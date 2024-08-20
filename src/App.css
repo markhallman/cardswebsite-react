@@ -20,3 +20,23 @@
 .container {
   padding: 2px 16px;
 }
+
+.playingCard {
+    max-height: 200px;
+    margin: 5px;
+}
+
+.cardHolder {
+    height: auto;
+    width: auto;
+    position: absolute;
+}
+
+.hand {
+    position: relative;
+}
+
+img {
+    display: block;
+}
+
