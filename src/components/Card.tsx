@@ -12,12 +12,10 @@ interface CardProps {
 
 function Card( {rank, suit = 'C', pad} : CardProps) {
     const cardImage = cardToImage(suit, rank);
-    let index = pad["index"]
-    let cardPadding = index * 50
-    console.log(cardPadding);
+    let cardPadding = pad["index"] * 50
 
     return (
-            <div className="cardHolder col-2 img-move thumb" style={{paddingLeft: cardPadding}}>
+            <div className="cardHolder col img-move thumb" style={{paddingLeft: cardPadding}}>
                   <img className="playingCard" src={"./src/assets/cards/" + cardImage} />
             </div>
         );
