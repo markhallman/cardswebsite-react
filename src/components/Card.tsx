@@ -10,13 +10,17 @@ interface CardProps {
     pad: number;
 }
 
+function cardClick(suit: Suit, rank : string){
+    console.log("card clicked: " + rank + suit);
+}
+
 function Card( {rank, suit = 'C', pad} : CardProps) {
     const cardImage = cardToImage(suit, rank);
+    let index = pad["index"]
     let cardPadding = pad["index"] * 50
-
     return (
-            <div className="cardHolder col img-move thumb" style={{paddingLeft: cardPadding}}>
-                  <img className="playingCard" src={"./src/assets/cards/" + cardImage} />
+            <div className={"cardHolder col-" + index + " img-move thumb"} style={{marginLeft: cardPadding}}>
+                  <img className="playingCard" src={"./src/assets/cards/" + cardImage} onClick={() => cardClick(suit, rank)} />
             </div>
         );
 }

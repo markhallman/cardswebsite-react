@@ -1,7 +1,7 @@
 import Banner from '../components/Banner'
 
 function Downloads(){
-    let downloadsPages = ["Home", "Downloads"]
+    let downloadsPages = ["Home", "Downloads", "HeartsGame"]
 
     return (
         <>
