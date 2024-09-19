@@ -8,37 +8,22 @@ function cardToImage(suit : Suit, rank : string){
 interface CardProps {
     rank: string;
     suit?: Suit;
-    pad: number;
-    location?: Location;
+    isPlayer: Boolean;
 }
 
-function cardClick(suit: Suit, rank : string){
-    console.log("card clicked: " + rank + suit);
+function cardClick(suit: Suit, rank : string, isPlayer : Boolean){
+    if(isPlayer){
+        console.log("Card Clicked")
+    }
 }
 
-function Card( {rank, suit = 'C', pad, location = "Bottom"} : CardProps) {
-    const cardImage = cardToImage(suit, rank);
-    let index = pad["index"]
-    let cardPadding = pad["index"] * 30
-
-    let cardStyle = {
-        marginLeft: cardPadding,
-    }
-
-    if (location == "Left" ||  location == "Right") {
-        cardStyle = {
-            transform: 'rotate(90deg)',
-            marginTop: 200 + cardPadding,
-            marginLeft: '30px'
-        }
-    }
-
-    console.log(location)
+function Card( {rank, suit = 'C', pad, location = "Bottom", isPlayer} : CardProps) {
+    // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
+    const cardImage = isPlayer ? cardToImage(suit, rank) : "yellow_back.png";
+    let playerClass = isPlayer ? "playerCard" : "opponentCard";
 
     return (
-            <div className={"cardHolder"} style={cardStyle}>
-                  <img className="playingCard" src={"./src/assets/cards/" + cardImage} onClick={() => cardClick(suit, rank)} />
-            </div>
+            <img className={"playingCard " + playerClass} src={"./src/assets/cards/" + cardImage} onClick={() => cardClick(suit, rank, isPlayer)} />
         );
 }
 

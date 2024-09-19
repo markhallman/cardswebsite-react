@@ -20,11 +20,11 @@
 .playingCard {
     width: 100%;
     height: auto;
-    max-height: 150px;
-    margin: 5px;
+    max-height: 120px;
+    margin: 4px;
 }
 
-.playingCard:hover{
+.playerCard:hover{
     box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.589);
     border: solid red
 }

@@ -11,11 +11,31 @@ function showCard(suit: Suit, rank : string){
     console.log("card clicked: " + rank + suit);
 }
 
+function getStyle(padding : int, location: string){
+    padding = padding * 30
+    let cardStyle = {
+        marginLeft: padding,
+    }
+
+    if (location == "Left" ||  location == "Right") {
+        cardStyle = {
+            transform: 'rotate(90deg)',
+            marginTop: 200 + padding,
+            marginLeft: '30px'
+        }
+    }
+
+    return cardStyle;
+}
+
 function Hand( {cards, location, isPlayer} : HandProps){
+
     return (
             <div className="hand">
                   {cards.map( (card, index) =>
-                      <Card rank={isPlayer ? card[0] : "yellow_back"} suit={isPlayer ? card[1] : ""} pad={{index}} key={card} location={location} /> )}
+                      <div className={"cardHolder"} style={getStyle(index, location)}>
+                            <Card rank={card[0]} suit={card[1]} isPlayer={isPlayer} />
+                      </div> )}
             </div>
         );
 }
