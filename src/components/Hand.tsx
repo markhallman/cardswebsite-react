@@ -1,4 +1,5 @@
 import Card from '../components/Card'
+import Draggable, {DraggableCore} from 'react-draggable';
 
 interface HandProps {
     cards: string[][];
@@ -14,7 +15,8 @@ function showCard(suit: Suit, rank : string){
 function getStyle(padding : int, location: string){
     padding = padding * 30
     let cardStyle = {
-        marginLeft: padding,
+        //marginLeft: padding,
+        transform : `translateX(${(padding)}%)`
     }
 
     if (location == "Left" ||  location == "Right") {
@@ -33,7 +35,7 @@ function Hand( {cards, location, isPlayer} : HandProps){
     return (
             <div className="hand">
                   {cards.map( (card, index) =>
-                      <div className={"cardHolder"} style={getStyle(index, location)}>
+                      <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
                             <Card rank={card[0]} suit={card[1]} isPlayer={isPlayer} />
                       </div> )}
             </div>

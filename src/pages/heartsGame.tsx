@@ -1,7 +1,6 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
 
-
 let playerHand = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
 
 function HeartsGame(){
@@ -20,11 +19,13 @@ function HeartsGame(){
                     <div className="col">
                         <Hand cards={fullHand} location="Left" isPlayer={false} />
                     </div>
-                    <div className="col ">
-                        <CardTable cards={tableCards}  />
-                    </div>
-                    <div className="col-2 justify-content-end">
+                    <div className="col-2 justify-content-right">
                         <Hand cards={fullHand} location="Right" isPlayer={false} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="d-flex col alight-items-center justify-content-center align-self-center">
+                        <CardTable cards={tableCards}  />
                     </div>
                 </div>
                 <div className="row justify-content-center">

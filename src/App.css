@@ -18,7 +18,7 @@
 }
 
 .playingCard {
-    width: 100%;
+    width: auto;
     height: auto;
     max-height: 120px;
     margin: 4px;
@@ -30,9 +30,12 @@
 }
 
 .cardHolder {
+    position: absolute;
+}
+
+.cardHolder {
     height: auto;
     width: auto;
-    position: absolute;
 }
 
 .hand {
@@ -50,4 +53,14 @@ img {
 
 .bottomHand {
     margin-bottom: 160px;
+}
+
+.cardTable {
+    background-image: url("./src/assets/woodenTableStock.jpg");
+    background-color: brown;
+    width: 420px;
+    height: 320px;
+    margin-top: 200px;
+    margin-left: 0px;
+    border: 1px solid black;
 }
