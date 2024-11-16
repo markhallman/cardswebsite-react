@@ -1,12 +1,13 @@
 import Card from '../components/Card'
 import Draggable, {DraggableCore} from 'react-draggable';
 
+// TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
+
 interface HandProps {
     cards: string[][];
     location: string;
     isPlayer: Boolean;
 }
-// TODO: rather than doing the margins in the card to give spacing, we should do it based on where the hand is on the screen from this class
 
 function showCard(suit: Suit, rank : string){
     console.log("card clicked: " + rank + suit);
