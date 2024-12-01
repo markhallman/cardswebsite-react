@@ -2,7 +2,7 @@ import Banner from '../components/Banner'
 import Hand from '../components/Hand'
 
 function Home(){
-    let homepages = ["Home", "Downloads", "HeartsLobbyJoin"]
+    let homepages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
     var fullHand = [["2","C"],["3","D"],["4","H"],["12", "D"]];
 
     return (

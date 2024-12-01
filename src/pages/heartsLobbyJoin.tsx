@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from "axios";
 
 function HeartsLobbyJoin(){
-    let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin"]
+    let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
 
     const navigate = useNavigate();
     // TODO: Obviously, we will need to get actual user credentials here in the future
@@ -48,7 +48,7 @@ function HeartsLobbyJoin(){
                     </div>
                      <div className="joinGame">
                             <button onClick={joinGame}>
-                                Create Game
+                                Join Game
                             </button>
                      </div>
                 </div>
