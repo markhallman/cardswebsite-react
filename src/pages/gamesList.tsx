@@ -40,7 +40,7 @@ function GamesList(){
                                 <ul>
                                     {activeGames.map((game, index) => (
                                         <li key={index}>
-                                            Game ID: {game.gameId}, Name: {game.players[0].name}
+                                            Game ID: {game.gameId}, Room Owner: {game.players[0].name}
                                         </li>
                                     ))}
                                 </ul>
