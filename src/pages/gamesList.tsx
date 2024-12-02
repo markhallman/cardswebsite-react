@@ -1,5 +1,5 @@
 import Banner from '../components/Banner'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from "axios";
 
 function GamesList(){
@@ -30,6 +30,16 @@ function GamesList(){
         });
     }
 
+    async function joinGame() {
+        console.log("Join Game Button clicked");
+
+    }
+
+    // Fetch active games when the component mounts
+    useEffect(() => {
+        getActiveGames();
+    }, []); // Empty dependency array ensures this runs only once
+
     return (
         <>
             <h1><Banner pages={listPages} activePage="GamesList" /></h1>
@@ -37,13 +47,19 @@ function GamesList(){
                 <div className="wrapper">
                             <h1>Active Games</h1>
                             {activeGames.length > 0 ? (
-                                <ul>
+                                <ul className="vstack list-unstyled d-flex flex-wrap">
                                     {activeGames.map((game, index) => (
-                                        <li key={index}>
-                                            Game ID: {game.gameId}, Room Owner: {game.players[0].name}
+                                        <li key={index} className="list-group-item bg-secondary text-white border border-dark m-2 p-2 justify-content-center align-items-center gameRoom">
+                                            <span className="p-2">
+                                                Game ID: {game.gameId}, Room Owner: {game.players[0].name}
+                                            </span>
+                                            <button onClick={joinGame}>
+                                                Join Game
+                                            </button>
                                         </li>
                                     ))}
                                 </ul>
+
                             ) : (
                                 <p>No active games available.</p>
                             )}

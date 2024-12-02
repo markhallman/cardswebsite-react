@@ -12,7 +12,7 @@ function HeartsLobbyJoin(){
     var password = "password";
     var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
 
-    const createGame = () => {
+    async function createGame() {
         console.log("Create Game Button clicked");
         axios.post("http://localhost:8080/games/creategame/hearts", {}, {
             headers: {Authorization: basicAuthHeader}
@@ -23,11 +23,6 @@ function HeartsLobbyJoin(){
         }).catch((error) => {
             console.error("Error creating game:", error);
         });
-    }
-
-    const joinGame = () => {
-        console.log("Join Game Button clicked");
-
     }
 
     return (
@@ -46,11 +41,7 @@ function HeartsLobbyJoin(){
                             Create Game
                         </button>
                     </div>
-                     <div className="joinGame">
-                            <button onClick={joinGame}>
-                                Join Game
-                            </button>
-                     </div>
+
                 </div>
             </div>
         </>

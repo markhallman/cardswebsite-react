@@ -64,3 +64,13 @@ img {
     margin-left: 0px;
     border: 1px solid black;
 }
+
+.gameRoom {
+    background: #C0C0C0;
+    border: solid black;
+    margin: 2px;
+    width: 400px;
+    height: 40px;
+    text-alight: center;
+}
+
