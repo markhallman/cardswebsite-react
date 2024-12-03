@@ -1,6 +1,5 @@
 import Banner from '../components/Banner'
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
 import axios from "axios";
 
 function HeartsLobbyJoin(){
@@ -9,7 +8,7 @@ function HeartsLobbyJoin(){
     const navigate = useNavigate();
     // TODO: Obviously, we will need to get actual user credentials here in the future
     var username = "user";
-    var password = "password";
+    var password = "password"
     var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
 
     async function createGame() {
