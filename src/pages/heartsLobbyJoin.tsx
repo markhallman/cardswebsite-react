@@ -19,7 +19,7 @@ function HeartsLobbyJoin(){
         }).then((response)=>{
             console.log("Game starting");
             console.log(response.status, response.data.token);
-            navigate('/heartsGame')
+            navigate('/heartsLobby')
         }).catch((error) => {
             console.error("Error creating game:", error);
         });
