@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 function HeartsLobbyJoin(){
+    // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down
     let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
 
     const navigate = useNavigate();
@@ -17,8 +18,9 @@ function HeartsLobbyJoin(){
             headers: {Authorization: basicAuthHeader}
         }).then((response)=>{
             console.log("Game starting");
-            console.log(response.status, response.data.token);
-            navigate('/heartsLobby')
+            console.log("GameId: " + response.data);
+            var gameId = response.data;
+            navigate(`/heartsLobby/${gameId}`)
         }).catch((error) => {
             console.error("Error creating game:", error);
         });
