@@ -3,10 +3,19 @@ import JoinGameButton from '../components/JoinGameButton';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
+interface Game {
+    gameId : number;
+    players? : { name: string }[];
+}
+
+interface ActiveGames {
+    activeGames : Game[];
+}
+
 function GamesList(){
     let listPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList" ]
 
-    const [activeGames, setActiveGames] = useState(0);
+    const [activeGames, setActiveGames] = useState<Game[]>([]);
 
     // TODO: Obviously, we will need to get actual user credentials here in the future
     var username = "user";
@@ -15,11 +24,11 @@ function GamesList(){
 
     async function getActiveGames() {
         console.log("Get Active Button clicked");
-        axios.get("http://localhost:8080/games/activegames", {
+        axios.get<ActiveGames>("http://localhost:8080/games/activegames", {
             headers: {Authorization: basicAuthHeader}
         }).then((response)=>{
             console.log(response.data);
-            let activeGames = response.data.activeGames;
+            let activeGames : Game[] = response.data.activeGames;
             activeGames.forEach((game: { gameId: number; }) => {
                 console.log(game.gameId);
             });
@@ -29,11 +38,6 @@ function GamesList(){
         }).catch((error) => {
             console.error("Error grabbing active games:", error);
         });
-    }
-
-    async function joinGame() {
-        console.log("Join Game Button clicked");
-
     }
 
     // Fetch active games when the component mounts

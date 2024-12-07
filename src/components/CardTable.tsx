@@ -4,7 +4,7 @@ interface CardTableProps {
     cards: string[][];
 }
 
-function getTableCardStyle(index : int) {
+function getTableCardStyle(index : number) {
     // Get the position of the card on the table based on index
     let cardStyle = {}
     if (index == 0) {

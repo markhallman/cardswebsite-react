@@ -10,15 +10,14 @@ interface CardProps {
     suit?: Suit;
     isPlayer: Boolean;
     (onClick?: void) : void;
-    height: int;
-    state: string;
+    height: number;
 }
 
-function cardClick(){
+function cardClick() {
     console.log("Card Clicked")
 }
 
-function Card( {rank, suit = 'C', pad, location = "Bottom", isPlayer, onClick = cardClick} : CardProps, height = 120) {
+function Card( {rank, suit = 'C', isPlayer, onClick = cardClick} : CardProps, height = 120) {
     // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
     const cardImage = isPlayer ? cardToImage(suit, rank) : "yellow_back.png";
     let playerClass = isPlayer ? "playerCard" : "opponentCard";
