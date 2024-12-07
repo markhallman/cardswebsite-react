@@ -1,4 +1,4 @@
-import Card from '../components/Card'
+import Card, { Suit } from '../components/Card'
 import Draggable, {DraggableCore} from 'react-draggable';
 
 // TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
@@ -13,7 +13,7 @@ function showCard(suit: Suit, rank : string){
     console.log("card clicked: " + rank + suit);
 }
 
-function getStyle(padding : int, location: string){
+function getStyle(padding : number, location: string){
     padding = padding * 30
     let cardStyle = {
         //marginLeft: padding,

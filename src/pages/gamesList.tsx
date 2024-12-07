@@ -1,4 +1,5 @@
 import Banner from '../components/Banner'
+import JoinGameButton from '../components/JoinGameButton';
 import { useState, useEffect } from 'react';
 import axios from "axios";
 
@@ -19,7 +20,7 @@ function GamesList(){
         }).then((response)=>{
             console.log(response.data);
             let activeGames = response.data.activeGames;
-            activeGames.forEach(game => {
+            activeGames.forEach((game: { gameId: number; }) => {
                 console.log(game.gameId);
             });
             setActiveGames(activeGames);
@@ -53,9 +54,7 @@ function GamesList(){
                                             <span className="p-2">
                                                 Game ID: {game.gameId}, Room Owner: {game.players[0].name}
                                             </span>
-                                            <button onClick={joinGame}>
-                                                Join Game
-                                            </button>
+                                            <JoinGameButton gameId={game.gameId}/>
                                         </li>
                                     ))}
                                 </ul>

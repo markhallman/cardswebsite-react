@@ -42,7 +42,6 @@ function HeartsLobbyJoin(){
                             Create Game
                         </button>
                     </div>
-
                 </div>
             </div>
         </>
