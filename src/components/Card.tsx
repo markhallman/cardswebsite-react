@@ -9,8 +9,8 @@ interface CardProps {
     rank: string;
     suit?: Suit;
     isPlayer: Boolean;
-    (onClick?: void) : void;
-    height: number;
+    onClick? : (event: React.MouseEvent<HTMLImageElement>) => void;
+    height?: number;
 }
 
 function cardClick() {

@@ -4,7 +4,7 @@ import Draggable, {DraggableCore} from 'react-draggable';
 // TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
 
 interface HandProps {
-    cards: string[][];
+    cards: [rank: string, suit: Suit][]; 
     location: string;
     isPlayer: Boolean;
 }
@@ -32,7 +32,7 @@ function getStyle(padding : number, location: string){
 }
 
 function Hand( {cards, location, isPlayer} : HandProps){
-
+    
     return (
             <div className="hand">
                   {cards.map( (card, index) =>
