@@ -19,6 +19,8 @@ function StartGameButton( {gameId} : startButtonProps ) {
         axios.post<String>(`http://localhost:8080/games/startgame/${gameId}`, {}, {
             headers: {Authorization: basicAuthHeader}
         }).then((response)=>{
+            const ws = new WebSocket("ws://localhost:8080/ws")
+
             console.log("Started game with ID " + gameId);
             navigate(`/heartsGame/${gameId}`, )
         }).catch((error) => {

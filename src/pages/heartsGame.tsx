@@ -1,10 +1,11 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
+import { Suit } from '../components/Card'
 
 let playerHand = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
 
 function HeartsGame(){
-    var fullHand = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
+    var fullHand  : [rank: string, suit: Suit][]= [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
     var tableCards = [["14","S"],["14","S"],["14","S"],["14","S"]]
 
     return (
