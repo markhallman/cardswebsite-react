@@ -1,7 +1,7 @@
-import Card from '../components/Card'
+import Card, { Suit } from '../components/Card'
 
 interface CardTableProps {
-    cards: string[][];
+    cards: [rank: string, suit: Suit][]; 
 }
 
 function getTableCardStyle(index : number) {
