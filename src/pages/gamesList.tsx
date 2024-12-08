@@ -5,7 +5,7 @@ import axios from "axios";
 
 interface Game {
     gameId : number;
-    players? : { name: string }[];
+    players : { name: string }[];
 }
 
 interface ActiveGames {

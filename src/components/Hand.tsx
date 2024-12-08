@@ -23,8 +23,8 @@ function getStyle(padding : number, location: string){
     if (location == "Left" ||  location == "Right") {
         cardStyle = {
             transform: 'rotate(90deg)',
-            marginTop: 200 + padding,
-            marginLeft: '30px'
+            marginLeft: '30px',
+            marginTop: 200 + padding
         }
     }
 
