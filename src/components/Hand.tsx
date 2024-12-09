@@ -7,6 +7,7 @@ interface HandProps {
     cards: [rank: string, suit: Suit][]; 
     location: string;
     isPlayer: Boolean;
+    onClick? : (event: React.MouseEvent<HTMLImageElement>) => void;
 }
 
 function showCard(suit: Suit, rank : string){
@@ -31,13 +32,14 @@ function getStyle(padding : number, location: string){
     return cardStyle;
 }
 
-function Hand( {cards, location, isPlayer} : HandProps){
+// Notice default onClick implementation is to just do nothing
+function Hand( {cards, location, isPlayer, onClick = () =>{}} : HandProps){
     
     return (
             <div className="hand">
                   {cards.map( (card, index) =>
                       <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
-                            <Card rank={card[0]} suit={card[1]} isPlayer={isPlayer} />
+                            <Card rank={card[0]} suit={card[1]} isPlayer={isPlayer} onClick={onClick}/>
                       </div> )}
             </div>
         );
