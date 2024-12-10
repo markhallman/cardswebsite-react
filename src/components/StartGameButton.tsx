@@ -7,8 +7,6 @@ interface startButtonProps {
 }
 
 function StartGameButton( {gameId} : startButtonProps ) {
-    const [ws, setWs] = useState<WebSocket | null>(null);
-
     const navigate = useNavigate();
 
     // TODO: Obviously, we will need to get actual user credentials here in the future

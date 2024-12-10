@@ -4,45 +4,61 @@ import { Suit } from '../components/Card'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-let playerHand = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
+// This is a hardcoded hand for testing purposes
+let playerHand : [rank: string, suit: Suit][] = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
 
 function HeartsGame(){
-    // TODO: Obviously these are temporary and should be grabbed from the server
-    var fullHand  : [rank: string, suit: Suit][] = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
-    var tableCards : [rank: string, suit: Suit][] = [["14","S"],["14","S"],["14","S"],["14","S"]]
-
     const { gameId } = useParams<{ gameId: string }>();
     const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+    const [fullHand, setFullHand ]= useState<[rank: string, suit: Suit][] >(playerHand);
+    const [tableCards, setTableCards ]= useState<[rank: string, suit: Suit][] >([]);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8080/ws`);
+        let ws: WebSocket
+        let retryCount = 0;
+        const maxRetries = 5;
 
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
+        const connectWebSocket = () => {
+            ws = new WebSocket(`ws://localhost:8080/ws`);
+
+            ws.onopen = () => {
+                console.log("WebSocket connection established");
+                setWebSocket(ws);
+            };
+
+            ws.onmessage = (event) => {
+                console.log("Message from server:", event.data);
+            };
+
+            ws.onclose = () => {
+                console.log("WebSocket connection closed");
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    console.log(`Retrying connection (${retryCount}/${maxRetries})...`);
+                    setTimeout(connectWebSocket, 1000); // Retry after 1 second
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
         };
 
-        ws.onmessage = (event) => {
-            console.log("Message from server:", event.data);
-        };
-
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
-
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
-
-        setWebSocket(ws);
+        connectWebSocket();
 
         // Cleanup on unmount
         return () => {
             ws.close();
         };
+        
     }, [gameId]);
 
     function onUserCardClick() {
-        console.log("User card clicked");
+        if (webSocket?.readyState !== WebSocket.OPEN) {
+            console.error("WebSocket connection is not open");
+            return;
+        }
+        webSocket?.send("Card Clicked");
     }
 
     return (
