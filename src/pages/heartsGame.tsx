@@ -3,62 +3,66 @@ import CardTable from '../components/CardTable'
 import { Suit } from '../components/Card'
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Client } from '@stomp/stompjs';
 
 // This is a hardcoded hand for testing purposes
 let playerHand : [rank: string, suit: Suit][] = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
 
 function HeartsGame(){
     const { gameId } = useParams<{ gameId: string }>();
-    const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+    const [stompClient, setStompClient] = useState<Client | null>(null);
     const [fullHand, setFullHand ]= useState<[rank: string, suit: Suit][] >(playerHand);
     const [tableCards, setTableCards ]= useState<[rank: string, suit: Suit][] >([]);
 
     useEffect(() => {
-        let ws: WebSocket
+        let client: Client
         let retryCount = 0;
         const maxRetries = 5;
 
-        const connectWebSocket = () => {
-            ws = new WebSocket(`ws://localhost:8080/ws`);
-
-            ws.onopen = () => {
-                console.log("WebSocket connection established");
-                setWebSocket(ws);
-            };
-
-            ws.onmessage = (event) => {
-                console.log("Message from server:", event.data);
-            };
-
-            ws.onclose = () => {
-                console.log("WebSocket connection closed");
-                if (retryCount < maxRetries) {
-                    retryCount++;
-                    console.log(`Retrying connection (${retryCount}/${maxRetries})...`);
-                    setTimeout(connectWebSocket, 1000); // Retry after 1 second
+        const connectStompClient = () => {
+            client = new Client({
+                brokerURL: 'ws://localhost:8080/ws',
+                reconnectDelay: 1000,
+                onConnect: () => {
+                    console.log("STOMP connection established");
+                    setStompClient(client);
+                },
+                onStompError: (frame) => {
+                    console.error("STOMP error:", frame);
+                },
+                onWebSocketClose: () => {
+                    console.log("WebSocket connection closed");
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`Retrying connection (${retryCount}/${maxRetries})...`);
+                        setTimeout(connectStompClient, 1000); // Retry after 1 second
+                    }
+                },
+                onWebSocketError: (error) => {
+                    console.error("WebSocket error:", error);
                 }
-            };
+            });
 
-            ws.onerror = (error) => {
-                console.error("WebSocket error:", error);
-            };
+            client.activate();
         };
 
-        connectWebSocket();
+
+        connectStompClient();
 
         // Cleanup on unmount
         return () => {
-            ws.close();
+            client.deactivate();
         };
-        
+
     }, [gameId]);
 
     function onUserCardClick() {
-        if (webSocket?.readyState !== WebSocket.OPEN) {
+    if (!stompClient || !stompClient.connected) {
             console.error("WebSocket connection is not open");
             return;
         }
-        webSocket?.send("Card Clicked");
+        console.log("User card clicked");
+        //stompClient.publish({ destination: '/app/card-clicked', body: 'Card Clicked' });
     }
 
     return (
