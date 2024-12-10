@@ -15,45 +15,30 @@ function HeartsGame(){
     const [tableCards, setTableCards ]= useState<[rank: string, suit: Suit][] >([]);
 
     useEffect(() => {
-        let client: Client
-        let retryCount = 0;
-        const maxRetries = 5;
+        const client = new Client({
+            brokerURL: 'ws://localhost:8080/ws',
+            reconnectDelay: 1000,
+            onConnect: () => {
+                console.log("STOMP connection established");
+                setStompClient(client);
+            },
+            onStompError: (frame) => {
+                console.error("STOMP error:", frame);
+            },
+            onWebSocketClose: () => {
+                console.log("WebSocket connection closed");
+            },
+            onWebSocketError: (error) => {
+                console.error("WebSocket error:", error);
+            }
+        });
 
-        const connectStompClient = () => {
-            client = new Client({
-                brokerURL: 'ws://localhost:8080/ws',
-                reconnectDelay: 1000,
-                onConnect: () => {
-                    console.log("STOMP connection established");
-                    setStompClient(client);
-                },
-                onStompError: (frame) => {
-                    console.error("STOMP error:", frame);
-                },
-                onWebSocketClose: () => {
-                    console.log("WebSocket connection closed");
-                    if (retryCount < maxRetries) {
-                        retryCount++;
-                        console.log(`Retrying connection (${retryCount}/${maxRetries})...`);
-                        setTimeout(connectStompClient, 1000); // Retry after 1 second
-                    }
-                },
-                onWebSocketError: (error) => {
-                    console.error("WebSocket error:", error);
-                }
-            });
-
-            client.activate();
-        };
-
-
-        connectStompClient();
+        client.activate();
 
         // Cleanup on unmount
         return () => {
             client.deactivate();
         };
-
     }, [gameId]);
 
     function onUserCardClick() {
