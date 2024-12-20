@@ -4,7 +4,7 @@ import { Suit } from '../components/Card'
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
-import { reindexPlayerArray } from '../utils/cardGameUtils';
+import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
 
 // This is a hardcoded hand for testing purposes
 let playerHand : [rank: string, suit: Suit][] = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
@@ -13,7 +13,9 @@ function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
     const [stompClient, setStompClient] = useState<Client | null>(null);
     const [fullHand, setFullHand ]= useState<[rank: string, suit: Suit][] >(playerHand);
-    const [tableCards, setTableCards ]= useState<[rank: string, suit: Suit][] >([]);
+    const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
+        new Map([])
+    );
     // TODO: Remove for testing, need to pass this downstream to all components with that react thingy
     const playerName = "user";
 
@@ -35,18 +37,27 @@ function HeartsGame() {
                         const messageData = JSON.parse(message.body);
                         console.log("Message data:", messageData);
 
-                        // Update player order if it has 
+                        // Update player order if it has changed for whatever reason
                         // TODO: server only sending over changed info could prevent some of these checks
                         const newPlayerOrder = messageData.currentGameState.playerDescriptors.map((player: any) => player.name);
                         if (JSON.stringify(playerOrder) !== JSON.stringify(newPlayerOrder)) {
                             setPlayerOrder(messageData.currentGameState.playerDescriptors.map((player: any) => player.name));
                         }         
 
+                        // Update the cards on the table (current trick)
                         // For table cards, index starts at 0 on the top and goes clockwise
-                        console.log("Current Trick:", messageData.currentGameState.currentTrickMap);
+                        // We also need to extract the player name from the player descriptor string
+                        const currentTrickLocal : Map<string,  {suit : string, value : string, rank : string}> = new Map(
+                            Object.entries(messageData.currentGameState.currentTrickMap).map(([key, value]) => [
+                                parseNameFromPlayerDescriptorString(key) as string || key as string,
+                                value as {suit : string, value : string, rank : string}
+                            ])
+                        );                        
+                        console.log("Current Trick:", currentTrickLocal);
+                        setTableCards(currentTrickLocal);
 
-                        //setTableCards(messageData.currentGameState.currentTrick);
-
+                        // Update the player's hand
+                        //const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
 
                     } catch (error) {
                         console.error("Error parsing message:", error);
@@ -102,7 +113,7 @@ function HeartsGame() {
                 </div>
                 <div className="row">
                     <div className="d-flex col alight-items-center justify-content-center align-self-center">
-                        <CardTable cards={tableCards}  playerConfiguration={reindexPlayerArray(playerName, playerOrder)}/>
+                        <CardTable playerTrickMap={tableCards}  playerConfiguration={reindexPlayerArray(playerName, playerOrder)}/>
                     </div>
                 </div>
                 <div className="row justify-content-center">

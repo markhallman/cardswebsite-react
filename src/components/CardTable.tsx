@@ -1,30 +1,29 @@
 import Card, { Suit } from '../components/Card'
 
 interface CardTableProps {
-    cards: [rank: string, suit: Suit][]; 
     playerConfiguration?: string[];
-    playerTrickMap?: Map<string, [string, Suit]>;
+    playerTrickMap?: Map<string,  {suit : string, value : string, rank : string}>;
 }
 
 function getTableCardStyle(index : number) {
     // Get the position of the card on the table based on index
     let cardStyle = {}
-    if (index == 0) {
+    if (index == 2) {
         cardStyle = {
             marginLeft: 165,
             marginTop: 10
         }
-    } else if(index == 1) {
+    } else if(index == 3) {
         cardStyle = {
             marginLeft: 300,
             marginTop: 100
         }
-    } else if(index == 2) {
+    } else if(index == 0) {
         cardStyle = {
             marginLeft: 165,
             marginTop: 170
         }
-    } else if(index == 3) {
+    } else if(index == 1) {
         cardStyle = {
             marginLeft: 20,
             marginTop: 100
@@ -35,13 +34,22 @@ function getTableCardStyle(index : number) {
 }
 
 // TODO: Need to reconfigure so that the cards are displayed in the correct order, with a map from player to card
-function CardTable( {cards} : CardTableProps){
+function CardTable( {playerConfiguration, playerTrickMap} : CardTableProps){
+    if (!playerConfiguration) {
+        console.error("Player configuration not provided");
+        return null; // TODO: just return an empty table
+    }
+
     return (
             <div className="cardTable">
-               {cards.map( (card, index) =>
-                  <div className={"cardHolder"} key={index} style={getTableCardStyle(index)}>
-                      <Card rank={card[0]} suit={card[1]} isPlayer={true} key={index}/>
-                  </div>)}
+               {playerTrickMap && Array.from(playerTrickMap.entries()).map( ([player, card], index) => {
+                const playerIndex = playerConfiguration.findIndex((element) => element === player);
+                console.log("Player Index: " + playerIndex);
+                return (
+                  <div className={"cardHolder"} key={index} style={getTableCardStyle(playerIndex)}>
+                      <Card rank={card.rank} suit={card.suit.charAt(0) as Suit} isPlayer={true} key={playerIndex}/>
+                  </div>);
+                })}
             </div>
         );
 }
