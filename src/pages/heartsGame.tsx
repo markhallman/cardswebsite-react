@@ -7,12 +7,11 @@ import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
 
 // This is a hardcoded hand for testing purposes
-let playerHand : [rank: string, suit: Suit][] = [["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["3","H"],["3","S"],["3","C"],["3", "S"],["4","H"]];
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
     const [stompClient, setStompClient] = useState<Client | null>(null);
-    const [fullHand, setFullHand ]= useState<[rank: string, suit: Suit][] >(playerHand);
+    const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
     );
@@ -57,7 +56,16 @@ function HeartsGame() {
                         setTableCards(currentTrickLocal);
 
                         // Update the player's hand
-                        //const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
+                        const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
+                        const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
+                        console.log("Player hand:", playerHand);
+                        if (player) {
+                            setFullHand(playerHand);
+                        } else {
+                            console.error("Player not found in current game state!");
+                            return;
+                        }
+                        // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
 
                     } catch (error) {
                         console.error("Error parsing message:", error);

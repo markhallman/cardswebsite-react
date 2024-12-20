@@ -4,7 +4,7 @@ import Draggable, {DraggableCore} from 'react-draggable';
 // TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
 
 interface HandProps {
-    cards: [rank: string, suit: Suit][]; 
+    cards: {suit : string, value : string, rank : string}[]; 
     location: string;
     isPlayer: Boolean;
     onClick? : (event: React.MouseEvent<HTMLImageElement>) => void;
@@ -39,7 +39,7 @@ function Hand( {cards, location, isPlayer, onClick = () =>{}} : HandProps){
             <div className="hand">
                   {cards.map( (card, index) =>
                       <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
-                            <Card rank={card[0]} suit={card[1]} isPlayer={isPlayer} onClick={onClick}/>
+                            <Card rank={card.rank} suit={card.suit.charAt(0) as Suit} isPlayer={isPlayer} onClick={onClick}/>
                       </div> )}
             </div>
         );
