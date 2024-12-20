@@ -2,6 +2,8 @@ import Card, { Suit } from '../components/Card'
 
 interface CardTableProps {
     cards: [rank: string, suit: Suit][]; 
+    playerConfiguration?: string[];
+    playerTrickMap?: Map<string, [string, Suit]>;
 }
 
 function getTableCardStyle(index : number) {
@@ -32,11 +34,8 @@ function getTableCardStyle(index : number) {
     return cardStyle;
 }
 
+// TODO: Need to reconfigure so that the cards are displayed in the correct order, with a map from player to card
 function CardTable( {cards} : CardTableProps){
-    let cardStyle = {
-        marginLeft: 300,
-    }
-
     return (
             <div className="cardTable">
                {cards.map( (card, index) =>
