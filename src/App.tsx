@@ -8,6 +8,9 @@ import GamesList from './pages/gamesList'
 
 import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
+import { Context, createContext } from 'react'
+
+export const GameWebSocketRootContext : Context<string> = createContext(`/hearts/game-room/`);
 
 function App() {
     return (

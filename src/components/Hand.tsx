@@ -34,7 +34,7 @@ function getStyle(padding : number, location: string){
 
 // Notice default onClick implementation is to just do nothing
 function Hand( {cards, location, isPlayer, onClick = () =>{}} : HandProps){
-    
+    // TODO: This charAt system for grabbing the suit is a bit hacky, but it works for now
     return (
             <div className="hand">
                   {cards.map( (card, index) =>

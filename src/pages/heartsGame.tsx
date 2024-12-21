@@ -1,15 +1,17 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
 import { Suit } from '../components/Card'
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, createContext, Context } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
+import { GameWebSocketRootContext } from '../App';
 
 // This is a hardcoded hand for testing purposes
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
+
     const [stompClient, setStompClient] = useState<Client | null>(null);
     const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
@@ -56,6 +58,7 @@ function HeartsGame() {
                         setTableCards(currentTrickLocal);
 
                         // Update the player's hand
+                        // TODO: Should sort the cards by suit then value
                         const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
                         const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
                         console.log("Player hand:", playerHand);
@@ -94,13 +97,26 @@ function HeartsGame() {
         };
     }, [gameId]);
 
-    function onUserCardClick() {
+    function onUserCardClick(rank : string, suit: string) {
         if (!stompClient || !stompClient.connected) {
             console.error("WebSocket connection is not open");
             return;
         }
+
+        const destination = `/hearts/game-room/${gameId}/playCard`;
+        const messageBody = JSON.stringify({
+            playerName: playerName,
+            card: card
+        });
+    
+        stompClient.publish({
+            destination: destination,
+            body: messageBody
+        });
+    
+        console.log("User card clicked and message sent:", messageBody);
+        
         console.log("User card clicked");
-        //stompClient.publish({ destination: '/app/card-clicked', body: 'Card Clicked' });
     }
 
     return (
