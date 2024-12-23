@@ -7,7 +7,7 @@ interface HandProps {
     cards: {suit : string, value : string, rank : string}[]; 
     location: string;
     isPlayer: Boolean;
-    onClick? : (event: React.MouseEvent<HTMLImageElement>) => void;
+    onClick? : string;
 }
 
 function showCard(suit: Suit, rank : string){
@@ -33,7 +33,7 @@ function getStyle(padding : number, location: string){
 }
 
 // Notice default onClick implementation is to just do nothing
-function Hand( {cards, location, isPlayer, onClick = () =>{}} : HandProps){
+function Hand( {cards, location, isPlayer, onClick = "default"} : HandProps){
     // TODO: This charAt system for grabbing the suit is a bit hacky, but it works for now
     return (
             <div className="hand">

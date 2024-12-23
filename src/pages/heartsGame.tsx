@@ -5,19 +5,19 @@ import { useEffect, useState, useRef, createContext, Context } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
-import { GameWebSocketRootContext } from '../App';
+import { UserContext } from '../context/UserContext';
 
 // This is a hardcoded hand for testing purposes
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
 
-    const [stompClient, setStompClient] = useState<Client | null>(null);
+    const [stompClient, setStompClient] = useState<Client | undefined>(undefined);
     const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
     );
-    // TODO: Remove for testing, need to pass this downstream to all components with that react thingy
+    // TODO: Obviously will remove this hardcoded player name in the future, and get it from the user passed down through context
     const playerName = "user";
 
     // Player order reflects the respoective positions of players at the table, 
@@ -97,55 +97,35 @@ function HeartsGame() {
         };
     }, [gameId]);
 
-    function onUserCardClick(rank : string, suit: string) {
-        if (!stompClient || !stompClient.connected) {
-            console.error("WebSocket connection is not open");
-            return;
-        }
-
-        const destination = `/hearts/game-room/${gameId}/playCard`;
-        const messageBody = JSON.stringify({
-            playerName: playerName,
-            card: card
-        });
-    
-        stompClient.publish({
-            destination: destination,
-            body: messageBody
-        });
-    
-        console.log("User card clicked and message sent:", messageBody);
-        
-        console.log("User card clicked");
-    }
-
     return (
         <>
-            <div className="container-fluid">
-                <div className="row justify-content-center" >
-                    <div className="col offset-4">
-                        <Hand cards={fullHand} location="Top" isPlayer={false} />
+            <UserContext.Provider value={{username: playerName, gameWebSocketRoot: `/hearts/game-room/${gameId}`, stompClient: stompClient}}>
+                <div className="container-fluid">
+                    <div className="row justify-content-center" >
+                        <div className="col offset-4">
+                            <Hand cards={fullHand} location="Top" isPlayer={false} />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <Hand cards={fullHand} location="Left" isPlayer={false} />
+                        </div>
+                        <div className="col-2 justify-content-right">
+                            <Hand cards={fullHand} location="Right" isPlayer={false} />
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="d-flex col alight-items-center justify-content-center align-self-center">
+                            <CardTable playerTrickMap={tableCards}  playerConfiguration={reindexPlayerArray(playerName, playerOrder)}/>
+                        </div>
+                    </div>
+                    <div className="row justify-content-center">
+                        <div className="col fixed-bottom bottomHand offset-4">
+                            <Hand cards={fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>
+                        </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col">
-                        <Hand cards={fullHand} location="Left" isPlayer={false} />
-                    </div>
-                    <div className="col-2 justify-content-right">
-                        <Hand cards={fullHand} location="Right" isPlayer={false} />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="d-flex col alight-items-center justify-content-center align-self-center">
-                        <CardTable playerTrickMap={tableCards}  playerConfiguration={reindexPlayerArray(playerName, playerOrder)}/>
-                    </div>
-                </div>
-                <div className="row justify-content-center">
-                    <div className="col fixed-bottom bottomHand offset-4">
-                        <Hand cards={fullHand} location="Bottom" isPlayer={true} onClick={onUserCardClick}/>
-                    </div>
-                </div>
-            </div>
+            </UserContext.Provider>
         </>
     );
 }

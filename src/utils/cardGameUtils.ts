@@ -23,3 +23,38 @@ export const parseNameFromPlayerDescriptorString = (playerDescriptor: string) =>
     console.error("Name not found in player descriptor");
     return null;
 }
+
+export const cardRankToValue = (rank: string) => {
+    if (rank === "1") {
+        return "ONE";
+    } else if (rank === "2") {
+        return "TWO";
+    } else if (rank === "3") {
+        return "THREE";
+    } else if (rank === "4") {
+        return "FOUR";
+    } else if (rank === "5") {
+        return "FIVE";
+    } else if (rank === "6") {
+        return "SIX";
+    } else if (rank === "7") {
+        return "SEVEN";
+    } else if (rank === "8") {
+        return "EIGHT";
+    } else if (rank === "9") {
+        return "NINE";
+    } else if (rank === "10") {
+        return "TEN";
+    } else if (rank == "11") {
+        return "JACK";
+    } else if (rank === "12") {
+        return "QUEEN";
+    } else if (rank === "13") {
+        return "KING";
+    } else if (rank === "14") {
+        return "ACE";
+    } else {
+        console.error("Invalid rank: " + rank);
+        return null;
+    }
+}
