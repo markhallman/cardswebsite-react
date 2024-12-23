@@ -6,10 +6,10 @@ import { UserContext } from '../context/UserContext';
 function Home(){
     let homepages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
     var fullHand : {suit: string, value: string, rank: string}[] = 
-        [{suit: "C", value: "TWO", rank:  "2"},
-            {suit: "C", value: "TWO", rank:  "2"},
-            {suit: "C", value: "TWO", rank:  "2"},
-            {suit: "C", value: "TWO", rank:  "2"}];
+        [{suit: "CLUB", value: "TWO", rank:  "2"},
+            {suit: "CLUB", value: "TWO", rank:  "2"},
+            {suit: "CLUB", value: "TWO", rank:  "2"},
+            {suit: "CLUB", value: "TWO", rank:  "2"}];
     // TODO: get the playername from login
     const playerName = "user";
 

@@ -99,7 +99,7 @@ function HeartsGame() {
 
     return (
         <>
-            <UserContext.Provider value={{username: playerName, gameWebSocketRoot: `/hearts/game-room/${gameId}`, stompClient: stompClient}}>
+            <UserContext.Provider value={{username: playerName, gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient}}>
                 <div className="container-fluid">
                     <div className="row justify-content-center" >
                         <div className="col offset-4">

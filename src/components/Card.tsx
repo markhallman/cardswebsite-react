@@ -3,11 +3,11 @@ import { UserContext } from '../context/UserContext';
 import { Client } from "@stomp/stompjs";
 import { cardRankToValue } from "../utils/cardGameUtils";
 
-export type Suit = "C" | "D" | "H" | "S";
+export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
 
 function cardToImage(suit : Suit, rank : string){
-    return rank + suit + ".png"
+    return rank + suit.charAt(0) + ".png"
 }
 
 interface CardProps {
@@ -35,8 +35,11 @@ function playCard(rank : string, suit: string, username : string, gameWebSocketR
     });
 
     stompClient.publish({
-        destination: gameWebSocketRoot,
-        body: messageBody
+        destination: gameWebSocketRoot + "/playCard",
+        body: messageBody,
+        headers: {
+            "user-name": username
+        }
     });
 
     console.log("User card clicked and message sent:", messageBody);
@@ -44,7 +47,7 @@ function playCard(rank : string, suit: string, username : string, gameWebSocketR
     console.log("User card clicked");
 }
 
-function Card( {rank, suit = 'C', isPlayer, onClick = "default"} : CardProps, height = 120) {
+function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps, height = 120) {
     const userContext = useContext(UserContext);
     const username = userContext.username;
     const gameWebSocketRoot = userContext.gameWebSocketRoot;

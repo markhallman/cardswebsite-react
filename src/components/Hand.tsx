@@ -39,7 +39,7 @@ function Hand( {cards, location, isPlayer, onClick = "default"} : HandProps){
             <div className="hand">
                   {cards.map( (card, index) =>
                       <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
-                            <Card rank={card.rank} suit={card.suit.charAt(0) as Suit} isPlayer={isPlayer} onClick={onClick}/>
+                            <Card rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick}/>
                       </div> )}
             </div>
         );

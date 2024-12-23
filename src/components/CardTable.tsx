@@ -47,7 +47,7 @@ function CardTable( {playerConfiguration, playerTrickMap} : CardTableProps){
                 console.log("Player Index: " + playerIndex);
                 return (
                   <div className={"cardHolder"} key={index} style={getTableCardStyle(playerIndex)}>
-                      <Card rank={card.rank} suit={card.suit.charAt(0) as Suit} isPlayer={true} key={playerIndex}/>
+                      <Card rank={card.rank} suit={card.suit as Suit} isPlayer={true} key={playerIndex}/>
                   </div>);
                 })}
             </div>
