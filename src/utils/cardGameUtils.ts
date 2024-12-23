@@ -25,33 +25,34 @@ export const parseNameFromPlayerDescriptorString = (playerDescriptor: string) =>
 }
 
 export const cardRankToValue = (rank: string) => {
+    console.log("Rank:", rank);
     if (rank === "1") {
         return "ONE";
-    } else if (rank === "2") {
+    } else if (rank == "2") {
         return "TWO";
-    } else if (rank === "3") {
+    } else if (rank == "3") {
         return "THREE";
-    } else if (rank === "4") {
+    } else if (rank == "4") {
         return "FOUR";
-    } else if (rank === "5") {
+    } else if (rank == "5") {
         return "FIVE";
-    } else if (rank === "6") {
+    } else if (rank == "6") {
         return "SIX";
-    } else if (rank === "7") {
+    } else if (rank == "7") {
         return "SEVEN";
-    } else if (rank === "8") {
+    } else if (rank == "8") {
         return "EIGHT";
-    } else if (rank === "9") {
+    } else if (rank == "9") {
         return "NINE";
-    } else if (rank === "10") {
+    } else if (rank == "10") {
         return "TEN";
     } else if (rank == "11") {
         return "JACK";
-    } else if (rank === "12") {
+    } else if (rank == "12") {
         return "QUEEN";
-    } else if (rank === "13") {
+    } else if (rank == "13") {
         return "KING";
-    } else if (rank === "14") {
+    } else if (rank == "14") {
         return "ACE";
     } else {
         console.error("Invalid rank: " + rank);
