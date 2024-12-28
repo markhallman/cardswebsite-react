@@ -10,8 +10,8 @@ function StartGameButton( {gameId} : startButtonProps ) {
     const navigate = useNavigate();
 
     // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username : string = "user";
-    var password : string = "password";
+    var username : string = "mark";
+    var password : string = "markiscool";
     var basicAuthHeader : string = 'Basic ' + btoa(username + ':' + password);
 
     async function startGame() {

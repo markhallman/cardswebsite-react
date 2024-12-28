@@ -8,8 +8,8 @@ function HeartsLobbyJoin(){
 
     const navigate = useNavigate();
     // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username = "user";
-    var password = "password"
+    var username : string = "mark";
+    var password : string = "markiscool";
     var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
 
     async function createGame() {
