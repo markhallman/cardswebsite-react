@@ -27,7 +27,7 @@ function Banner( {pages, activePage} : BannerProps){
                         <li className="nav-item" key={page}>
                           <a className={page === activePage ? 'nav-link active' : 'nav-link'}
                                 aria-current="page"
-                                href={page === "Home" ? "/" : "#/" + page.toLowerCase()}>{page}</a>
+                                href={page === "Home" ? "/" : "/" + page.toLowerCase()}>{page}</a>
                         </li>
                     )}
                 </ul>
