@@ -24,12 +24,13 @@ function HeartsGame() {
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
 
     useEffect(() => {
+        if(!token) {  
+            console.error("No token found in user context");
+            return;  
+        }
         const client = new Client({
-            brokerURL: 'ws://localhost:8080/ws',
+            brokerURL: `ws://localhost:8080/ws?token=${encodeURIComponent(token)}`,
             reconnectDelay: 1000,
-            connectHeaders: {   
-                Authorization: `Bearer ${token}`
-            },
             onConnect: () => {
                 console.log("STOMP connection established");
                 setStompClient(client);

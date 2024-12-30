@@ -40,8 +40,6 @@ function App() {
     if(!jwtToken) {
         return <Login setToken={setJwtToken} />
     }
-
-    console.log("Token: " + jwtToken);
     
     return (
         <UserContext.Provider value={{username: username, token: jwtToken}}>

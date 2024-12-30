@@ -6,7 +6,7 @@ import Card, { Suit } from '../components/Card'
 export const reindexPlayerArray = (player: string, playerArray?: string[]) => {
     if (!playerArray) {
         console.error("Player array not provided");
-        return;
+        return [];
     }
     let playerIndex = playerArray.findIndex((element) => element === player);
     let reindexedArray = playerArray.slice(playerIndex).concat(playerArray.slice(0, playerIndex));
