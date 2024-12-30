@@ -22,7 +22,8 @@ function Login({setToken}: LoginProps) {
                 password: password
             });
             console.log("Login successful");
-            setToken(JSON.stringify(response.data));
+            // Save the token to localStorage, removing the quotes
+            setToken(JSON.stringify(response.data).replace(/^"(.*)"$/, '$1'));
         } catch (error) {
             console.error("Error logging in:", error);
         }

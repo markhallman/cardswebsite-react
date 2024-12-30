@@ -20,6 +20,7 @@ function GamesList(){
 
     const userContext = useContext(UserContext);
     const {username, token} = userContext;
+    console.log("Token for active games: " + token);
     var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function getActiveGames() {
