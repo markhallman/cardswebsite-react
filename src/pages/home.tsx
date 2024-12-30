@@ -15,12 +15,10 @@ function Home(){
 
     return (
         <>
-            <UserContext.Provider value={{username: playerName, gameWebSocketRoot: `/hearts/game-room`}}>
-                <h1><Banner pages={homepages} activePage="Home" /></h1>
-                <p className="p-2"> Welcome to Coolest Card Games! A place for card game fans from all over the world to play the coolest
-                card games. Really, right now thats just hearts, but what's cooler than hearts?</p>
-                <Hand cards={fullHand} location="Top" isPlayer={false}/>
-            </UserContext.Provider>
+            <h1><Banner pages={homepages} activePage="Home" /></h1>
+            <p className="p-2"> Welcome to Coolest Card Games! A place for card game fans from all over the world to play the coolest
+            card games. Really, right now thats just hearts, but what's cooler than hearts?</p>
+            <Hand cards={fullHand} location="Top" isPlayer={false}/>
         </>
     );
 }

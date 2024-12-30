@@ -1,21 +1,22 @@
 import Banner from '../components/Banner'
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { UserContext } from '../context/UserContext';
+import { useContext } from 'react';
 
 function HeartsLobbyJoin(){
     // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down
     let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
 
     const navigate = useNavigate();
-    // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username : string = "mark";
-    var password : string = "markiscool";
-    var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
+    const userContext = useContext(UserContext);
+    const {username, token} = userContext;
+    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function createGame() {
         console.log("Create Game Button clicked");
         axios.post("http://localhost:8080/games/creategame/hearts", {}, {
-            headers: {Authorization: basicAuthHeader}
+            headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log("Game starting");
             console.log("GameId: " + response.data);

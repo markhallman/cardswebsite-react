@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 
 interface startButtonProps {
     gameId : number;
@@ -8,16 +9,15 @@ interface startButtonProps {
 
 function StartGameButton( {gameId} : startButtonProps ) {
     const navigate = useNavigate();
-
-    // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username : string = "mark";
-    var password : string = "markiscool";
-    var basicAuthHeader : string = 'Basic ' + btoa(username + ':' + password);
+    
+    const userContext = useContext(UserContext);
+    const {username, token} = userContext;
+    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function startGame() {
         console.log("Start Game Button clicked for gameId " + gameId);
         axios.post<String>(`http://localhost:8080/games/startgame/${gameId}`, {}, {
-            headers: {Authorization: basicAuthHeader}
+            headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log("Starting game with ID " + gameId);
             navigate(`/heartsGame/${gameId}`)

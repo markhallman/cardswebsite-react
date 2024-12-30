@@ -1,7 +1,8 @@
 import Banner from '../components/Banner'
 import JoinGameButton from '../components/JoinGameButton';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from "axios";
+import { UserContext } from '../context/UserContext';
 
 interface Game {
     gameId : number;
@@ -17,15 +18,14 @@ function GamesList(){
 
     const [activeGames, setActiveGames] = useState<Game[]>([]);
 
-    // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username : string = "mark";
-    var password : string = "markiscool";
-    var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
+    const userContext = useContext(UserContext);
+    const {username, token} = userContext;
+    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function getActiveGames() {
         console.log("Get Active Button clicked");
         axios.get<ActiveGames>("http://localhost:8080/games/activegames", {
-            headers: {Authorization: basicAuthHeader}
+            headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log(response.data);
             let activeGames : Game[] = response.data.activeGames;

@@ -11,12 +11,32 @@ import { BrowserRouter } from "react-router-dom";
 
 import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { UserContext } from './context/UserContext'
+import axios from 'axios'
 
 function App() {
     const [jwtToken, setJwtToken] = React.useState<string | null>(null);
     const [username, setUsername] = React.useState<string>("anonymous");
+
+    // Load the token from localStorage when the component mounts
+    // TODO: This is a security vulnerability. We should use a secure cookie instead.
+    useEffect(() => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            setJwtToken(token);
+        }
+    }, []);
+
+    // Save the token to localStorage whenever it changes
+    useEffect(() => {
+        if (jwtToken) {
+            localStorage.setItem('jwtToken', jwtToken);
+        } else {
+            localStorage.removeItem('jwtToken');
+        }
+    }, [jwtToken]);
+
     if(!jwtToken) {
         return <Login setToken={setJwtToken} />
     }

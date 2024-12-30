@@ -1,24 +1,23 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
-import { Suit } from '../components/Card'
-import { useEffect, useState, useRef, createContext, Context } from 'react';
+import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
-
-// This is a hardcoded hand for testing purposes
+import { UserContext } from '../context/UserContext';
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
+    const userContext = useContext(UserContext);
+    const {username, token} = userContext;
+    const playerName = username;
 
     const [stompClient, setStompClient] = useState<Client | undefined>(undefined);
     const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
     );
-    // TODO: Obviously will remove this hardcoded player name in the future, and get it from the user passed down through context
-    const playerName = "user";
 
     // Player order reflects the respoective positions of players at the table, 
     //  not the current order exactly since it doesnt change with trick wins
@@ -28,6 +27,9 @@ function HeartsGame() {
         const client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             reconnectDelay: 1000,
+            connectHeaders: {   
+                Authorization: `Bearer ${token}`
+            },
             onConnect: () => {
                 console.log("STOMP connection established");
                 setStompClient(client);

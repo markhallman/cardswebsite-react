@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 
 interface joinButtonProps {
     gameId : number;
@@ -8,15 +10,15 @@ interface joinButtonProps {
 function JoinGameButton( {gameId} : joinButtonProps ) {
     const navigate = useNavigate();
 
-    // TODO: Obviously, we will need to get actual user credentials here in the future
-    var username : string = "mark";
-    var password : string = "markiscool";
-    var basicAuthHeader = 'Basic ' + btoa(username + ':' + password);
+    const userContext = useContext(UserContext);
+    const username = userContext.username;
+    const token = userContext.token;
+    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function joinGame() {
         console.log("Join Game Button clicked for gameId " + gameId);
         axios.post<String>(`http://localhost:8080/games/joingame/${gameId}`, {}, {
-            headers: {Authorization: basicAuthHeader}
+            headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log("Joining game");
             console.log("GameId: " + gameId);

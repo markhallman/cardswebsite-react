@@ -11,7 +11,6 @@ function Login({setToken}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const websiteLogo = './src/assets/cardHand.jpeg';
-    //const navigate = useNavigate();
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         console.log("Login Button clicked");
@@ -23,8 +22,7 @@ function Login({setToken}: LoginProps) {
                 password: password
             });
             console.log("Login successful");
-            setToken(response.data.token);
-           // navigate("/home"); 
+            setToken(JSON.stringify(response.data));
         } catch (error) {
             console.error("Error logging in:", error);
         }
