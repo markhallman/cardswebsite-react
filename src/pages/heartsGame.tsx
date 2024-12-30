@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, createContext, Context } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
-import { UserContext } from '../context/UserContext';
+import { GameContext } from '../context/GameContext';
 
 // This is a hardcoded hand for testing purposes
 
@@ -99,7 +99,7 @@ function HeartsGame() {
 
     return (
         <>
-            <UserContext.Provider value={{username: playerName, gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient}}>
+            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient}}>
                 <div className="container-fluid">
                     <div className="row justify-content-center" >
                         <div className="col offset-4">
@@ -125,7 +125,7 @@ function HeartsGame() {
                         </div>
                     </div>
                 </div>
-            </UserContext.Provider>
+            </GameContext.Provider>
         </>
     );
 }

@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { UserContext } from '../context/UserContext';
 import { Client } from "@stomp/stompjs";
 import { cardRankToValue } from "../utils/cardGameUtils";
+import { GameContext } from "../context/GameContext";
 
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
@@ -48,10 +49,12 @@ function playCard(rank : string, suit: string, username : string, gameWebSocketR
 }
 
 function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps, height = 120) {
+    const gameContext = useContext(GameContext);
+    const gameWebSocketRoot = gameContext.gameWebSocketRoot;
+    const stompClient = gameContext.stompClient;
+
     const userContext = useContext(UserContext);
     const username = userContext.username;
-    const gameWebSocketRoot = userContext.gameWebSocketRoot;
-    const stompClient = userContext.stompClient;
 
     // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
     const cardImage = isPlayer ? cardToImage(suit, rank) : "yellow_back.png";
