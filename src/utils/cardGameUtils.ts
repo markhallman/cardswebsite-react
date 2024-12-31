@@ -2,6 +2,24 @@ import Card, { Suit } from '../components/Card'
 
 // Utility file for card game functions that may be used across multiple games
 
+const suitOrder = ["CLUB", "DIAMOND", "SPADE", "HEART"];
+// Sort cards by suit and then rank
+// Cool feature in javascript lets you pass a function to the sort method as a comparator
+export const sortCards = (cards: { suit: string, value: string, rank: string }[]) => {
+    return cards.sort((a, b) => {
+        // Compare suits
+        const suitComparison = suitOrder.indexOf(a.suit) - suitOrder.indexOf(b.suit);
+        if (suitComparison !== 0) {
+            return suitComparison;
+        }
+
+        // Compare ranks (convert rank to number for proper numerical sorting)
+        const rankA = parseInt(a.rank, 10);
+        const rankB = parseInt(b.rank, 10);
+        return rankB - rankA;
+    });
+};
+
 // Reindex a plauer array so that the specified player is at index 0
 export const reindexPlayerArray = (player: string, playerArray?: string[]) => {
     if (!playerArray) {

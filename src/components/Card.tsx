@@ -72,7 +72,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
 
     return (
             <img className={"playingCard " + playerClass}
-                    src={"./src/assets/cards/" + cardImage}
+                    src={"/src/assets/cards/" + cardImage}
                     onClick={onClickLocal}
                     height={height}/>
         );

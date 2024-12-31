@@ -23,22 +23,30 @@ function App() {
     // TODO: This is a security vulnerability. We should use a secure cookie instead.
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
+        const username = localStorage.getItem('username');
         if (token) {
             setJwtToken(token);
+            setUsername(username || "anonymous");
         }
     }, []);
 
-    // Save the token to localStorage whenever it changes
+    // Save the token and username to localStorage whenever it changes
     useEffect(() => {
         if (jwtToken) {
             localStorage.setItem('jwtToken', jwtToken);
         } else {
             localStorage.removeItem('jwtToken');
         }
-    }, [jwtToken]);
+
+        if (username) {
+            localStorage.setItem('username', username);
+        } else {
+            localStorage.removeItem('username');
+        }
+    }, [jwtToken, username]);
 
     if(!jwtToken) {
-        return <Login setToken={setJwtToken} />
+        return <Login setToken={setJwtToken} setUser={setUsername} />
     }
     
     return (

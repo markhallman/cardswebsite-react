@@ -3,7 +3,7 @@ import CardTable from '../components/CardTable'
 import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
-import { reindexPlayerArray, parseNameFromPlayerDescriptorString } from '../utils/cardGameUtils';
+import { reindexPlayerArray, parseNameFromPlayerDescriptorString, sortCards } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
 
@@ -62,11 +62,13 @@ function HeartsGame() {
 
                         // Update the player's hand
                         // TODO: Should sort the cards by suit then value
+                        console.log("Player name:", playerName);
                         const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
+                        console.log("Player:", player);
                         const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
                         console.log("Player hand:", playerHand);
                         if (player) {
-                            setFullHand(playerHand);
+                            setFullHand(sortCards(playerHand));
                         } else {
                             console.error("Player not found in current game state!");
                             return;

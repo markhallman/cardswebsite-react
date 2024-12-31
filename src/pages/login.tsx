@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
     setToken: (token: string) => void;
+    setUser: (user: string) => void;
 }
 
 
-function Login({setToken}: LoginProps) {
+function Login({setToken, setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const websiteLogo = './src/assets/cardHand.jpeg';
@@ -24,6 +25,7 @@ function Login({setToken}: LoginProps) {
             console.log("Login successful");
             // Save the token to localStorage, removing the quotes
             setToken(JSON.stringify(response.data).replace(/^"(.*)"$/, '$1'));
+            setUser(username);
         } catch (error) {
             console.error("Error logging in:", error);
         }
