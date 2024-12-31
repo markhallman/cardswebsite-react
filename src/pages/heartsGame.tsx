@@ -1,19 +1,33 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
 import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString, sortCards } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
+import { deactivateWebSocket, getWebSocketClient, initWebSocket, subscribeToGame } from '../utils/webSocketUtil';
+import { get } from 'axios';
+
+// TODO: If a user navigates away from the game page, they should be removed from the game
+//          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
+//          to ensure that the user is still connected to the game
+//          User should also be directed away from this page if the game is not active on the server
+//          User should be warned if they are about to navigate away from the page while the game is active
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
+    const location = useLocation();
     const userContext = useContext(UserContext);
-    const {username, token} = userContext;
-    const playerName = username;
 
-    const [stompClient, setStompClient] = useState<Client | undefined>(undefined);
+    if(!userContext) {  
+        console.error("UserContext not found for some reason");
+        return null;
+    }
+
+    const {username, token}= userContext;
+    const playerName = username;
+    const [stompClient, setStompClient] = useState<Client | null>(location.state?.gameClient || null);
     const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
@@ -24,87 +38,33 @@ function HeartsGame() {
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
 
     useEffect(() => {
+        const client = getWebSocketClient();
+        setStompClient(client);
+
         if(!token) {  
             console.error("No token found in user context");
             return;  
         }
-        const client = new Client({
-            brokerURL: `ws://localhost:8080/ws?token=${encodeURIComponent(token)}`,
-            reconnectDelay: 1000,
-            onConnect: () => {
-                console.log("STOMP connection established");
-                setStompClient(client);
 
-                client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
-                    console.log("Received message:", message.body);
-                    try {
-                        const messageData = JSON.parse(message.body);
-                        console.log("Message data:", messageData);
+        if (!client) {
+            console.error("No game client found in user context");
+            return;
+        }
 
-                        // Update player order if it has changed for whatever reason
-                        // TODO: server only sending over changed info could prevent some of these checks
-                        const newPlayerOrder = messageData.currentGameState.playerDescriptors.map((player: any) => player.name);
-                        if (JSON.stringify(playerOrder) !== JSON.stringify(newPlayerOrder)) {
-                            setPlayerOrder(messageData.currentGameState.playerDescriptors.map((player: any) => player.name));
-                        }         
-
-                        // Update the cards on the table (current trick)
-                        // For table cards, index starts at 0 on the top and goes clockwise
-                        // We also need to extract the player name from the player descriptor string
-                        const currentTrickLocal : Map<string,  {suit : string, value : string, rank : string}> = new Map(
-                            Object.entries(messageData.currentGameState.currentTrickMap).map(([key, value]) => [
-                                parseNameFromPlayerDescriptorString(key) as string || key as string,
-                                value as {suit : string, value : string, rank : string}
-                            ])
-                        );                        
-                        console.log("Current Trick:", currentTrickLocal);
-                        setTableCards(currentTrickLocal);
-
-                        // Update the player's hand
-                        // TODO: Should sort the cards by suit then value
-                        console.log("Player name:", playerName);
-                        const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
-                        console.log("Player:", player);
-                        const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
-                        console.log("Player hand:", playerHand);
-                        if (player) {
-                            setFullHand(sortCards(playerHand));
-                        } else {
-                            console.error("Player not found in current game state!");
-                            return;
-                        }
-                        // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
-
-                    } catch (error) {
-                        console.error("Error parsing message:", error);
-                        return;
-                    }
-
-                });
-
-            },
-            onStompError: (frame) => {
-                console.error("STOMP error:", frame);
-            },
-            onWebSocketClose: () => {
-                console.log("WebSocket connection closed");
-            },
-            onWebSocketError: (error) => {
-                console.error("WebSocket error:", error);
-            }
-        });
-
-        client.activate();
-
-        // Cleanup on unmount
+        if (client.connected) {
+            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+        } else {
+            initWebSocket(token);
+            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+        }
         return () => {
-            client.deactivate();
+            console.log("Closing page");
         };
-    }, [gameId]);
+    }, [gameId, stompClient]);
 
     return (
         <>
-            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient}}>
+            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient || undefined}}>
                 <div className="container-fluid">
                     <div className="row justify-content-center" >
                         <div className="col offset-4">

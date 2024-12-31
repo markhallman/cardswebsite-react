@@ -13,6 +13,8 @@ interface ActiveGames {
     activeGames : Game[];
 }
 
+// TODO: Should only display games that are not full or started
+
 function GamesList(){
     let listPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList" ]
 

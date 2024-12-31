@@ -17,7 +17,7 @@ function JoinGameButton( {gameId} : joinButtonProps ) {
 
     async function joinGame() {
         console.log("Join Game Button clicked for gameId " + gameId);
-        axios.post<String>(`http://localhost:8080/games/joingame/${gameId}`, {}, {
+        axios.post<String>(`http://localhost:8080/games/joinGame/${gameId}`, {}, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log("Joining game");
