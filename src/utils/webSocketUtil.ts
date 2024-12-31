@@ -1,16 +1,23 @@
 import { Client } from "@stomp/stompjs";
 import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils";
+import { useEffect, useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 var client : Client | null = null;
 
-export const initWebSocket = (token: string | null) => {
+const initWebSocket = (token: string | null) => {
     return new Promise((resolve, reject) => {
+        if (client && client.connected) {
+            resolve(client);
+            return;
+        }
+
         if (!token) {
             console.error("No token found in user context");
             reject(new Error("No token found in user context"));
             return;
         }
-    
+
         client = new Client({
             brokerURL: 'ws://localhost:8080/ws',
             reconnectDelay: 1000,
@@ -18,7 +25,7 @@ export const initWebSocket = (token: string | null) => {
                 Authorization: `Bearer ${token}`
             },
             onConnect: () => {
-                console.log("STOMP connection established in lobby");
+                console.log("STOMP connection established");
                 resolve(client);
             },
             onStompError: (frame) => {
@@ -38,7 +45,7 @@ export const initWebSocket = (token: string | null) => {
     });
  }
 
-export const getWebSocketClient = () => {
+const getWebSocketClient = () => {
     if (!client) {
         throw new Error("WebSocket client is not initialized. Call initWebSocket first.");
     }
@@ -54,7 +61,7 @@ export const deactivateWebSocket = () => {
 
 // Set the proper websocket subscriptions for the lobby
 // TODO: Implement this function
-export const lobbyConnect = (token: string | null) => {
+export const subscribeToLobby = (token: string | null) => {
     if (!token) {
         console.error("No token found in user context");
         return;
@@ -126,4 +133,48 @@ export const subscribeToGame = (gameId : string | undefined,
             return;
         }
     });
+}
+
+export function useWebSocket(token : string | undefined) { 
+    const [client, setClient] = useState<Client | null>(null);
+    const location = useLocation();
+    
+    useEffect(() => {
+        if (!token) {
+            console.error("No token found in user context");
+            return;
+        }
+
+
+        if (!client) {
+            console.log("Initializing websocket");
+            initWebSocket(token).then(() => {
+                console.log("WebSocket connection established");
+    
+                const initializedClient: Client = getWebSocketClient();
+                setClient(initializedClient);
+            }).catch((error) => {   
+                console.error("Error initializing websocket:", error);
+            });
+        }
+
+        // We should deactivate the websocket if we arent in the game lobby or game page
+        const handleNavigation = (location: any) => {
+            if (!location.pathname.includes('heartsLobby') && !location.pathname.includes('heartsGame')) {
+                console.log("Navigation away from game lobby/page detected, deactivating websocket");
+                deactivateWebSocket();
+                setClient(null);
+            }
+        };
+
+        handleNavigation(location);
+
+        return () => {
+            handleNavigation(location);
+            setClient(null);
+    };
+
+    }, [token, location]);
+
+    return client;
 }

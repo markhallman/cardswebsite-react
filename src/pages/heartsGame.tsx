@@ -6,8 +6,7 @@ import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString, sortCards } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
-import { deactivateWebSocket, getWebSocketClient, initWebSocket, subscribeToGame } from '../utils/webSocketUtil';
-import { get } from 'axios';
+import { subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
 
 // TODO: If a user navigates away from the game page, they should be removed from the game
 //          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
@@ -36,11 +35,9 @@ function HeartsGame() {
     // Player order reflects the respoective positions of players at the table, 
     //  not the current order exactly since it doesnt change with trick wins
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
+    const client = useWebSocket(token);
 
     useEffect(() => {
-        const client = getWebSocketClient();
-        setStompClient(client);
-
         if(!token) {  
             console.error("No token found in user context");
             return;  
@@ -51,20 +48,16 @@ function HeartsGame() {
             return;
         }
 
-        if (client.connected) {
-            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
-        } else {
-            initWebSocket(token);
-            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
-        }
+        subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+
         return () => {
             console.log("Closing page");
         };
-    }, [gameId, stompClient]);
+    }, [gameId, client]);
 
     return (
         <>
-            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: stompClient || undefined}}>
+            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: client || undefined}}>
                 <div className="container-fluid">
                     <div className="row justify-content-center" >
                         <div className="col offset-4">

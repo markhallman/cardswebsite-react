@@ -56,7 +56,7 @@ img {
 }
 
 .cardTable {
-    background-image: url("./src/assets/woodenTableStock.jpg");
+    background-image: url("/src/assets/woodenTableStock.jpg");
     background-color: brown;
     width: 420px;
     height: 320px;

@@ -3,7 +3,7 @@ import StartGameButton from '../components/StartGameButton'
 import { useContext, useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import { UserContext } from "../context/UserContext";
-import { deactivateWebSocket, getWebSocketClient, initWebSocket, lobbyConnect } from "../utils/webSocketUtil";
+import { subscribeToLobby, useWebSocket } from "../utils/webSocketUtil";
 
 
 function HeartsLobby(){
@@ -12,7 +12,7 @@ function HeartsLobby(){
 
     const userContext = useContext(UserContext);
     const { username, token } = userContext;
-    const [stompClient, setStompClient] = useState<Client | null>(null);
+    const client = useWebSocket(token);
 
     useEffect(() => {
 
@@ -20,22 +20,10 @@ function HeartsLobby(){
             console.error("No token found in user context");
             return;
         }
-        initWebSocket(token).then(() => {   
-            console.log("WebSocket connection established in lobby");
-
-            const client : Client = getWebSocketClient();
-            if (!client) {
-                console.error("Game client not initialized properly");
-                return;
-            }
-
-            lobbyConnect(token);
-            setStompClient(client);
-        });
+        subscribeToLobby(token);
 
 
         return () => {
-            console.log("Closing page");
         };
     }, [token]);
 
@@ -48,7 +36,7 @@ function HeartsLobby(){
                 <div className="wrapper">
                     <h1>Welcome to the game lobby!</h1>
                     {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
-                    <StartGameButton gameId={numericGameId} gameClient={stompClient}/>
+                    <StartGameButton gameId={numericGameId} gameClient={client}/>
                 </div>
             </div>
         </>
