@@ -5,9 +5,9 @@ import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 var client : Client | null = null;
 
-const initWebSocket = (token: string | null) => {
+export const initWebSocket = (token: string | null) => {
     return new Promise((resolve, reject) => {
-        if (client && client.connected) {
+        if (client) {
             resolve(client);
             return;
         }
@@ -86,6 +86,8 @@ export const subscribeToGame = (gameId : string | undefined,
         return
     }
 
+    console.log("Subscribing to game room:", gameId);
+
     const playerOrder : string[] = [];
 
     client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
@@ -114,7 +116,6 @@ export const subscribeToGame = (gameId : string | undefined,
             setTableCards(currentTrickLocal);
 
             // Update the player's hand
-            // TODO: Should sort the cards by suit then value
             console.log("Player name:", playerName);
             const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
             console.log("Player:", player);
@@ -144,7 +145,6 @@ export function useWebSocket(token : string | undefined) {
             console.error("No token found in user context");
             return;
         }
-
 
         if (!client) {
             console.log("Initializing websocket");

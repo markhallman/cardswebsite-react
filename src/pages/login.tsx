@@ -11,7 +11,7 @@ interface LoginProps {
 function Login({setToken, setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const websiteLogo = './src/assets/cardHand.jpeg';
+    const websiteLogo = '/src/assets/cardHand.jpeg';
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         console.log("Login Button clicked");

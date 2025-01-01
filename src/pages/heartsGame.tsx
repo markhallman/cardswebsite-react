@@ -6,7 +6,7 @@ import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray, parseNameFromPlayerDescriptorString, sortCards } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
-import { subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
+import { initWebSocket, subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
 
 // TODO: If a user navigates away from the game page, they should be removed from the game
 //          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
@@ -26,7 +26,6 @@ function HeartsGame() {
 
     const {username, token}= userContext;
     const playerName = username;
-    const [stompClient, setStompClient] = useState<Client | null>(location.state?.gameClient || null);
     const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
@@ -43,12 +42,20 @@ function HeartsGame() {
             return;  
         }
 
-        if (!client) {
-            console.error("No game client found in user context");
-            return;
+        if (client) {
+            if (client.connected) {
+                console.log("WebSocket client connected, subscribing to game.");
+                subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+            } else {
+                console.log("Client not connected, setting onConnect");
+                client.onConnect = () => {
+                    subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+                }
+            }
+        } else {
+            console.log("Client not initialized, retrying");
         }
-
-        subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+    
 
         return () => {
             console.log("Closing page");

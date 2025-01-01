@@ -45,7 +45,7 @@ function App() {
         }
     }, [jwtToken, username]);
 
-    if(!jwtToken) {
+    if(!jwtToken || username == "anonymous") {
         return <Login setToken={setJwtToken} setUser={setUsername} />
     }
     
