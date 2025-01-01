@@ -1,12 +1,12 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
 import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
-import { reindexPlayerArray, parseNameFromPlayerDescriptorString, sortCards } from '../utils/cardGameUtils';
+import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
-import { initWebSocket, subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
+import { subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
 
 // TODO: If a user navigates away from the game page, they should be removed from the game
 //          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
@@ -16,7 +16,6 @@ import { initWebSocket, subscribeToGame, useWebSocket } from '../utils/webSocket
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
-    const location = useLocation();
     const userContext = useContext(UserContext);
 
     if(!userContext) {  
@@ -34,7 +33,7 @@ function HeartsGame() {
     // Player order reflects the respoective positions of players at the table, 
     //  not the current order exactly since it doesnt change with trick wins
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
-    const client = useWebSocket(token);
+    const client : Client | null = useWebSocket(token);
 
     // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
         // page refresh will fix, but we should have a way to recover from this

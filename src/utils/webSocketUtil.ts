@@ -143,6 +143,7 @@ export const subscribeToGame = (gameId : string | undefined,
     });
 }
 
+// Custom Hook to manage the websocket connection centrally
 export function useWebSocket(token : string | undefined) { 
     const [client, setClient] = useState<Client | null>(null);
     const location = useLocation();
