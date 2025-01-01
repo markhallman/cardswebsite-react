@@ -77,62 +77,69 @@ export const subscribeToGame = (gameId : string | undefined,
     setPlayerOrder : React.Dispatch<React.SetStateAction<string[] | undefined>>, 
     setFullHand :  React.Dispatch<React.SetStateAction<{ suit: string, value: string, rank: string }[]>> , 
     setTableCards :  React.Dispatch<React.SetStateAction<Map<string, { suit: string, value: string, rank: string }>>>) => {
-    if (!client) {
-        throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
-    }
 
-    if (!gameId) {
-        console.error("No game ID supplied");
-        return
-    }
-
-    console.log("Subscribing to game room:", gameId);
-
-    const playerOrder : string[] = [];
-
-    client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
-        console.log("Received message:", message.body);
-        try {
-            const messageData = JSON.parse(message.body);
-            console.log("Message data:", messageData);
-
-            // Update player order if it has changed for whatever reason
-            // TODO: server only sending over changed info could prevent some of these checks
-            const newPlayerOrder = messageData.currentGameState.playerDescriptors.map((player: any) => player.name);
-            if (JSON.stringify(playerOrder) !== JSON.stringify(newPlayerOrder)) {
-                setPlayerOrder(messageData.currentGameState.playerDescriptors.map((player: any) => player.name));
-            }         
-
-            // Update the cards on the table (current trick)
-            // For table cards, index starts at 0 on the top and goes clockwise
-            // We also need to extract the player name from the player descriptor string
-            const currentTrickLocal : Map<string,  {suit : string, value : string, rank : string}> = new Map(
-                Object.entries(messageData.currentGameState.currentTrickMap).map(([key, value]) => [
-                    parseNameFromPlayerDescriptorString(key) as string || key as string,
-                    value as {suit : string, value : string, rank : string}
-                ])
-            );                        
-            console.log("Current Trick:", currentTrickLocal);
-            setTableCards(currentTrickLocal);
-
-            // Update the player's hand
-            console.log("Player name:", playerName);
-            const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
-            console.log("Player:", player);
-            const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
-            console.log("Player hand:", playerHand);
-            if (player) {
-                setFullHand(sortCards(playerHand));
-            } else {
-                console.error("Player not found in current game state!");
+    return new Promise((resolve, reject) => {   
+        if (!client) {
+            throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
+        }
+    
+        if (!gameId) {
+            console.error("No game ID supplied");
+            return
+        }
+    
+        console.log("Subscribing to game room:", gameId);
+    
+        const playerOrder : string[] = [];
+        const subscription = client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
+            console.log("Received message:", message.body);
+            try {
+                const messageData = JSON.parse(message.body);
+                console.log("Message data:", messageData);
+    
+                // Update player order if it has changed for whatever reason
+                // TODO: server only sending over changed info could prevent some of these checks
+                const newPlayerOrder = messageData.currentGameState.playerDescriptors.map((player: any) => player.name);
+                if (JSON.stringify(playerOrder) !== JSON.stringify(newPlayerOrder)) {
+                    setPlayerOrder(messageData.currentGameState.playerDescriptors.map((player: any) => player.name));
+                }         
+    
+                // Update the cards on the table (current trick)
+                // For table cards, index starts at 0 on the top and goes clockwise
+                // We also need to extract the player name from the player descriptor string
+                const currentTrickLocal : Map<string,  {suit : string, value : string, rank : string}> = new Map(
+                    Object.entries(messageData.currentGameState.currentTrickMap).map(([key, value]) => [
+                        parseNameFromPlayerDescriptorString(key) as string || key as string,
+                        value as {suit : string, value : string, rank : string}
+                    ])
+                );                        
+                console.log("Current Trick:", currentTrickLocal);
+                setTableCards(currentTrickLocal);
+    
+                // Update the player's hand
+                console.log("Player name:", playerName);
+                const player = messageData.currentGameState.players.find((player: any) => player.name === playerName);
+                console.log("Player:", player);
+                const playerHand : {suit : string, value : string, rank : string}[] = player.hand;
+                console.log("Player hand:", playerHand);
+                if (player) {
+                    setFullHand(sortCards(playerHand));
+                } else {
+                    console.error("Player not found in current game state!");
+                    reject(new Error("Player not found in current game state!")); 
+                    return;
+                }
+                // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
+    
+            } catch (error) {
+                console.error("Error parsing message:", error);
+                reject(error);
                 return;
             }
-            // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
+        });
 
-        } catch (error) {
-            console.error("Error parsing message:", error);
-            return;
-        }
+        resolve(subscription)
+
     });
 }
 

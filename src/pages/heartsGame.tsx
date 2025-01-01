@@ -36,26 +36,36 @@ function HeartsGame() {
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
     const client = useWebSocket(token);
 
+    // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
+        // page refresh will fix, but we should have a way to recover from this
+
     useEffect(() => {
         if(!token) {  
             console.error("No token found in user context");
             return;  
         }
 
+        const subscribeToGamePromise = () =>
+            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards)
+                .then(() => {
+                    console.log("Subscribed to game");
+                }).catch((error) => {   
+                    console.error("Error subscribing to game:", error); 
+                });
+
         if (client) {
             if (client.connected) {
                 console.log("WebSocket client connected, subscribing to game.");
-                subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+                subscribeToGamePromise();
             } else {
                 console.log("Client not connected, setting onConnect");
                 client.onConnect = () => {
-                    subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+                    subscribeToGamePromise();
                 }
             }
         } else {
             console.log("Client not initialized, retrying");
         }
-    
 
         return () => {
             console.log("Closing page");
