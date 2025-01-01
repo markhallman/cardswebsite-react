@@ -6,7 +6,7 @@ import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
-import { subscribeToGame, useWebSocket } from '../utils/webSocketUtil';
+import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
 
 // TODO: If a user navigates away from the game page, they should be removed from the game
 //          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
@@ -67,7 +67,12 @@ function HeartsGame() {
         }
 
         return () => {
-            console.log("Closing page");
+            console.log("Unsubscribing from game");
+            unsubscribeFromGame(gameId).then(() => {
+                console.log("Unsubscribed from game");  
+            }).catch((error) => {
+                console.error("Error unsubscribing from game:", error);
+            });
         };
     }, [gameId, client]);
 

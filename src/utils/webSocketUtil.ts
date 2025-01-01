@@ -1,9 +1,10 @@
-import { Client } from "@stomp/stompjs";
+import { Client, StompSubscription } from "@stomp/stompjs";
 import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils";
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 var client : Client | null = null;
+var gameSubscription : StompSubscription | null = null;
 
 export const initWebSocket = (token: string | null) => {
     return new Promise((resolve, reject) => {
@@ -80,18 +81,19 @@ export const subscribeToGame = (gameId : string | undefined,
 
     return new Promise((resolve, reject) => {   
         if (!client) {
-            throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
+            reject(new Error("WebSocket client is not initialized. Call initializeWebSocket first."));
+            return;
         }
     
         if (!gameId) {
-            console.error("No game ID supplied");
-            return
+            reject(new Error("No game ID supplied"));
+            return;
         }
     
         console.log("Subscribing to game room:", gameId);
     
         const playerOrder : string[] = [];
-        const subscription = client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
+        gameSubscription = client.subscribe(`/topic/hearts/game-room/${gameId}`, (message) => {
             console.log("Received message:", message.body);
             try {
                 const messageData = JSON.parse(message.body);
@@ -138,8 +140,30 @@ export const subscribeToGame = (gameId : string | undefined,
             }
         });
 
-        resolve(subscription)
+        resolve(gameSubscription)
+    });
+}
 
+export const unsubscribeFromGame = (gameId : string | undefined) => {
+    return new Promise<void>((resolve, reject) => {   
+        if (!client) {
+            reject(new Error("WebSocket client is not initialized. Call initializeWebSocket first."));
+            return;
+        }
+    
+        if (!gameId) {
+            reject(new Error("No game ID supplied"));
+            return;
+        }
+
+        if (!gameSubscription) {
+            reject(new Error("No game subscription found"));
+            return; 
+        }
+
+        console.log("Unsubscribing from game room:", gameId);
+        gameSubscription.unsubscribe();
+        resolve();
     });
 }
 
