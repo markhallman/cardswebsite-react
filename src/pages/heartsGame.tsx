@@ -44,22 +44,14 @@ function HeartsGame() {
             return;  
         }
 
-        const subscribeToGamePromise = () =>
-            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards)
-                .then(() => {
-                    console.log("Subscribed to game");
-                }).catch((error) => {   
-                    console.error("Error subscribing to game:", error); 
-                });
-
         if (client) {
             if (client.connected) {
                 console.log("WebSocket client connected, subscribing to game.");
-                subscribeToGamePromise();
+                subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
             } else {
                 console.log("Client not connected, setting onConnect");
                 client.onConnect = () => {
-                    subscribeToGamePromise();
+                    subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
                 }
             }
         } else {

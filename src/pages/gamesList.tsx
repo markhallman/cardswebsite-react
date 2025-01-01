@@ -7,6 +7,7 @@ import { UserContext } from '../context/UserContext';
 interface Game {
     gameId : number;
     players : { name: string }[];
+    gameIsStarted : boolean;
 }
 
 interface ActiveGames {
@@ -30,10 +31,6 @@ function GamesList(){
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log(response.data);
-            let activeGames : Game[] = response.data.activeGames;
-            activeGames.forEach((game: { gameId: number; }) => {
-                console.log(game.gameId);
-            });
             setActiveGames(activeGames);
             return activeGames;
             // TODO: figure out how to grab active games from request and extract the data

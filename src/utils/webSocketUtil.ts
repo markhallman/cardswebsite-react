@@ -79,15 +79,12 @@ export const subscribeToGame = (gameId : string | undefined,
     setFullHand :  React.Dispatch<React.SetStateAction<{ suit: string, value: string, rank: string }[]>> , 
     setTableCards :  React.Dispatch<React.SetStateAction<Map<string, { suit: string, value: string, rank: string }>>>) => {
 
-    return new Promise((resolve, reject) => {   
         if (!client) {
-            reject(new Error("WebSocket client is not initialized. Call initializeWebSocket first."));
-            return;
+            throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
         }
     
         if (!gameId) {
-            reject(new Error("No game ID supplied"));
-            return;
+            throw new Error("No game ID supplied");
         }
     
         console.log("Subscribing to game room:", gameId);
@@ -128,20 +125,18 @@ export const subscribeToGame = (gameId : string | undefined,
                     setFullHand(sortCards(playerHand));
                 } else {
                     console.error("Player not found in current game state!");
-                    reject(new Error("Player not found in current game state!")); 
+                    throw new Error("Player not found in current game state!"); 
                     return;
                 }
                 // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
     
             } catch (error) {
                 console.error("Error parsing message:", error);
-                reject(error);
-                return;
+                throw error;
             }
         });
 
-        resolve(gameSubscription)
-    });
+        return gameSubscription
 }
 
 export const unsubscribeFromGame = (gameId : string | undefined) => {
