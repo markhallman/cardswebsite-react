@@ -33,7 +33,6 @@ function GamesList(){
             console.log(response.data);
             setActiveGames(activeGames);
             return activeGames;
-            // TODO: figure out how to grab active games from request and extract the data
         }).catch((error) => {
             console.error("Error grabbing active games:", error);
         });

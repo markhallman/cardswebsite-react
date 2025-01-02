@@ -3,7 +3,7 @@ import StartGameButton from '../components/StartGameButton'
 import { useContext, useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
 import { UserContext } from "../context/UserContext";
-import { subscribeToLobby, useWebSocket } from "../utils/webSocketUtil";
+import { subscribeToLobby, unsubscribeFromLobby, useWebSocket } from "../utils/webSocketUtil";
 
 
 function HeartsLobby(){
@@ -12,20 +12,28 @@ function HeartsLobby(){
 
     const userContext = useContext(UserContext);
     const { username, token } = userContext;
-    const client = useWebSocket(token);
+    const { client, isConnected} = useWebSocket(token);
+
+    // TODO : figure out acual type for these
+    const [players, setPlayers] = useState<string[] | undefined>(undefined);
+    const [rulesConfig, setRulesConfig] = useState<string | undefined>(undefined);
 
     useEffect(() => {
-
         if (!token) {
             console.error("No token found in user context");
             return;
         }
-        subscribeToLobby(token);
 
+        if(isConnected && client) {
+            subscribeToLobby(gameId, setRulesConfig, setPlayers);
+        }
 
         return () => {
+            if(isConnected && client){
+                unsubscribeFromLobby(gameId);
+            }
         };
-    }, [token]);
+    }, [token, isConnected]);
 
     // TODO: Probably want some sort of heartbeat with the user so we can tell if they disconnect weirdly
     // TODO: Functinallity for removing lobbies that dont have any active users

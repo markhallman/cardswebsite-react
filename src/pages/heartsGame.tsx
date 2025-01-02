@@ -33,7 +33,7 @@ function HeartsGame() {
     // Player order reflects the respoective positions of players at the table, 
     //  not the current order exactly since it doesnt change with trick wins
     const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
-    const client : Client | null = useWebSocket(token);
+    const { client, isConnected  } = useWebSocket(token);
 
     // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
         // page refresh will fix, but we should have a way to recover from this
@@ -44,29 +44,20 @@ function HeartsGame() {
             return;  
         }
 
-        if (client) {
-            if (client.connected) {
-                console.log("WebSocket client connected, subscribing to game.");
-                subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
-            } else {
-                console.log("Client not connected, setting onConnect");
-                client.onConnect = () => {
-                    subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
-                }
-            }
+        if (client && isConnected) {
+            console.log("WebSocket client connected, subscribing to game.");
+            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
         } else {
             console.log("Client not initialized, retrying");
         }
 
         return () => {
-            console.log("Unsubscribing from game");
-            unsubscribeFromGame(gameId).then(() => {
-                console.log("Unsubscribed from game");  
-            }).catch((error) => {
-                console.error("Error unsubscribing from game:", error);
-            });
+            if(client && isConnected) {
+                console.log("Unsubscribing from game");
+                unsubscribeFromGame(gameId)
+            }
         };
-    }, [gameId, client]);
+    }, [gameId, client, isConnected]);
 
     return (
         <>

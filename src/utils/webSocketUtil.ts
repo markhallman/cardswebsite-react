@@ -5,8 +5,9 @@ import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
+var lobbySubscription : StompSubscription | null = null;
 
-export const initWebSocket = (token: string | null) => {
+export const initWebSocket = (token: string | undefined) => {
     return new Promise((resolve, reject) => {
         if (client) {
             resolve(client);
@@ -60,15 +61,73 @@ export const deactivateWebSocket = () => {
     }
 };
 
+const unsubscribeFromConnection = (gameId : string | undefined, subscription : StompSubscription | null) => {
+    return new Promise<void>((resolve, reject) => {   
+        if (!client) {
+            reject(new Error("WebSocket client is not initialized. Call initializeWebSocket first."));
+            return;
+        }
+    
+        if (!gameId) {
+            reject(new Error("No game ID supplied"));
+            return;
+        }
+
+        if (!subscription) {
+            reject(new Error("No subscription found"));
+            return; 
+        }
+
+        console.log("Unsubscribing from:", gameId);
+        subscription.unsubscribe();
+        resolve();
+    });
+}
+
 // Set the proper websocket subscriptions for the lobby
-// TODO: Implement this function
-export const subscribeToLobby = (token: string | null) => {
-    if (!token) {
-        console.error("No token found in user context");
-        return;
+// TODO: WHAT IS THE ACTUAL TYPE OF RULES CONFIG
+export const subscribeToLobby = (gameId : string | undefined, 
+    setRulesConfig : React.Dispatch<React.SetStateAction<string | undefined>>,
+    setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>) => {
+    if (!client || !client.connected) {
+        throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
     }
 
+    if (!gameId) {
+        throw new Error("No game ID supplied");
+    }
+
+    console.log("Subscribing to lobby for game:", gameId);
+    lobbySubscription = client.subscribe(`/topic/hearts/game-lobby/${gameId}`, (message) => {
+        console.log("Received message:", message.body);
+        try {
+            const messageData = JSON.parse(message.body);
+            console.log("Message data:", messageData);
+
+            // Update the rules config if it has changed
+            if (messageData.rulesConfig) {
+                console.log("Updating rules config:", messageData.rulesConfig);
+                //setRulesConfig(messageData.rulesConfig);
+            }
+
+            // Update the player list if it has changed
+            if (messageData.players) {
+                console.log("Updating players :", messageData.rulesConfig);
+                //setPlayerList(messageData.playerList);
+            }
+
+        } catch (error) {
+            console.error("Error parsing message:", error);
+            throw error;
+        }
+    });
+
+
     return client;
+}
+
+export const unsubscribeFromLobby = (gameId : string | undefined) => {
+    return unsubscribeFromConnection(gameId, lobbySubscription);
 }
 
 // Subscribes to the game room for the given game ID
@@ -140,34 +199,30 @@ export const subscribeToGame = (gameId : string | undefined,
 }
 
 export const unsubscribeFromGame = (gameId : string | undefined) => {
-    return new Promise<void>((resolve, reject) => {   
-        if (!client) {
-            reject(new Error("WebSocket client is not initialized. Call initializeWebSocket first."));
-            return;
-        }
-    
-        if (!gameId) {
-            reject(new Error("No game ID supplied"));
-            return;
-        }
-
-        if (!gameSubscription) {
-            reject(new Error("No game subscription found"));
-            return; 
-        }
-
-        console.log("Unsubscribing from game room:", gameId);
-        gameSubscription.unsubscribe();
-        resolve();
-    });
+    unsubscribeFromConnection(gameId, gameSubscription);
 }
 
 // Custom Hook to manage the websocket connection centrally
 export function useWebSocket(token : string | undefined) { 
     const [client, setClient] = useState<Client | null>(null);
+    const [isConnected, setIsConnected] = useState<boolean>(false);
     const location = useLocation();
     
     useEffect(() => {
+        const initWebSocketLocal = async () => {
+            try {
+                await initWebSocket(token);
+                console.log("WebSocket connection established");
+        
+                const initializedClient: Client = getWebSocketClient();
+                setClient(initializedClient);
+                setIsConnected(initializedClient.connected);
+            } catch (error) {
+                console.error("Error initializing websocket:", error);
+                setIsConnected(false);
+            }
+        }
+
         if (!token) {
             console.error("No token found in user context");
             return;
@@ -175,14 +230,7 @@ export function useWebSocket(token : string | undefined) {
 
         if (!client) {
             console.log("Initializing websocket");
-            initWebSocket(token).then(() => {
-                console.log("WebSocket connection established");
-    
-                const initializedClient: Client = getWebSocketClient();
-                setClient(initializedClient);
-            }).catch((error) => {   
-                console.error("Error initializing websocket:", error);
-            });
+            initWebSocketLocal();
         }
 
         // We should deactivate the websocket if we arent in the game lobby or game page
@@ -191,6 +239,7 @@ export function useWebSocket(token : string | undefined) {
                 console.log("Navigation away from game lobby/page detected, deactivating websocket");
                 deactivateWebSocket();
                 setClient(null);
+                setIsConnected(false);
             }
         };
 
@@ -199,9 +248,10 @@ export function useWebSocket(token : string | undefined) {
         return () => {
             handleNavigation(location);
             setClient(null);
+            setIsConnected(false);
     };
 
     }, [token, location]);
 
-    return client;
+    return { client, isConnected};
 }
