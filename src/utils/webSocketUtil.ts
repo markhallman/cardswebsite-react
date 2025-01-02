@@ -21,11 +21,9 @@ export const initWebSocket = (token: string | undefined) => {
         }
 
         client = new Client({
-            brokerURL: 'ws://localhost:8080/ws',
+            brokerURL: `ws://localhost:8080/ws?token=${token}`,
             reconnectDelay: 1000,
-            connectHeaders: {
-                Authorization: `Bearer ${token}`
-            },
+
             onConnect: () => {
                 console.log("STOMP connection established");
                 resolve(client);
@@ -235,6 +233,7 @@ export function useWebSocket(token : string | undefined) {
 
         // We should deactivate the websocket if we arent in the game lobby or game page
         const handleNavigation = (location: any) => {
+            console.log("Location:", location.pathname);
             if (!location.pathname.includes('heartsLobby') && !location.pathname.includes('heartsGame')) {
                 console.log("Navigation away from game lobby/page detected, deactivating websocket");
                 deactivateWebSocket();
