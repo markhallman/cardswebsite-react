@@ -29,7 +29,6 @@ function HeartsLobbyJoin(){
 
     return (
         <>
-            <h1><Banner pages={downloadsPages} activePage="HeartsLobbyJoin" /></h1>
             <div className="content-area p-3">
                 <div className="wrapper">
                     <p>

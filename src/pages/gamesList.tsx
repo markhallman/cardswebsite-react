@@ -45,7 +45,6 @@ function GamesList(){
 
     return (
         <>
-            <h1><Banner pages={listPages} activePage="GamesList" /></h1>
             <div className="content-area p-3">
                 <div className="wrapper">
                             <h1>Active Games</h1>

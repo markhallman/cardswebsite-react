@@ -1,10 +1,6 @@
-interface BannerProps {
-    pages: string[];
-    activePage: string;
-}
+import { Link, Outlet } from "react-router-dom";
 
-
-function Banner( {pages, activePage} : BannerProps){
+function Banner(){
     const websiteLogo = './src/assets/cardHand.jpeg';
     const logoStyle = {
         marginRight :'10px',
@@ -13,26 +9,31 @@ function Banner( {pages, activePage} : BannerProps){
     };
 
     return (
-        <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-            <a className="navbar-brand" href="#">
-                <img src={websiteLogo} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
-                Coolest Card Games
-            </a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarToggler">
-                <ul className="navbar-nav">
-                    {pages.map( (page) =>
-                        <li className="nav-item" key={page}>
-                          <a className={page === activePage ? 'nav-link active' : 'nav-link'}
-                                aria-current="page"
-                                href={page === "Home" ? "/" : "/" + page.toLowerCase()}>{page}</a>
+        <>
+            <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+                <a className="navbar-brand" href="#">
+                    <img src={websiteLogo} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
+                    Coolest Card Games
+                </a>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarToggler">
+                    <ul className="navbar-nav">
+                        <li className='nav-item me-3'>
+                            <Link to="/home">Home</Link>
                         </li>
-                    )}
-                </ul>
-            </div>
-        </nav>
+                        <li className='nav-item me-3'>
+                            <Link to="/gamesList">Active Games</Link>
+                        </li>
+                        <li className='nav-item me-3'>
+                            <Link to="/heartsLobbyJoin">Create Game</Link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <Outlet />
+        </>
         );
 }
 

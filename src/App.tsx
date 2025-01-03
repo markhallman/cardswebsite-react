@@ -53,11 +53,12 @@ function App() {
         <UserContext.Provider value={{username: username, token: jwtToken}}>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Home/>} />
-                    <Route path="/home" element={<Home/>} />
-                    <Route path="/downloads" element={<Downloads/>} />
-                    <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
-                    <Route path="/gamesList" element={<GamesList/>} />
+                    <Route path="/" element={<Banner/>}>
+                        <Route path="/home" element={<Home/>} />
+                        <Route path="/downloads" element={<Downloads/>} />
+                        <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
+                        <Route path="/gamesList" element={<GamesList/>} />
+                    </Route>
                     <Route path="/heartsLobby/:gameId" element={<HeartsLobby/>} />
                     <Route path="/heartsGame/:gameId" element={<HeartsGame/>} />
                 </Routes>

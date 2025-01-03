@@ -41,9 +41,6 @@ function HeartsLobby(){
     // TODO: numPlayers should be actually configurable, sourced from RulesConfig
     return (
         <>
-            <Prompt
-                    message='Are you sure you want to leave the lobby? You will be rmeoved from the game.'
-            />
             <div className="content-area p-3">
                 <div className="wrapper">
                     <h1>Welcome to the game lobby!</h1>
