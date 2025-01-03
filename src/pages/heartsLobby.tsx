@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import StartGameButton from '../components/StartGameButton'
 import { useContext, useEffect, useState } from "react";
-import { Client } from "@stomp/stompjs";
 import { UserContext } from "../context/UserContext";
 import { subscribeToLobby, unsubscribeFromLobby, useWebSocket } from "../utils/webSocketUtil";
-
+import PlayerDisplay from "../components/PlayerDisplay";
+import RulesConfigEditor, { RulesConfig } from "../components/RulesConfigEditor";
 
 function HeartsLobby(){
     const { gameId } = useParams<{ gameId: string }>();
@@ -16,7 +16,7 @@ function HeartsLobby(){
 
     // TODO : figure out acual type for these
     const [players, setPlayers] = useState<string[] | undefined>(undefined);
-    const [rulesConfig, setRulesConfig] = useState<string | undefined>(undefined);
+    const [rulesConfig, setRulesConfig] = useState<RulesConfig | undefined>(undefined);
 
     useEffect(() => {
         if (!token) {
@@ -38,13 +38,19 @@ function HeartsLobby(){
     // TODO: Probably want some sort of heartbeat with the user so we can tell if they disconnect weirdly
     // TODO: Functinallity for removing lobbies that dont have any active users
     // TODO: If a user visits this page, and the game is already started, they should be redirected to the game page
+    // TODO: numPlayers should be actually configurable, sourced from RulesConfig
     return (
         <>
+            <Prompt
+                    message='Are you sure you want to leave the lobby? You will be rmeoved from the game.'
+            />
             <div className="content-area p-3">
                 <div className="wrapper">
                     <h1>Welcome to the game lobby!</h1>
                     {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
                     <StartGameButton gameId={numericGameId} gameClient={client}/>
+                    <RulesConfigEditor rulesConfig={rulesConfig}/>
+                    <PlayerDisplay players={players} numPlayers={4}/>
                 </div>
             </div>
         </>

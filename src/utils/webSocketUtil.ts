@@ -2,6 +2,7 @@ import { Client, StompSubscription } from "@stomp/stompjs";
 import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils";
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { RulesConfig } from "../components/RulesConfigEditor";
 
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
@@ -85,7 +86,7 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 // Set the proper websocket subscriptions for the lobby
 // TODO: WHAT IS THE ACTUAL TYPE OF RULES CONFIG
 export const subscribeToLobby = (gameId : string | undefined, 
-    setRulesConfig : React.Dispatch<React.SetStateAction<string | undefined>>,
+    setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig | undefined>>,
     setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>) => {
     if (!client || !client.connected) {
         throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
@@ -105,13 +106,13 @@ export const subscribeToLobby = (gameId : string | undefined,
             // Update the rules config if it has changed
             if (messageData.rulesConfig) {
                 console.log("Updating rules config:", messageData.rulesConfig);
-                //setRulesConfig(messageData.rulesConfig);
+                setRulesConfig(messageData.rulesConfig);
             }
 
             // Update the player list if it has changed
             if (messageData.players) {
-                console.log("Updating players :", messageData.rulesConfig);
-                //setPlayerList(messageData.playerList);
+                console.log("Updating players :", messageData.players);
+                setPlayerList(messageData.playerList);
             }
 
         } catch (error) {
