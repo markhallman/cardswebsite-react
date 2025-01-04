@@ -16,8 +16,6 @@ interface RulesConfigEditorProps {
 }
 
 function RulesConfigEditor ( {rulesConfig} : RulesConfigEditorProps) {
-    console.log("RulesConfig: ", rulesConfig);
-    console.log("HeartsMustBeBroken: ", rulesConfig?.heartsMustBeBroken);
     return (
         <div className="container">
             <h1>Rules Config Editor</h1>

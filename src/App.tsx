@@ -58,8 +58,7 @@ function App() {
                     <Route path="/gamesList" element={<GamesList/>} />
                     <Route index element={<Home/>} />
                 </Route>
-                <Route 
-                    path="/heartsLobby/:gameId"/>
+                <Route path="/heartsLobby/:gameId" element={<HeartsLobby/>}/>
                 <Route path="/heartsGame/:gameId" element={<HeartsGame/>} />
             </>
         )

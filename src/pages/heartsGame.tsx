@@ -1,7 +1,7 @@
 import Hand from '../components/Hand'
 import CardTable from '../components/CardTable'
 import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { unstable_usePrompt, useParams } from 'react-router-dom';
 import { Client } from '@stomp/stompjs';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
@@ -37,6 +37,12 @@ function HeartsGame() {
 
     // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
         // page refresh will fix, but we should have a way to recover from this
+
+    unstable_usePrompt({
+        message: "Are you sure you want to leave? You will be removed from the lobby",
+        when: ({ currentLocation, nextLocation }) =>
+        currentLocation.pathname !== nextLocation.pathname,
+    });
 
     useEffect(() => {
         if(!token) {  

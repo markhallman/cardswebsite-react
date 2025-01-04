@@ -6,10 +6,11 @@ import { Client } from '@stomp/stompjs';
 
 interface startButtonProps {
     gameId : number;
-    gameClient : Client | null;
-}
+    gameClient : Client | null,
+    setGameIsStarting : React.Dispatch<React.SetStateAction<boolean>>
+};
 
-function StartGameButton( {gameId, gameClient} : startButtonProps ) {
+function StartGameButton( {gameId, gameClient, setGameIsStarting} : startButtonProps ) {
     const navigate = useNavigate();
     
     const userContext = useContext(UserContext);
@@ -23,6 +24,8 @@ function StartGameButton( {gameId, gameClient} : startButtonProps ) {
     var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function startGame() {
+        setGameIsStarting(true);
+
         if (!gameClient) {
             console.error("Game client not initialized properly");
             return;
