@@ -1,19 +1,18 @@
 import Banner from './components/Banner'
 import Downloads from './pages/downloads'
-import Home from './pages/home'
-import HeartsGame from './pages/heartsGame'
-import HeartsLobbyJoin from './pages/heartsLobbyJoin'
-import HeartsLobby from './pages/heartsLobby'
 import GamesList from './pages/gamesList'
+import HeartsGame from './pages/heartsGame'
+import HeartsLobby from './pages/heartsLobby'
+import HeartsLobbyJoin from './pages/heartsLobbyJoin'
+import Home from './pages/home'
 import Login from './pages/login'
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom"
 
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'
-import './App.css'
 import React, { useEffect } from 'react'
+import { Route, Routes } from 'react-router-dom'
+import './App.css'
 import { UserContext } from './context/UserContext'
-import axios from 'axios'
 
 function App() {
     const [jwtToken, setJwtToken] = React.useState<string | null>(null);
