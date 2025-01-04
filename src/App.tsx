@@ -7,7 +7,7 @@ import HeartsLobby from './pages/heartsLobby'
 import GamesList from './pages/gamesList'
 import Login from './pages/login'
 
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
 
 import { HashRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
@@ -24,14 +24,14 @@ function App() {
     useEffect(() => {
         const token = localStorage.getItem('jwtToken');
         const username = localStorage.getItem('username');
+        console.log("token: " + token);
+        console.log("username: " + username);
+
         if (token) {
             setJwtToken(token);
             setUsername(username || "anonymous");
         }
-    }, []);
 
-    // Save the token and username to localStorage whenever it changes
-    useEffect(() => {
         if (jwtToken) {
             localStorage.setItem('jwtToken', jwtToken);
         } else {
@@ -48,22 +48,27 @@ function App() {
     if(!jwtToken || username == "anonymous") {
         return <Login setToken={setJwtToken} setUser={setUsername} />
     }
+
+    const router = createBrowserRouter(
+        createRoutesFromElements(
+            <>
+                <Route path="/" element={<Banner/>}>
+                    <Route path="/home" element={<Home/>} />
+                    <Route path="/downloads" element={<Downloads/>} />
+                    <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
+                    <Route path="/gamesList" element={<GamesList/>} />
+                    <Route index element={<Home/>} />
+                </Route>
+                <Route 
+                    path="/heartsLobby/:gameId"/>
+                <Route path="/heartsGame/:gameId" element={<HeartsGame/>} />
+            </>
+        )
+    );
     
     return (
         <UserContext.Provider value={{username: username, token: jwtToken}}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<Banner/>}>
-                        <Route path="/home" element={<Home/>} />
-                        <Route path="/downloads" element={<Downloads/>} />
-                        <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
-                        <Route path="/gamesList" element={<GamesList/>} />
-                        <Route index element={<Home/>} />
-                    </Route>
-                    <Route path="/heartsLobby/:gameId" element={<HeartsLobby/>} />
-                    <Route path="/heartsGame/:gameId" element={<HeartsGame/>} />
-                </Routes>
-            </BrowserRouter>
+            <RouterProvider router={router} /> 
         </UserContext.Provider>
     )
 }
