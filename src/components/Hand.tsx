@@ -15,6 +15,8 @@ function showCard(suit: Suit, rank : string){
 }
 
 function getStyle(padding : number, location: string){
+    padding = padding * 20
+
     if (location == "Left" ||  location == "Right") {
         return {
             transform: 'rotate(90deg)',
@@ -23,10 +25,9 @@ function getStyle(padding : number, location: string){
         }
     }
 
-    padding = padding * 30
     return {
         transform : `translateX(${(padding)}%)`,
-        marginLeft: padding
+        marginLeft: padding,
     }
 }
 
