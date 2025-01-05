@@ -234,7 +234,6 @@ export function useWebSocket(token : string | undefined) {
 
         // We should deactivate the websocket if we arent in the game lobby or game page
         const handleNavigation = (location: any) => {
-            console.log("Location:", location.pathname);
             if (!location.pathname.includes('heartsLobby') && !location.pathname.includes('heartsGame')) {
                 console.log("Navigation away from game lobby/page detected, deactivating websocket");
                 deactivateWebSocket();

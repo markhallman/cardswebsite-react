@@ -13,6 +13,7 @@ import React, { useEffect } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import { UserContext } from './context/UserContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
     const [jwtToken, setJwtToken] = React.useState<string | null>(null);
@@ -58,8 +59,16 @@ function App() {
                     <Route path="/gamesList" element={<GamesList/>} />
                     <Route index element={<Home/>} />
                 </Route>
-                <Route path="/heartsLobby/:gameId" element={<HeartsLobby/>}/>
-                <Route path="/heartsGame/:gameId" element={<HeartsGame/>} />
+                <Route path="/heartsLobby/:gameId" element={
+                    <ProtectedRoute allowWhenGameStarted={false}>                   
+                         <HeartsLobby/>
+                    </ProtectedRoute>
+                    }/>
+                <Route path="/heartsGame/:gameId" element={
+                    <ProtectedRoute allowWhenGameStarted={true}>                   
+                        <HeartsGame/>
+                    </ProtectedRoute>
+               }/>
             </>
         )
     );

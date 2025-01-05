@@ -34,7 +34,7 @@ function StartGameButton( {gameId, gameClient, setGameIsStarting} : startButtonP
         console.log("Start Game Button clicked for gameId " + gameId);
         axios.post<String>(`http://localhost:8080/games/startgame/${gameId}`, {}, {
             headers: {Authorization: tokenAuthHeader}
-        }).then((response)=>{
+        }).then((response)=> {
             console.log("Starting game with ID " + gameId);
             navigate(`/heartsGame/${gameId}`);
         }).catch((error) => {
