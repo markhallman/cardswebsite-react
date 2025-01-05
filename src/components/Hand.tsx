@@ -15,21 +15,19 @@ function showCard(suit: Suit, rank : string){
 }
 
 function getStyle(padding : number, location: string){
-    padding = padding * 30
-    let cardStyle = {
-        //marginLeft: padding,
-        transform : `translateX(${(padding)}%)`
-    }
-
     if (location == "Left" ||  location == "Right") {
-        cardStyle = {
+        return {
             transform: 'rotate(90deg)',
-            marginLeft: '30px',
+            marginLeft: 30,
             marginTop: 200 + padding
         }
     }
 
-    return cardStyle;
+    padding = padding * 30
+    return {
+        transform : `translateX(${(padding)}%)`,
+        marginLeft: padding
+    }
 }
 
 // Notice default onClick implementation is to just do nothing
