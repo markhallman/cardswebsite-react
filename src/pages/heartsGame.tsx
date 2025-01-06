@@ -7,12 +7,11 @@ import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
+import Scoreboard from '../components/Scoreboard';
 
-// TODO: If a user navigates away from the game page, they should be removed from the game
-//          thusly a message should be sent to the server to remove them from the game probably want a heartbeat
-//          to ensure that the user is still connected to the game
-//          User should also be directed away from this page if the game is not active on the server
-//          User should be warned if they are about to navigate away from the page while the game is active
+export type ScoreboardObj = {
+    playerScores : Map<string, number>
+}
 
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
@@ -29,6 +28,8 @@ function HeartsGame() {
     const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
         new Map([])
     );
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [scoreboard, setScoreboard] = useState<ScoreboardObj | undefined>(undefined);
 
     // Player order reflects the respoective positions of players at the table, 
     //  not the current order exactly since it doesnt change with trick wins
@@ -52,7 +53,7 @@ function HeartsGame() {
 
         if (client && isConnected) {
             console.log("WebSocket client connected, subscribing to game.");
-            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards);
+            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards, setScoreboard);
         } else {
             console.log("Client not initialized, retrying");
         }
@@ -69,6 +70,11 @@ function HeartsGame() {
         <>
             <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: client || undefined}}>
                 <div className="container-fluid">
+                    <div className="row">
+                        <div className="col mt-2">
+                            <button className="btn btn-success" onClick={()=> setShowPopup(!showPopup)} >Scoreboard</button>
+                        </div>
+                    </div>
                     <div className="row justify-content-center" >
                         <div className="col offset-4">
                             <Hand cards={fullHand} location="Top" isPlayer={false} />
@@ -92,6 +98,7 @@ function HeartsGame() {
                             <Hand cards={fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>
                         </div>
                     </div>
+                    <Scoreboard trigger={showPopup} setTrigger={setShowPopup} scoreboard={scoreboard}></Scoreboard>
                 </div>
             </GameContext.Provider>
         </>

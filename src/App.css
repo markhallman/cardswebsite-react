@@ -71,5 +71,35 @@ img {
     margin: 2px;
     width: 400px;
     height: 40px;
-    text-alight: center;
+    text-align: center;
+}
+
+.popup{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;   
+    text-align: center;
+}
+
+.popup-inner{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Offset by half its width and height */
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid green;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds some depth */
+
+}
+
+.popup-inner button{
+    top: 16px;
+    right: 16px;
 }

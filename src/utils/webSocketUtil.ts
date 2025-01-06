@@ -3,6 +3,7 @@ import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils"
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { RulesConfig } from "../components/RulesConfigEditor";
+import { ScoreboardObj } from "../pages/heartsGame";
 
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
@@ -135,7 +136,8 @@ export const subscribeToGame = (gameId : string | undefined,
     playerName : string,
     setPlayerOrder : React.Dispatch<React.SetStateAction<string[] | undefined>>, 
     setFullHand :  React.Dispatch<React.SetStateAction<{ suit: string, value: string, rank: string }[]>> , 
-    setTableCards :  React.Dispatch<React.SetStateAction<Map<string, { suit: string, value: string, rank: string }>>>) => {
+    setTableCards :  React.Dispatch<React.SetStateAction<Map<string, { suit: string, value: string, rank: string }>>>,
+    setScoreboard : React.Dispatch<React.SetStateAction<ScoreboardObj | undefined>>) => {
 
         if (!client) {
             throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
@@ -186,7 +188,10 @@ export const subscribeToGame = (gameId : string | undefined,
                     throw new Error("Player not found in current game state!"); 
                     return;
                 }
-                // const playerHandLocal : [rank: string, suit: Suit][] = messageData.currentGameState.players
+
+                // Update the scoreboard
+                const playerScores = messageData.currentGameState.scoreBoard.score;
+                setScoreboard({playerScores});
     
             } catch (error) {
                 console.error("Error parsing message:", error);
