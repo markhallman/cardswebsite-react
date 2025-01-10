@@ -14,6 +14,7 @@ export const initWebSocket = (token: string | undefined,
     onConnect?: () => void) => {
     return new Promise((resolve, reject) => {
         if (client) {
+            // TODO: Should we call the onConnect call here anyway? this would solve the child issue
             resolve(client);
             return;
         }
@@ -236,7 +237,9 @@ export const unsubscribeFromGame = (gameId : string | undefined) => {
 
 let activeComponents : number = 0;
 
-// TODO: Implement tracking of active components to determine if we should deactivate the websocket
+// TODO: TERRIBLE way to do onConnect handling. The problem is if a component contains another component
+//          using the onConnect callback, there will be a race condition to see which onConnect actually gets
+//          called
 // Custom Hook to manage the websocket connection centrally
 export function useWebSocket(token : string | undefined, onConnect?: () => void) { 
     const [client, setClient] = useState<Client | null>(null);

@@ -12,7 +12,7 @@ function HeartsLobby(){
 
     const userContext = useContext(UserContext);
     const { username, token } = userContext;
-    const gameContext = useContext(GameContext);
+    const gameWebSocketRoot = `/app/hearts/game-lobby/${gameId}`;
 
 
     // TODO : figure out acual type for players
@@ -29,9 +29,8 @@ function HeartsLobby(){
 
     const startGame = () => {
         if (client && isConnected) {
-            console.log(gameContext.gameWebSocketRoot + "/startGame");
             client.publish({
-                destination: gameContext.gameWebSocketRoot + "/startGame"});
+                destination: gameWebSocketRoot + "/startGame"});
             console.log(`Game with id ${gameId} started`);
         } else {
             console.error("Issue starting game, websocket not connected");
@@ -69,7 +68,7 @@ function HeartsLobby(){
     // TODO: management of gameIsStarting is off... if a user starts the game and quickly backs out could be wonky
     return (
         <>
-            <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-lobby/${gameId}`, stompClient: client || undefined}}>
+            <GameContext.Provider value={{gameWebSocketRoot: gameWebSocketRoot, stompClient: client || undefined}}>
                 <div className="content-area p-3">
                     <div className="wrapper">
                         <h1>Welcome to the game lobby!</h1>
