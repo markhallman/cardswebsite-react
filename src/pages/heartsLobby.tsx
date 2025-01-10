@@ -1,5 +1,4 @@
 import { unstable_usePrompt, useNavigate, useParams } from "react-router-dom";
-import StartGameButton from '../components/StartGameButton'
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { subscribeToLobby, unsubscribeFromLobby, useWebSocket } from "../utils/webSocketUtil";
@@ -13,11 +12,32 @@ function HeartsLobby(){
 
     const userContext = useContext(UserContext);
     const { username, token } = userContext;
-    const { client, isConnected } = useWebSocket(token);
+    const gameContext = useContext(GameContext);
+
 
     // TODO : figure out acual type for players
     const [players, setPlayers] = useState<string[] | undefined>(undefined);
     const [rulesConfig, setRulesConfig] = useState<RulesConfig | undefined>(undefined);
+
+
+    const handleConnect = () => {
+        console.log("WebSocket connected, subscribing to lobby");
+        subscribeToLobby(gameId, setRulesConfig, setPlayers, navigate);
+    };
+
+    const { client, isConnected } = useWebSocket(token, handleConnect);
+
+    const startGame = () => {
+        if (client && isConnected) {
+            console.log(gameContext.gameWebSocketRoot + "/startGame");
+            client.publish({
+                destination: gameContext.gameWebSocketRoot + "/startGame"});
+            console.log(`Game with id ${gameId} started`);
+        } else {
+            console.error("Issue starting game, websocket not connected");
+        }
+    };
+
 
     const navigate = useNavigate();
 
@@ -33,10 +53,6 @@ function HeartsLobby(){
         if (!token) {
             console.error("No token found in user context");
             return;
-        }
-
-        if(isConnected && client) {
-            subscribeToLobby(gameId, setRulesConfig, setPlayers, navigate);
         }
 
         return () => {
@@ -58,7 +74,9 @@ function HeartsLobby(){
                     <div className="wrapper">
                         <h1>Welcome to the game lobby!</h1>
                         {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
-                        <StartGameButton gameId={numericGameId} gameClient={client}/>
+                        <button onClick={startGame}>
+                            Start Game
+                        </button>
                         <RulesConfigEditor rulesConfig={rulesConfig}/>
                         <PlayerDisplay players={players} numPlayers={4}/>
                     </div>

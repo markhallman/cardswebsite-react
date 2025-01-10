@@ -20,14 +20,12 @@ function HeartsLobbyJoin(){
         axios.post("http://localhost:8080/games/creategame/hearts", {}, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
-            console.log("Game starting");
-            console.log("GameId: " + response.data);
+            console.log("Creating lobby for GameId: " + response.data);
             var gameId = response.data;
             navigate(`/heartsLobby/${gameId}`)
         }).catch((error) => {
             console.error("Error creating game:", error);
         });
-
     }
 
     return (

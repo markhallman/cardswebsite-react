@@ -10,7 +10,8 @@ var gameSubscription : StompSubscription | null = null;
 var lobbySubscription : StompSubscription | null = null;
 var startGameListener : StompSubscription | null = null;
 
-export const initWebSocket = (token: string | undefined) => {
+export const initWebSocket = (token: string | undefined, 
+    onConnect?: () => void) => {
     return new Promise((resolve, reject) => {
         if (client) {
             resolve(client);
@@ -29,6 +30,12 @@ export const initWebSocket = (token: string | undefined) => {
 
             onConnect: () => {
                 console.log("STOMP connection established");
+                console.log("OnConnect: ", onConnect);  
+                if(onConnect){
+                    console.log("Calling onConnect");
+                    onConnect();
+                }
+
                 resolve(client);
             },
             onStompError: (frame) => {
@@ -92,7 +99,7 @@ export const subscribeToLobby = (gameId : string | undefined,
     setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>,
     navigate: (path: string) => void) => {
 
-    if (!client || !client.connected) {
+    if (!client) {
         throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
     }
 
@@ -231,7 +238,7 @@ let activeComponents : number = 0;
 
 // TODO: Implement tracking of active components to determine if we should deactivate the websocket
 // Custom Hook to manage the websocket connection centrally
-export function useWebSocket(token : string | undefined) { 
+export function useWebSocket(token : string | undefined, onConnect?: () => void) { 
     const [client, setClient] = useState<Client | null>(null);
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const location = useLocation();
@@ -240,15 +247,16 @@ export function useWebSocket(token : string | undefined) {
         activeComponents++;
         const initWebSocketLocal = async () => {
             try {
-                await initWebSocket(token);
+                await initWebSocket(token, onConnect);
                 console.log("WebSocket connection established");
         
                 const initializedClient: Client = getWebSocketClient();
                 setClient(initializedClient);
+                console.log("websocketutil is connected : " + initializedClient.connected);
                 setIsConnected(initializedClient.connected);
+
             } catch (error) {
                 console.error("Error initializing websocket:", error);
-                setIsConnected(false);
             }
         }
 
@@ -257,7 +265,7 @@ export function useWebSocket(token : string | undefined) {
             return;
         }
 
-        if (!client) {
+        if (!client || !isConnected) {
             console.log("Initializing websocket");
             initWebSocketLocal();
         }
