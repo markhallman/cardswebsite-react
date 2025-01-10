@@ -10,11 +10,11 @@ var gameSubscription : StompSubscription | null = null;
 var lobbySubscription : StompSubscription | null = null;
 var startGameListener : StompSubscription | null = null;
 
-export const initWebSocket = (token: string | undefined, 
-    onConnect?: () => void) => {
+const initWebSocket = (token: string | undefined, 
+    subscribeAction?: () => void) => {
     return new Promise((resolve, reject) => {
         if (client) {
-            // TODO: Should we call the onConnect call here anyway? this would solve the child issue
+            subscribeAction?.();
             resolve(client);
             return;
         }
@@ -31,10 +31,10 @@ export const initWebSocket = (token: string | undefined,
 
             onConnect: () => {
                 console.log("STOMP connection established");
-                console.log("OnConnect: ", onConnect);  
-                if(onConnect){
-                    console.log("Calling onConnect");
-                    onConnect();
+                console.log("subscribeAction: ", subscribeAction);  
+                if(subscribeAction){
+                    console.log("Calling subscribeAction");
+                    subscribeAction();
                 }
 
                 resolve(client);
@@ -63,7 +63,7 @@ const getWebSocketClient = () => {
     return client;
 }
 
-export const deactivateWebSocket = () => {
+const deactivateWebSocket = () => {
     if (client) {
         client.deactivate();
         client = null;
@@ -152,6 +152,7 @@ export const subscribeToLobby = (gameId : string | undefined,
     return client;
 }
 
+// TODO: unsubscribe actions should be handled by hook, not on component
 export const unsubscribeFromLobby = async (gameId : string | undefined) => {
     // TODO: this is wonky, do we need this
     await unsubscribeFromConnection(gameId, startGameListener);   
@@ -237,11 +238,8 @@ export const unsubscribeFromGame = (gameId : string | undefined) => {
 
 let activeComponents : number = 0;
 
-// TODO: TERRIBLE way to do onConnect handling. The problem is if a component contains another component
-//          using the onConnect callback, there will be a race condition to see which onConnect actually gets
-//          called
 // Custom Hook to manage the websocket connection centrally
-export function useWebSocket(token : string | undefined, onConnect?: () => void) { 
+export function useWebSocket(token : string | undefined, subscribeAction?: () => void) { 
     const [client, setClient] = useState<Client | null>(null);
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const location = useLocation();
@@ -250,7 +248,7 @@ export function useWebSocket(token : string | undefined, onConnect?: () => void)
         activeComponents++;
         const initWebSocketLocal = async () => {
             try {
-                await initWebSocket(token, onConnect);
+                await initWebSocket(token, subscribeAction);
                 console.log("WebSocket connection established");
         
                 const initializedClient: Client = getWebSocketClient();
