@@ -3,44 +3,39 @@ import axios from "axios";
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { Client } from '@stomp/stompjs';
+import { useWebSocket } from '../utils/webSocketUtil';
+import { GameContext } from '../context/GameContext';
 
 interface startButtonProps {
     gameId : number;
     gameClient : Client | null,
-    setGameIsStarting : React.Dispatch<React.SetStateAction<boolean>>
 };
 
-function StartGameButton( {gameId, gameClient, setGameIsStarting} : startButtonProps ) {
+function StartGameButton( {gameId, gameClient} : startButtonProps ) {
     const navigate = useNavigate();
     
     const userContext = useContext(UserContext);
+    const gameContext = useContext(GameContext);
 
     if(!userContext) {  
         console.error("UserContext not found for some reason");
         return null;
     }
+    
+    const { client, isConnected} = useWebSocket(userContext.token);
 
-    const {username, token} = userContext;
-    var tokenAuthHeader : string = `Bearer ${token}`;
-
-    async function startGame() {
-        setGameIsStarting(true);
-
-        if (!gameClient) {
-            console.error("Game client not initialized properly");
-            return;
+    const startGame = () => {
+        if (client && isConnected) {
+            // TODO: the gameContext isnt actually set here! Its defaulting, need to either
+            //  define to match the lobby connection OR add a LobbyContext
+            console.log(gameContext.gameWebSocketRoot + "/startGame");
+            client.publish({
+                destination: gameContext.gameWebSocketRoot + "/startGame"});
+            console.log(`Game with id ${gameId} started`);
+        } else {
+            console.error("Issue starting game, websocket not connected");
         }
-
-        console.log("Start Game Button clicked for gameId " + gameId);
-        axios.post<String>(`http://localhost:8080/games/startgame/${gameId}`, {}, {
-            headers: {Authorization: tokenAuthHeader}
-        }).then((response)=> {
-            console.log("Starting game with ID " + gameId);
-            navigate(`/heartsGame/${gameId}`);
-        }).catch((error) => {
-            console.error("Error creating game:", error);
-        });
-    }
+    };
 
     return (
         <button onClick={startGame}>

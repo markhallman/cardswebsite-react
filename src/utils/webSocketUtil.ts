@@ -8,6 +8,7 @@ import { ScoreboardObj } from "../pages/heartsGame";
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
 var lobbySubscription : StompSubscription | null = null;
+var startGameListener : StompSubscription | null = null;
 
 export const initWebSocket = (token: string | undefined) => {
     return new Promise((resolve, reject) => {
@@ -88,7 +89,9 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 // TODO: WHAT IS THE ACTUAL TYPE OF RULES CONFIG
 export const subscribeToLobby = (gameId : string | undefined, 
     setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig | undefined>>,
-    setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>) => {
+    setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>,
+    navigate: (path: string) => void) => {
+
     if (!client || !client.connected) {
         throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
     }
@@ -122,13 +125,31 @@ export const subscribeToLobby = (gameId : string | undefined,
         }
     });
 
+    startGameListener = client.subscribe(`/topic/hearts/game-lobby/${gameId}/startGame`, (message) => {
+        console.log("Received message:", message.body);
+        try {
+            const messageData = JSON.parse(message.body);
+            console.log("Message data:", messageData);
+
+            // If we hear back from the server that the game is starting, go to the game page
+            navigate(`/heartsGame/${gameId}`);
+
+        } catch (error) {
+            console.error("Error parsing message:", error);
+            throw error;
+        }
+    });
+
 
     return client;
 }
 
-export const unsubscribeFromLobby = (gameId : string | undefined) => {
-    return unsubscribeFromConnection(gameId, lobbySubscription);
+export const unsubscribeFromLobby = async (gameId : string | undefined) => {
+    // TODO: this is wonky, do we need this
+    await unsubscribeFromConnection(gameId, startGameListener);   
+    await unsubscribeFromConnection(gameId, lobbySubscription);
 }
+
 
 // Subscribes to the game room for the given game ID
 // The state setters are sourced from the game page, maybe could be refactored
@@ -206,6 +227,9 @@ export const unsubscribeFromGame = (gameId : string | undefined) => {
     unsubscribeFromConnection(gameId, gameSubscription);
 }
 
+let activeComponents : number = 0;
+
+// TODO: Implement tracking of active components to determine if we should deactivate the websocket
 // Custom Hook to manage the websocket connection centrally
 export function useWebSocket(token : string | undefined) { 
     const [client, setClient] = useState<Client | null>(null);
@@ -213,6 +237,7 @@ export function useWebSocket(token : string | undefined) {
     const location = useLocation();
     
     useEffect(() => {
+        activeComponents++;
         const initWebSocketLocal = async () => {
             try {
                 await initWebSocket(token);
@@ -238,24 +263,23 @@ export function useWebSocket(token : string | undefined) {
         }
 
         // We should deactivate the websocket if we arent in the game lobby or game page
-        const handleNavigation = (location: any) => {
-            if (!location.pathname.includes('heartsLobby') && !location.pathname.includes('heartsGame')) {
-                console.log("Navigation away from game lobby/page detected, deactivating websocket");
+        if (!location.pathname.includes('heartsLobby') && !location.pathname.includes('heartsGame')) {
+            console.log("Navigation away from game lobby/page detected, deactivating websocket");
+            deactivateWebSocket();
+            setClient(null);
+            setIsConnected(false);
+        }
+
+        return () => {
+            activeComponents--;
+            if (activeComponents === 0 && isConnected) {
                 deactivateWebSocket();
                 setClient(null);
                 setIsConnected(false);
             }
-        };
-
-        handleNavigation(location);
-
-        return () => {
-            handleNavigation(location);
-            setClient(null);
-            setIsConnected(false);
     };
 
     }, [token, location]);
 
-    return { client, isConnected};
+    return {client, isConnected};
 }

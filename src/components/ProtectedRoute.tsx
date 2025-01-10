@@ -60,9 +60,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
         return <div>Loading...</div>;
     }
 
-    // Dont allow access if the game is started and the user wants the lobby page,
-    //  or the game is not started and the user wants the game page
-    if (!isAuthorized || (gameIsStarted && !allowWhenGameStarted) || (!gameIsStarted && allowWhenGameStarted)) {
+    // If the page isnt allowed when the game is started, and the game is started, we assume you want to be on the game page
+    if((gameIsStarted && !allowWhenGameStarted)){
+        return <Navigate to={`/heartsGame/${gameId}`} replace />;
+    }
+
+    // Dont allow access if the game is not started and the user wants the game pate or the user is not authorized
+    if (!isAuthorized || (!gameIsStarted && allowWhenGameStarted)) {
         // Redirect if not authorized
         return <Navigate to={"/home"} replace />;
     }

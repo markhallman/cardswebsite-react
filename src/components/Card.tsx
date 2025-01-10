@@ -7,7 +7,7 @@ import { GameContext } from "../context/GameContext";
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
 
-function cardToImage(suit : Suit, rank : string){
+function cardToImageString(suit : Suit, rank : string) : string {
     return rank + suit.charAt(0) + ".png"
 }
 
@@ -56,8 +56,10 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
     const userContext = useContext(UserContext);
     const username = userContext.username;
 
+    
+
     // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
-    const cardImage = isPlayer ? cardToImage(suit, rank) : "yellow_back.png";
+    const cardImage = isPlayer ? cardToImageString(suit, rank) : "yellow_back.png";
     let playerClass = isPlayer ? "playerCard" : "opponentCard";
 
     var onClickLocal;
