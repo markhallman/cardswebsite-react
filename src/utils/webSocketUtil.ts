@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { RulesConfig } from "../components/RulesConfigEditor";
 import { ScoreboardObj } from "../pages/heartsGame";
+import { Player } from "../components/PlayerDisplay";
 
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
@@ -97,7 +98,7 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 // TODO: WHAT IS THE ACTUAL TYPE OF RULES CONFIG
 export const subscribeToLobby = (gameId : string | undefined, 
     setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig | undefined>>,
-    setPlayerList : React.Dispatch<React.SetStateAction<string[] | undefined>>,
+    setPlayerList : React.Dispatch<React.SetStateAction<Player[] | undefined>>,
     navigate: (path: string) => void) => {
 
     if (!client) {
@@ -124,7 +125,7 @@ export const subscribeToLobby = (gameId : string | undefined,
             // Update the player list if it has changed
             if (messageData.players) {
                 console.log("Updating players :", messageData.players);
-                setPlayerList(messageData.playerList);
+                setPlayerList(messageData.players);
             }
 
         } catch (error) {

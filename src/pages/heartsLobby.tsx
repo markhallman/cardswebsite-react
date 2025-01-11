@@ -2,7 +2,7 @@ import { unstable_usePrompt, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { subscribeToLobby, unsubscribeFromLobby, useWebSocket } from "../utils/webSocketUtil";
-import PlayerDisplay from "../components/PlayerDisplay";
+import PlayerDisplay, { Player } from "../components/PlayerDisplay";
 import RulesConfigEditor, { RulesConfig } from "../components/RulesConfigEditor";
 import { GameContext } from "../context/GameContext";
 
@@ -16,7 +16,7 @@ function HeartsLobby(){
 
 
     // TODO : figure out acual type for players
-    const [players, setPlayers] = useState<string[] | undefined>(undefined);
+    const [players, setPlayers] = useState<Player[] | undefined>(undefined);
     const [rulesConfig, setRulesConfig] = useState<RulesConfig | undefined>(undefined);
 
 

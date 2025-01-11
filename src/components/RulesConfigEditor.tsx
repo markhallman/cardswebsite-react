@@ -18,7 +18,7 @@ interface RulesConfigEditorProps {
 function RulesConfigEditor ( {rulesConfig} : RulesConfigEditorProps) {
     return (
         <div className="container">
-            <h1>Rules Config Editor</h1>
+            <h1>RULES</h1>
             <div className="row">
                 <div className="rules-grid col-6 p-2">
                     <div>Hearts Must Be Broken:</div>

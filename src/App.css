@@ -102,3 +102,9 @@ img {
     top: 16px;
     right: 16px;
 }
+
+.playerIcon {
+    width: 100px;
+    height: 100px;
+    margin: 4px;
+}

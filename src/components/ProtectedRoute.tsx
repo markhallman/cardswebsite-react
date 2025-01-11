@@ -36,23 +36,34 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
         };
 
         const checkGameStatus = async () => {   
-            try {
-                // Replace with your API call logic
-                const response = await axios.get(`http://localhost:8080/games/isStarted/${gameId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`, 
-                    },
-                });
-                console.log("Gameisstarted: " + response.data);
-                setGameIsStarted(response.data);
-            } catch (error) {
-                setGameIsStarted(null); // If the API call fails, we don't know if the game is started
-                setTimeout(checkGameStatus, 1000); // try again
-            }
+            // Replace with your API call logic
+            const response = await axios.get(`http://localhost:8080/games/isStarted/${gameId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+            });
+            console.log("Gameisstarted: " + response.data);
+            setGameIsStarted(response.data);
+            return response.status;
         }
 
         checkAuthorization();
-        checkGameStatus();
+        checkGameStatus()
+            .then((res) => {
+                switch(res){
+                    case 200:
+                        console.log("Game status checked");
+                        break;
+                    case 422:
+                        console.error("Game does not exist");
+                        // TODO: Redirect to a 404 page? Redirect to to home?
+                        break;
+                    case 500:
+                        console.error("Internal server error");
+                        // TODO: Redirect to a 404 page? Redirect to to home?
+                        break;
+                }
+            });
     }, [token, allowWhenGameStarted]);
 
     if (isAuthorized === null || gameIsStarted === null) {

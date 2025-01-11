@@ -1,19 +1,29 @@
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import PlayerCard from "../components/PlayerCard";
+import axios from "axios";
+
+export type Player = {
+    name: string;
+    humanControlled: boolean;
+    id: string;
+}
+
 interface PlayerDisplayProps {
-    players? : string[];
+    players? : Player[];
     numPlayers: number;
 }
 
 function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
+    console.log("PlayerDisplay: ", players);
     return (
         <div className="container">
-        <h1>Player Display</h1>
             <div className="row">
                 {players?.map((player, index) => (
-                    <div key={index} className="col-12 p-2">
-                        {player}
-                    </div>))}
+                    <>
+                        <PlayerCard key={index} playerName={player.name} playerNumber={index} />
+                    </>))}
             </div>           
-        <p>Number of Players: {numPlayers}</p>
         </div>
     );
 }
