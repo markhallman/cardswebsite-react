@@ -43,7 +43,6 @@ export const parseNameFromPlayerDescriptorString = (playerDescriptor: string) =>
 }
 
 export const cardRankToValue = (rank: string) => {
-    console.log("Rank:", rank);
     if (rank === "1") {
         return "ONE";
     } else if (rank == "2") {

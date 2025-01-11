@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from '../context/UserContext';
 import { Client } from "@stomp/stompjs";
 import { cardRankToValue } from "../utils/cardGameUtils";
 import { GameContext } from "../context/GameContext";
+import axios from "axios";
 
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
@@ -44,9 +45,7 @@ function playCard(rank : string, suit: string, username : string, gameWebSocketR
     });
 
     console.log("User card clicked and message sent:", messageBody);
-    
-    console.log("User card clicked");
-}
+    }
 
 function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps, height = 120) {
     const gameContext = useContext(GameContext);
@@ -55,12 +54,30 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
 
     const userContext = useContext(UserContext);
     const username = userContext.username;
+    const token  = userContext.token;
+    const [imageUrl, setImageUrl] = useState("");
 
-    
+    const rankString = isPlayer ? cardRankToValue(rank) : "back";
+
 
     // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
-    const cardImage = isPlayer ? cardToImageString(suit, rank) : "yellow_back.png";
     let playerClass = isPlayer ? "playerCard" : "opponentCard";
+
+    useEffect(() => {
+        const fetchCardImage = async () => {
+            const response = await axios.get(
+                `http://localhost:8080/games/images/card/default/${suit}/${rankString}`,
+                { responseType: "blob",
+                  headers: {
+                        Authorization: `Bearer ${token}`, 
+                    },
+                 },
+            );
+            setImageUrl(URL.createObjectURL(response.data));
+        }
+        fetchCardImage();
+
+    }, [rank, suit]);
 
     var onClickLocal;
     if (onClick == "default")  {
@@ -74,7 +91,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
 
     return (
             <img className={"playingCard " + playerClass}
-                    src={"/src/assets/cards/" + cardImage}
+                    src={imageUrl}
                     onClick={onClickLocal}
                     height={height}/>
         );
