@@ -17,10 +17,11 @@ function HeartsLobby(){
     // TODO : figure out acual type for players
     const [players, setPlayers] = useState<Player[] | undefined>(undefined);
     const [rulesConfig, setRulesConfig] = useState<RulesConfig | undefined>(undefined);
+    const [gameOwner, setGameOwner] = useState<string | undefined>(undefined);
 
     const handleConnect = () => {
         console.log("WebSocket connected, subscribing to lobby");
-        subscribeToLobby(gameId, setRulesConfig, setPlayers, navigate);
+        subscribeToLobby(gameId, setRulesConfig, setPlayers, setGameOwner, navigate);
     };
 
     const { client, isConnected } = useWebSocket(token, handleConnect);
@@ -34,7 +35,6 @@ function HeartsLobby(){
             console.error("Issue starting game, websocket not connected");
         }
     };
-
 
     const navigate = useNavigate();
 
@@ -60,7 +60,6 @@ function HeartsLobby(){
         };
     }, [token, isConnected]);
 
-    // TODO: Functinallity for removing lobbies that dont have any active users
     // TODO: If a user visits this page, and the game is already started, they should be redirected to the game page
     // TODO: numPlayers should be actually configurable, sourced from RulesConfig
     // TODO: management of gameIsStarting is off... if a user starts the game and quickly backs out could be wonky
@@ -71,9 +70,12 @@ function HeartsLobby(){
                     <div className="wrapper">
                         <h1>Welcome to the game lobby!</h1>
                         {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
-                        <button className="btn btn-success m-2" onClick={startGame}>
-                            Start Game
-                        </button>
+                        {gameOwner == username ?  
+                            <button className="btn btn-success m-2" onClick={startGame}>
+                                Start Game
+                            </button>
+                            : <p>Waiting for {gameOwner} to start the game</p>
+                        }   
                         <RulesConfigEditor rulesConfig={rulesConfig}/>
                         <PlayerDisplay players={players} numPlayers={4}/>
                     </div>

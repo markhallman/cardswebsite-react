@@ -99,6 +99,7 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 export const subscribeToLobby = (gameId : string | undefined, 
     setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig | undefined>>,
     setPlayerList : React.Dispatch<React.SetStateAction<Player[] | undefined>>,
+    setGameOwner : React.Dispatch<React.SetStateAction<string | undefined>>,
     navigate: (path: string) => void) => {
 
     if (!client) {
@@ -118,14 +119,16 @@ export const subscribeToLobby = (gameId : string | undefined,
 
             // Update the rules config if it has changed
             if (messageData.rulesConfig) {
-                console.log("Updating rules config:", messageData.rulesConfig);
                 setRulesConfig(messageData.rulesConfig);
             }
 
             // Update the player list if it has changed
             if (messageData.players) {
-                console.log("Updating players :", messageData.players);
                 setPlayerList(messageData.players);
+            }
+
+            if (messageData.gameOwner) {
+                setGameOwner(messageData.gameOwner.name);
             }
 
         } catch (error) {

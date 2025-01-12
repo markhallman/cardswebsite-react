@@ -17,9 +17,8 @@ function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
         <div className="container">
             <div className="row">
                 {players?.map((player, index) => (
-                    <>
-                        <PlayerCard key={index} playerName={player.name} playerNumber={index} />
-                    </>))}
+                    <PlayerCard key={index} playerName={player.name} playerNumber={index} />
+                   ))}
             </div>           
         </div>
     );
