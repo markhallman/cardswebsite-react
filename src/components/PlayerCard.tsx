@@ -11,7 +11,7 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
     const token = userContext.token;
-    const ICON_MAP = ["Banana", "Apple", "Cherry", "Strawberry"];
+    const ICON_MAP = ["Cherry", "Apple", "Banana", "Strawberry"];
 
     useEffect(() => {
         const featchPlayerIcon = async () => {
@@ -29,12 +29,12 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
     }, []);
 
     return <>
-        <div>
-            <div className="col-12 p-2">
-                <h2>Player: {playerName}</h2>
+        <div className="col-6 p-2 d-flex flex-column align-items-center">
+            <div className="text-center">
+                <h2>{playerName}</h2>
             </div>
             <div className="text-center">
-                <img src={imageUrl} className="playerIcon  img-fluid img-thumbnail border-dark" alt="Player Icon" />
+                <img src={imageUrl} className="playerIcon img-fluid img-thumbnail border-dark" alt="Player Icon" />
             </div>
         </div>
     </>
