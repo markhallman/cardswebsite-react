@@ -11,7 +11,17 @@ interface PlayerDisplayProps {
     numPlayers: number;
 }
 
+//TODO: This is rerendering a LOT, need to figure out why/how to fix
 function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
+    console.log("PlayerDisplay: ", players);
+    if(!players){
+        return <div>Loading...</div>
+    }
+
+    while (players.length < numPlayers){
+        players.push({name: "AI", humanControlled: false, id: "AI"});
+    }
+
     console.log("PlayerDisplay: ", players);
     return (
         <div className="container">

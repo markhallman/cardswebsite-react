@@ -167,7 +167,7 @@ export const unsubscribeFromLobby = async (gameId : string | undefined) => {
 // Subscribes to the game room for the given game ID
 // The state setters are sourced from the game page, maybe could be refactored
 export const subscribeToGame = (gameId : string | undefined, 
-    playerName : string,
+    playerName : string | undefined,
     setPlayerOrder : React.Dispatch<React.SetStateAction<string[] | undefined>>, 
     setFullHand :  React.Dispatch<React.SetStateAction<{ suit: string, value: string, rank: string }[]>> , 
     setTableCards :  React.Dispatch<React.SetStateAction<Map<string, { suit: string, value: string, rank: string }>>>,
@@ -179,6 +179,10 @@ export const subscribeToGame = (gameId : string | undefined,
     
         if (!gameId) {
             throw new Error("No game ID supplied");
+        }
+
+        if (!playerName) {
+            throw new Error("No player name supplied");
         }
     
         console.log("Subscribing to game room:", gameId);

@@ -15,8 +15,11 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
 
     useEffect(() => {
         const featchPlayerIcon = async () => {
+            console.log("playername: " + playerName)
+            const iconEndpoint = playerName == "AI" ? "AI" : ICON_MAP[playerNumber]
+            console.log("iconendpoint: " + iconEndpoint);
             const response = await axios.get(
-                `http://localhost:8080/games/images/playerIcon/${ICON_MAP[playerNumber]}`,
+                `http://localhost:8080/games/images/playerIcon/${iconEndpoint}`,
                 { responseType: "blob",
                     headers: {
                         Authorization: `Bearer ${token}`, 

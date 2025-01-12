@@ -21,9 +21,14 @@ export const sortCards = (cards: { suit: string, value: string, rank: string }[]
 };
 
 // Reindex a plauer array so that the specified player is at index 0
-export const reindexPlayerArray = (player: string, playerArray?: string[]) => {
+export const reindexPlayerArray = (player?: string, playerArray?: string[]) => {
     if (!playerArray) {
         console.error("Player array not provided");
+        return [];
+    }
+
+    if (!player) {
+        console.error("Player not provided");
         return [];
     }
     let playerIndex = playerArray.findIndex((element) => element === player);
