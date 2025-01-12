@@ -22,23 +22,15 @@ function App() {
     // Load the token from localStorage when the component mounts
     // TODO: This is a security vulnerability. We should use a secure cookie instead.
     useEffect(() => {
-        const token = localStorage.getItem('jwtToken');
-        const username = localStorage.getItem('username');
-        console.log("token: " + token);
-        console.log("username: " + username);
-
-        if (token) {
-            setJwtToken(token);
-            setUsername(username || "anonymous");
-        }
-
         if (jwtToken) {
+            console.log("Setting token in local storage");
             localStorage.setItem('jwtToken', jwtToken);
         } else {
             localStorage.removeItem('jwtToken');
         }
 
         if (username) {
+            console.log("Setting username in local storage");
             localStorage.setItem('username', username);
         } else {
             localStorage.removeItem('username');

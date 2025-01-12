@@ -14,11 +14,9 @@ function HeartsLobby(){
     const { username, token } = userContext;
     const gameWebSocketRoot = `/app/hearts/game-lobby/${gameId}`;
 
-
     // TODO : figure out acual type for players
     const [players, setPlayers] = useState<Player[] | undefined>(undefined);
     const [rulesConfig, setRulesConfig] = useState<RulesConfig | undefined>(undefined);
-
 
     const handleConnect = () => {
         console.log("WebSocket connected, subscribing to lobby");
@@ -73,7 +71,7 @@ function HeartsLobby(){
                     <div className="wrapper">
                         <h1>Welcome to the game lobby!</h1>
                         {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
-                        <button onClick={startGame}>
+                        <button className="btn btn-success m-2" onClick={startGame}>
                             Start Game
                         </button>
                         <RulesConfigEditor rulesConfig={rulesConfig}/>
