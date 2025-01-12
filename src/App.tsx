@@ -16,14 +16,13 @@ import { UserContext } from './context/UserContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
+    // TODO: Might want to just use a single state object for user info, can extract username from token
     const [jwtToken, setJwtToken] = React.useState<string | null>(localStorage.getItem('jwtToken'));
     const [username, setUsername] = React.useState<string | null>(localStorage.getItem('username'));
 
     // Load the token from localStorage when the component mounts
     // TODO: This is a security vulnerability. We should use a secure cookie instead.
     useEffect(() => {
-        console.log("Token: " + jwtToken);
-        console.log("Username: " + username);
         if (jwtToken) {
             console.log("Setting token in local storage");
             localStorage.setItem('jwtToken', jwtToken);
@@ -35,7 +34,7 @@ function App() {
         } 
     }, [jwtToken, username]);
 
-    if(!jwtToken || username == "anonymous") {
+    if(!jwtToken || !username) {
         return <Login setToken={setJwtToken} setUser={setUsername} />
     }
 

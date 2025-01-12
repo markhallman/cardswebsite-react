@@ -24,9 +24,14 @@ function defaultCardClick() {
     console.log("Card Clicked")
 }
 
-function playCard(rank : string, suit: string, username : string, gameWebSocketRoot : string, stompClient? : Client) {
+function playCard(rank : string, suit: string, gameWebSocketRoot : string, username? : string, stompClient? : Client) {
     if (!stompClient || !stompClient.connected) {
         console.error("WebSocket connection is not open");
+        return;
+    }
+
+    if(!username) {
+        console.error("Username not provided");
         return;
     }
 
@@ -39,9 +44,6 @@ function playCard(rank : string, suit: string, username : string, gameWebSocketR
     stompClient.publish({
         destination: gameWebSocketRoot + "/playCard",
         body: messageBody,
-        headers: {
-            "user-name": username
-        }
     });
 
     console.log("User card clicked and message sent:", messageBody);
@@ -83,7 +85,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
     if (onClick == "default")  {
         onClickLocal = defaultCardClick
     } else if (onClick == "playCard") {
-        onClickLocal = () => playCard(rank, suit, username, gameWebSocketRoot, stompClient);
+        onClickLocal = () => playCard(rank, suit, gameWebSocketRoot, username, stompClient);
     } else {
         console.error("Invalid onClick value:", onClick);
         onClickLocal = defaultCardClick;
