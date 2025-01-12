@@ -1,7 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../context/UserContext";
 import PlayerCard from "../components/PlayerCard";
-import axios from "axios";
 
 export type Player = {
     name: string;
