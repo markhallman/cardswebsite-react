@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface LoginProps {
     setToken: (token: string) => void;
@@ -17,7 +18,7 @@ function Login({setToken, setUser}: LoginProps) {
         event.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:8080/login", {
+            const response = await axios.post(`${apiBaseUrl}/login`, {
                 username: username,
                 password: password
             });

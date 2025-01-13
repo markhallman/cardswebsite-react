@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface PlayerCardProps {
     playerName: string; 
@@ -19,7 +20,7 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
             const iconEndpoint = playerName == "AI" ? "AI" : ICON_MAP[playerNumber]
             console.log("iconendpoint: " + iconEndpoint);
             const response = await axios.get(
-                `http://localhost:8080/games/images/playerIcon/${iconEndpoint}`,
+                `${apiBaseUrl}/games/images/playerIcon/${iconEndpoint}`,
                 { responseType: "blob",
                     headers: {
                         Authorization: `Bearer ${token}`, 

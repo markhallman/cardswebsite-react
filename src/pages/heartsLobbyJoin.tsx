@@ -2,6 +2,7 @@ import axios from "axios";
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 function HeartsLobbyJoin(){
     // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down
@@ -15,7 +16,7 @@ function HeartsLobbyJoin(){
     async function createGame() {
         console.log("Create Game Button clicked");
 
-        axios.post("http://localhost:8080/games/creategame/hearts", {}, {
+        axios.post(`${apiBaseUrl}/games/creategame/hearts`, {}, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log("Creating lobby for GameId: " + response.data);

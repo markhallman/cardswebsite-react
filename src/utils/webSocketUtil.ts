@@ -1,15 +1,19 @@
 import { Client, StompSubscription } from "@stomp/stompjs";
-import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils";
 import { useEffect, useState } from "react";
-import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Player } from "../components/PlayerDisplay";
 import { RulesConfig } from "../components/RulesConfigEditor";
 import { ScoreboardObj } from "../pages/heartsGame";
-import { Player } from "../components/PlayerDisplay";
+import { parseNameFromPlayerDescriptorString, sortCards } from "./cardGameUtils";
 
 var client : Client | null = null;
 var gameSubscription : StompSubscription | null = null;
 var lobbySubscription : StompSubscription | null = null;
 var startGameListener : StompSubscription | null = null;
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+export const apiBaseUrl = isDevelopment ? 'http://localhost:8080' : 'https://coolestcardgames.com/api';
+export const websocketUrl = isDevelopment ? 'ws://localhost:8080/ws' : 'ws://coolestcardgames.com/ws';
 
 const initWebSocket = (token: string | undefined, 
     subscribeAction?: () => void) => {
@@ -27,7 +31,7 @@ const initWebSocket = (token: string | undefined,
         }
 
         client = new Client({
-            brokerURL: `ws://localhost:8080/ws?token=${token}`,
+            brokerURL: `${websocketUrl}?token=${token}`,
             reconnectDelay: 1000,
 
             onConnect: () => {

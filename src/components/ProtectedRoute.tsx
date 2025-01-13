@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useMemo, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { UserContext } from '../context/UserContext';
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -24,7 +25,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
         const checkAuthorization = async () => {
             try {
                 // Replace with your API call logic
-                const response = await axios.get(`http://localhost:8080/games/authenticated/${gameId}`, {
+                const response = await axios.get(`${apiBaseUrl}/games/authenticated/${gameId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`, 
                     },
@@ -37,7 +38,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
 
         const checkGameStatus = async () => {   
             // Replace with your API call logic
-            const response = await axios.get(`http://localhost:8080/games/isStarted/${gameId}`, {
+            const response = await axios.get(`${apiBaseUrl}/games/isStarted/${gameId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`, 
                 },

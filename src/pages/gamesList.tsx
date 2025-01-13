@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import JoinGameButton from '../components/JoinGameButton';
 import { RulesConfig } from '../components/RulesConfigEditor';
 import { UserContext } from '../context/UserContext';
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface Game {
     gameId : number;
@@ -28,7 +29,7 @@ function GamesList(){
 
     async function getActiveGames() {
         console.log("Get Active Button clicked");
-        axios.get<ActiveGames>("http://localhost:8080/games/activegames", {
+        axios.get<ActiveGames>(`${apiBaseUrl}/games/activegames`, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log(response.data);

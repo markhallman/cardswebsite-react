@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { GameContext } from "../context/GameContext";
 import { UserContext } from '../context/UserContext';
 import { cardRankToValue } from "../utils/cardGameUtils";
+import { apiBaseUrl } from "../utils/webSocketUtil";
 
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
@@ -68,7 +69,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
     useEffect(() => {
         const fetchCardImage = async () => {
             const response = await axios.get(
-                `http://localhost:8080/games/images/card/default/${suit}/${rankString}`,
+                `${apiBaseUrl}/games/images/card/default/${suit}/${rankString}`,
                 { responseType: "blob",
                   headers: {
                         Authorization: `Bearer ${token}`, 
