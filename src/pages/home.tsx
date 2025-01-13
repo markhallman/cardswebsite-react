@@ -1,7 +1,4 @@
-import Banner from '../components/Banner'
-import Hand from '../components/Hand'
-import { Suit } from '../components/Card'
-import { UserContext } from '../context/UserContext';
+import Hand from '../components/Hand';
 
 function Home(){
     let homepages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]

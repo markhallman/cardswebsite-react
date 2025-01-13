@@ -1,9 +1,8 @@
-import Banner from '../components/Banner'
-import JoinGameButton from '../components/JoinGameButton';
-import { useState, useEffect, useContext } from 'react';
 import axios from "axios";
-import { UserContext } from '../context/UserContext';
+import { useContext, useEffect, useState } from 'react';
+import JoinGameButton from '../components/JoinGameButton';
 import { RulesConfig } from '../components/RulesConfigEditor';
+import { UserContext } from '../context/UserContext';
 
 interface Game {
     gameId : number;

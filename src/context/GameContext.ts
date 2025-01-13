@@ -1,5 +1,5 @@
-import { Client } from '@stomp/stompjs'
-import { Context, createContext } from 'react'
+import { Client } from '@stomp/stompjs';
+import { Context, createContext } from 'react';
 
 interface GameContextType {
     gameWebSocketRoot: string;

@@ -1,9 +1,7 @@
-import Banner from '../components/Banner'
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import { UserContext } from '../context/UserContext';
 import { useContext } from 'react';
-import { subscribeToLobby, useWebSocket } from '../utils/webSocketUtil';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 function HeartsLobbyJoin(){
     // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down

@@ -7,13 +7,13 @@ import HeartsLobbyJoin from './pages/heartsLobbyJoin'
 import Home from './pages/home'
 import Login from './pages/login'
 
-import { BrowserRouter, createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
 
 import React, { useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import './App.css'
-import { UserContext } from './context/UserContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import { UserContext } from './context/UserContext'
 
 function App() {
     // TODO: Might want to just use a single state object for user info, can extract username from token

@@ -1,5 +1,4 @@
-import { Client } from '@stomp/stompjs'
-import { Context, createContext } from 'react'
+import { Context, createContext } from 'react';
 
 interface UserContextType {
     username?: string;

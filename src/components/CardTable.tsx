@@ -1,4 +1,4 @@
-import Card, { Suit } from '../components/Card'
+import Card, { Suit } from '../components/Card';
 
 interface CardTableProps {
     playerConfiguration?: string[];

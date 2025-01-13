@@ -1,5 +1,4 @@
-import Card, { Suit } from '../components/Card'
-import Draggable, {DraggableCore} from 'react-draggable';
+import Card, { Suit } from '../components/Card';
 
 // TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
 

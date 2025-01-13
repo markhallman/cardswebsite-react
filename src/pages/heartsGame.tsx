@@ -1,13 +1,12 @@
-import Hand from '../components/Hand'
-import CardTable from '../components/CardTable'
-import { useEffect, useState, useRef, createContext, Context, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { unstable_usePrompt, useParams } from 'react-router-dom';
-import { Client } from '@stomp/stompjs';
-import { reindexPlayerArray } from '../utils/cardGameUtils';
+import CardTable from '../components/CardTable';
+import Hand from '../components/Hand';
+import Scoreboard from '../components/Scoreboard';
 import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
+import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
-import Scoreboard from '../components/Scoreboard';
 
 export type ScoreboardObj = {
     playerScores : Map<string, number>

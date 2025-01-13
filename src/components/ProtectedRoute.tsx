@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext, useMemo } from "react";
-import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from '../context/UserContext'
+import React, { useContext, useMemo, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
+import { UserContext } from '../context/UserContext';
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
