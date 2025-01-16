@@ -19,22 +19,20 @@ interface ActiveGames {
 // TODO: Should only display games that are not full or started
 
 function GamesList(){
-    let listPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList" ]
-
-    const [activeGames, setActiveGames] = useState<Game[]>([]);
+    const [activeLobbies, setActiveLobbies] = useState<Game[]>([]);
 
     const userContext = useContext(UserContext);
     const {username, token} = userContext;
     var tokenAuthHeader : string = `Bearer ${token}`;
 
-    async function getActiveGames() {
+    async function getActiveLobbies() {
         console.log("Get Active Button clicked");
-        axios.get<ActiveGames>(`${apiBaseUrl}/games/activegames`, {
+        axios.get<ActiveGames>(`${apiBaseUrl}/games/activelobbies`, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log(response.data);
             const activeGames = response.data.activeGames;
-            setActiveGames(activeGames);
+            setActiveLobbies(activeGames);
             return activeGames;
         }).catch((error) => {
             console.error("Error grabbing active games:", error);
@@ -43,7 +41,7 @@ function GamesList(){
 
     // Fetch active games when the component mounts
     useEffect(() => {
-        getActiveGames();
+        getActiveLobbies();
     }, []); // Empty dependency array ensures this runs only once
 
     return (
@@ -51,9 +49,9 @@ function GamesList(){
             <div className="content-area p-3">
                 <div className="wrapper">
                             <h1>Active Games</h1>
-                            {activeGames.length > 0 ? (
+                            {activeLobbies.length > 0 ? (
                                 <ul className="vstack list-unstyled d-flex flex-wrap">
-                                    {activeGames.map((game, index) => (
+                                    {activeLobbies.map((game, index) => (
                                         <li key={index} className="list-group-item bg-secondary text-white border border-dark m-2 p-2 justify-content-center align-items-center gameRoom">
                                             <span className="p-2">
                                                 Game ID: {game.gameId}, Open Slots: {game.rulesConfig.numPlayers - game.players.length}
@@ -66,7 +64,7 @@ function GamesList(){
                             ) : (
                                 <p>No active games available.</p>
                             )}
-                        <button onClick={getActiveGames}>
+                        <button onClick={getActiveLobbies}>
                             Update Active Games List
                         </button>
                 </div>

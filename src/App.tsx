@@ -1,5 +1,4 @@
 import Banner from './components/Banner'
-import Downloads from './pages/downloads'
 import GamesList from './pages/gamesList'
 import HeartsGame from './pages/heartsGame'
 import HeartsLobby from './pages/heartsLobby'
@@ -43,7 +42,6 @@ function App() {
             <>
                 <Route path="/" element={<Banner/>}>
                     <Route path="/home" element={<Home/>} />
-                    <Route path="/downloads" element={<Downloads/>} />
                     <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
                     <Route path="/gamesList" element={<GamesList/>} />
                     <Route index element={<Home/>} />

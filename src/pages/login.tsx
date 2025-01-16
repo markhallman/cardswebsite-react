@@ -11,7 +11,18 @@ interface LoginProps {
 function Login({setToken, setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [imageUrl, setImageUrl] = useState("");
     const websiteLogo = '/src/assets/cardHand.jpeg';
+
+    const fetchWebsiteLogo = async () => {
+        const response = await axios.get(
+            `${apiBaseUrl}/games/images/coolestcardgames`,
+                { responseType: "blob" }
+        );
+        setImageUrl(URL.createObjectURL(response.data));
+    }
+    fetchWebsiteLogo();
+    
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         console.log("Login Button clicked");

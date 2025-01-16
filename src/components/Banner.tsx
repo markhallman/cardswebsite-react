@@ -29,9 +29,6 @@ function Banner(){
                         <li className='nav-item me-3'>
                             <Link to="/heartsLobbyJoin">Create Game</Link>
                         </li>
-                        <li className='nav-item me-3'>
-                            <Link to="/downloads">Downloads</Link>
-                        </li>
                     </ul>
                 </div>
             </nav>
