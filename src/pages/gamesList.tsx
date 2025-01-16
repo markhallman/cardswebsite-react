@@ -27,7 +27,7 @@ function GamesList(){
 
     async function getActiveLobbies() {
         console.log("Get Active Button clicked");
-        axios.get<ActiveGames>(`${apiBaseUrl}/games/activelobbies`, {
+        axios.get<ActiveGames>(`${apiBaseUrl}/games/activeLobbies`, {
             headers: {Authorization: tokenAuthHeader}
         }).then((response)=>{
             console.log(response.data);
