@@ -1,7 +1,24 @@
+import { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { apiBaseUrl } from "../utils/webSocketUtil";
+import axios from "axios";
+
+
 
 function Banner(){
-    const websiteLogo = './src/assets/cardHand.jpeg';
+    const [imageUrl, setImageUrl] = useState('');
+    
+    useEffect(() => {
+        const fetchWebsiteLogo = async () => {
+            const response = await axios.get(
+                `${apiBaseUrl}/games/images/coolestcardgames`,
+                    { responseType: "blob" }
+            );
+            setImageUrl(URL.createObjectURL(response.data));
+        }
+        fetchWebsiteLogo();
+    }, []);
+
     const logoStyle = {
         marginRight :'10px',
         marginLeft: '10px',
@@ -12,7 +29,7 @@ function Banner(){
         <>
             <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
                 <a className="navbar-brand" href="#">
-                    <img src={websiteLogo} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
+                    <img src={imageUrl} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
                     Coolest Card Games
                 </a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

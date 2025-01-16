@@ -12,7 +12,6 @@ function Login({setToken, setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
-    const websiteLogo = '/src/assets/cardHand.jpeg';
 
     const fetchWebsiteLogo = async () => {
         const response = await axios.get(
@@ -46,7 +45,7 @@ function Login({setToken, setUser}: LoginProps) {
         <>
             <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
                 {/* Logo */}
-                <img src={websiteLogo} width="100px" alt="Website Logo" className="mb-4" />
+                <img src={imageUrl} width="100px" alt="Website Logo" className="mb-4" />
 
                 {/* Login Form */}
                 <form className="p-4 bg-white rounded shadow-sm" style={{ width: "350px" }} onSubmit={login}>
