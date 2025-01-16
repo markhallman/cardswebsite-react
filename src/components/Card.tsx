@@ -69,7 +69,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
     useEffect(() => {
         const fetchCardImage = async () => {
             const response = await axios.get(
-                `${apiBaseUrl}/games/images/card/default/${suit}/${rankString}`,
+                `${apiBaseUrl}/images/card/default/${suit}/${rankString}`,
                 { responseType: "blob",
                   headers: {
                         Authorization: `Bearer ${token}`, 

@@ -20,7 +20,7 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
             const iconEndpoint = playerName == "AI" ? "AI" : ICON_MAP[playerNumber]
             console.log("iconendpoint: " + iconEndpoint);
             const response = await axios.get(
-                `${apiBaseUrl}/games/images/playerIcon/${iconEndpoint}`,
+                `${apiBaseUrl}/images/playerIcon/${iconEndpoint}`,
                 { responseType: "blob",
                     headers: {
                         Authorization: `Bearer ${token}`, 

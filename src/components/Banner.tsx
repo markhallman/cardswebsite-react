@@ -11,7 +11,7 @@ function Banner(){
     useEffect(() => {
         const fetchWebsiteLogo = async () => {
             const response = await axios.get(
-                `${apiBaseUrl}/games/images/coolestcardgames`,
+                `${apiBaseUrl}/images/coolestcardgames`,
                     { responseType: "blob" }
             );
             setImageUrl(URL.createObjectURL(response.data));
