@@ -39,10 +39,9 @@ function GamesList(){
         });
     }
 
-    // Fetch active games when the component mounts
     useEffect(() => {
         getActiveLobbies();
-    }, []); // Empty dependency array ensures this runs only once
+    }, []); 
 
     return (
         <>
