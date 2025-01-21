@@ -12,8 +12,8 @@ var lobbySubscription : StompSubscription | null = null;
 var startGameListener : StompSubscription | null = null;
 
 const isDevelopment = process.env.NODE_ENV === 'development';
-export const apiBaseUrl = isDevelopment ? 'https://localhost:8080' : 'https://coolestcardgames.com:8080';
-export const websocketUrl = isDevelopment ? 'wss://localhost:8080/ws' : 'wss://coolestcardgames.com:8080/ws';
+export const apiBaseUrl = isDevelopment ? 'https://localhost:8443' : 'https://coolestcardgames.com:8443';
+export const websocketUrl = isDevelopment ? 'wss://localhost:8443/ws' : 'wss://coolestcardgames.com:8443/ws';
 
 const initWebSocket = (token: string | undefined, 
     subscribeAction?: () => void) => {
