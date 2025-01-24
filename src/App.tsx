@@ -8,19 +8,18 @@ import Login from './pages/login'
 
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { Route } from 'react-router-dom'
 import './App.css'
 import ProtectedRoute from './components/ProtectedRoute'
 import { UserContext } from './context/UserContext'
+import axios from 'axios'
 
 function App() {
-    // TODO: Might want to just use a single state object for user info, can extract username from token
     const [jwtToken, setJwtToken] = React.useState<string | null>(localStorage.getItem('jwtToken'));
     const [username, setUsername] = React.useState<string | null>(localStorage.getItem('username'));
 
     // Load the token from localStorage when the component mounts
-    // TODO: This is a security vulnerability. We should use a secure cookie instead.
     useEffect(() => {
         if (jwtToken) {
             console.log("Setting token in local storage");
@@ -32,6 +31,28 @@ function App() {
             localStorage.setItem('username', username);
         } 
     }, [jwtToken, username]);
+
+    useLayoutEffect(() => {
+        // TODO: Implement a refresh token strategy
+        const refreshInterceptor = axios.interceptors.response.use(
+            (response) => {
+                return response;
+            },
+            async (error) => {   
+                console.log("Error status: " + error.data);
+
+                if(error.status === 401) {
+                    console.log("Token expired, logging out");
+                    setJwtToken(null);
+                    setUsername(null);
+                    localStorage.removeItem('jwtToken');
+                    localStorage.removeItem('username');
+                }
+
+                return Promise.reject(error);
+            }
+        )
+    }, []);
 
     if(!jwtToken || !username) {
         return <Login setToken={setJwtToken} setUser={setUsername} />
