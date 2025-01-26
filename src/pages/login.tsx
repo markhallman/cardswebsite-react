@@ -14,6 +14,7 @@ function Login({setToken, setUser}: LoginProps) {
 
     useEffect(() => {
         const fetchWebsiteLogo = async () => {
+            console.log("Fetching website logo");
             const response = await axios.get(
                 `${apiBaseUrl}/images/coolestcardgames`,
                     { responseType: "blob" }
@@ -21,7 +22,7 @@ function Login({setToken, setUser}: LoginProps) {
             setImageUrl(URL.createObjectURL(response.data));
         }
         fetchWebsiteLogo();
-    });
+    },[]);
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         console.log("Login Button clicked");
