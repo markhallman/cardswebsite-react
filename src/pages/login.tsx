@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface LoginProps {
@@ -7,21 +7,21 @@ interface LoginProps {
     setUser: (user: string) => void;
 }
 
-
 function Login({setToken, setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
 
-    const fetchWebsiteLogo = async () => {
-        const response = await axios.get(
-            `${apiBaseUrl}/images/coolestcardgames`,
-                { responseType: "blob" }
-        );
-        setImageUrl(URL.createObjectURL(response.data));
-    }
-    fetchWebsiteLogo();
-    
+    useEffect(() => {
+        const fetchWebsiteLogo = async () => {
+            const response = await axios.get(
+                `${apiBaseUrl}/images/coolestcardgames`,
+                    { responseType: "blob" }
+            );
+            setImageUrl(URL.createObjectURL(response.data));
+        }
+        fetchWebsiteLogo();
+    });
 
     async function login(event: React.FormEvent<HTMLFormElement>) {
         console.log("Login Button clicked");
