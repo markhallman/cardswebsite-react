@@ -1,10 +1,5 @@
 import PlayerCard from "../components/PlayerCard";
-
-export type Player = {
-    name: string;
-    humanControlled: boolean;
-    id: string;
-}
+import { Player } from "../pages/heartsGame";
 
 interface PlayerDisplayProps {
     players? : Player[];
@@ -27,7 +22,7 @@ function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
         <div className="container">
             <div className="row">
                 {players?.map((player, index) => (
-                    <PlayerCard key={index} playerName={player.name} playerNumber={index} />
+                    <PlayerCard key={index} playerName={player.name} playerNumber={index} activePlayer={false}/>
                    ))}
             </div>           
         </div>

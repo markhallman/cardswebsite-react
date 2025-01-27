@@ -1,9 +1,10 @@
 import Card, { Suit } from '../components/Card';
+import { CardObj } from '../pages/heartsGame';
 
 // TODO: Either add useState call here to get hand contents, or make a PlayerView class that manages it
 
 interface HandProps {
-    cards: {suit : string, value : string, rank : string}[]; 
+    cards?: CardObj[]; 
     location: string;
     isPlayer: Boolean;
     onClick? : string;
@@ -35,7 +36,7 @@ function Hand( {cards, location, isPlayer, onClick = "default"} : HandProps){
     // TODO: This charAt system for grabbing the suit is a bit hacky, but it works for now
     return (
             <div className="hand">
-                  {cards.map( (card, index) =>
+                  {cards?.map( (card, index) =>
                       <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
                             <Card rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick}/>
                       </div> )}

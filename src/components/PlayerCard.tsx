@@ -4,11 +4,12 @@ import { UserContext } from "../context/UserContext";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface PlayerCardProps {
-    playerName: string; 
+    playerName?: string; 
     playerNumber: number;
+    activePlayer: boolean;
 }
 
-function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
+function PlayerCard({playerName, playerNumber, activePlayer} : PlayerCardProps) {
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
     const token = userContext.token;
@@ -33,11 +34,11 @@ function PlayerCard({playerName, playerNumber} : PlayerCardProps) {
     }, []);
 
     return <>
-        <div className="col-6 p-2 d-flex flex-column align-items-center">
-            <div className="text-center">
+        <div className="col-6 p-2 d-flex flex-row align-items-center">
+            <div className= {activePlayer ? "text-center activePlayer" : "text-center"}>
                 <img src={imageUrl} className="playerIcon img-fluid img-thumbnail border-dark" alt="Player Icon" />
             </div>
-            <div className="text-center">
+            <div className="activePlayertext-center border border-start-0 border-dark rounded-end p-2">
                 <h2>{playerName}</h2>
             </div>
         </div>

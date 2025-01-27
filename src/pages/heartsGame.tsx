@@ -7,9 +7,31 @@ import { GameContext } from '../context/GameContext';
 import { UserContext } from '../context/UserContext';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
+import PlayerCard from '../components/PlayerCard';
+
+// TODO: Move these types to a shared location? Type definition file?
+export type Player = {
+    name: string;
+    humanControlled: boolean;
+    id: string;
+}
+
+export type CardObj = {
+    suit: string;
+    value: string;
+    rank: string;
+}
 
 export type ScoreboardObj = {
     playerScores : Map<string, number>
+}
+
+export type GameState = {
+    fullHand : CardObj[];
+    tableCards : Map<string, CardObj>;
+    playerOrder : Player[];
+    scoreboard : ScoreboardObj;
+    currentPlayer : Player;
 }
 
 function HeartsGame() {
@@ -23,16 +45,10 @@ function HeartsGame() {
 
     const {username, token}= userContext;
     const playerName = username;
-    const [fullHand, setFullHand ]= useState<{suit : string, value : string, rank : string}[] >([]);
-    const [tableCards, setTableCards ]= useState<Map<string, {suit : string, value : string, rank : string}>>(
-        new Map([])
-    );
-    const [showPopup, setShowPopup] = useState<boolean>(false);
-    const [scoreboard, setScoreboard] = useState<ScoreboardObj | undefined>(undefined);
 
-    // Player order reflects the respoective positions of players at the table, 
-    //  not the current order exactly since it doesnt change with trick wins
-    const [playerOrder, setPlayerOrder] = useState<string[] | undefined>(undefined);
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [gameState, setGameState] = useState<GameState | undefined>(undefined);
+
     const { client, isConnected  } = useWebSocket(token);
 
     // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
@@ -52,7 +68,9 @@ function HeartsGame() {
 
         if (client && isConnected) {
             console.log("WebSocket client connected, subscribing to game.");
-            subscribeToGame(gameId, playerName, setPlayerOrder, setFullHand, setTableCards, setScoreboard);
+            // TODO: recfactor to use a single set state function, so we dont have to pass a million of them
+            //          maybe that involves just having a single gameState object that we pass around
+            subscribeToGame(gameId, playerName, setGameState);
         } else {
             console.log("Client not initialized, retrying");
         }
@@ -76,28 +94,31 @@ function HeartsGame() {
                     </div>
                     <div className="row justify-content-center" >
                         <div className="col offset-4">
-                            <Hand cards={fullHand} location="Top" isPlayer={false} />
+                            <Hand cards={gameState?.fullHand} location="Top" isPlayer={false} />
                         </div>
                     </div>
                     <div className="row">
                         <div className="col">
-                            <Hand cards={fullHand} location="Left" isPlayer={false} />
+                            <Hand cards={gameState?.fullHand} location="Left" isPlayer={false} />
                         </div>
                         <div className="col-2 justify-content-right">
-                            <Hand cards={fullHand} location="Right" isPlayer={false} />
+                            <Hand cards={gameState?.fullHand} location="Right" isPlayer={false} />
                         </div>
                     </div>
                     <div className="row">
                         <div className="d-flex col alight-items-center justify-content-center align-self-center">
-                            <CardTable playerTrickMap={tableCards}  playerConfiguration={reindexPlayerArray(playerName, playerOrder)}/>
+                            <CardTable playerTrickMap={gameState?.tableCards}  playerConfiguration={reindexPlayerArray(playerName, gameState?.playerOrder)}/>
                         </div>
                     </div>
-                    <div className="row justify-content-center">
+                    <div className="row fixed-bottom justify-content-center">
+                        <div className="col">
+                            <PlayerCard playerName={username} playerNumber={0} activePlayer={gameState?.currentPlayer.name==username}/>
+                        </div>
                         <div className="col fixed-bottom bottomHand offset-4">
-                            <Hand cards={fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>
+                            <Hand cards={gameState?.fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>
                         </div>
                     </div>
-                    <Scoreboard trigger={showPopup} setTrigger={setShowPopup} scoreboard={scoreboard}></Scoreboard>
+                    <Scoreboard trigger={showPopup} setTrigger={setShowPopup} scoreboard={gameState?.scoreboard}></Scoreboard>
                 </div>
             </GameContext.Provider>
         </>

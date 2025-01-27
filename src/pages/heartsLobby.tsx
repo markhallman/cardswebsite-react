@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { unstable_usePrompt, useNavigate, useParams } from "react-router-dom";
-import PlayerDisplay, { Player } from "../components/PlayerDisplay";
+import PlayerDisplay from "../components/PlayerDisplay";
 import RulesConfigEditor, { RulesConfig } from "../components/RulesConfigEditor";
 import { GameContext } from "../context/GameContext";
 import { UserContext } from "../context/UserContext";
 import { subscribeToLobby, unsubscribeFromLobby, useWebSocket } from "../utils/webSocketUtil";
+import { Player } from "./heartsGame";
 
 function HeartsLobby(){
     const { gameId } = useParams<{ gameId: string }>();
@@ -67,11 +68,11 @@ function HeartsLobby(){
         <>
             <GameContext.Provider value={{gameWebSocketRoot: gameWebSocketRoot, stompClient: client || undefined}}>
                 <div className="content-area p-3">
-                    <div className="wrapper">
+                    <div className="wrapper text-center">
                         <h1>Welcome to the game lobby!</h1>
                         {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
                         {gameOwner == username ?  
-                            <button className="btn btn-success m-2" onClick={startGame}>
+                            <button className="btn btn-success m-2 text-center" onClick={startGame}>
                                 Start Game
                             </button>
                             : <p>Waiting for {gameOwner} to start the game</p>

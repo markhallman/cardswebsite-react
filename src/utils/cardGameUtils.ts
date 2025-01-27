@@ -1,4 +1,5 @@
 import Card, { Suit } from '../components/Card'
+import { Player } from '../pages/heartsGame';
 
 // Utility file for card game functions that may be used across multiple games
 
@@ -21,7 +22,7 @@ export const sortCards = (cards: { suit: string, value: string, rank: string }[]
 };
 
 // Reindex a plauer array so that the specified player is at index 0
-export const reindexPlayerArray = (player?: string, playerArray?: string[]) => {
+export const reindexPlayerArray = (player?: string, playerArray?: Player[]) => {
     if (!playerArray) {
         console.error("Player array not provided");
         return [];
@@ -31,7 +32,7 @@ export const reindexPlayerArray = (player?: string, playerArray?: string[]) => {
         console.error("Player not provided");
         return [];
     }
-    let playerIndex = playerArray.findIndex((element) => element === player);
+    let playerIndex = playerArray.findIndex((element) => element.name === player);
     let reindexedArray = playerArray.slice(playerIndex).concat(playerArray.slice(0, playerIndex));
     return reindexedArray;
 }

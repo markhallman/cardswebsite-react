@@ -1,17 +1,12 @@
 import { useContext } from "react";
 import { ScoreboardObj } from "../pages/heartsGame";
 import { UserContext } from "../context/UserContext";
+import { parseNameFromPlayerDescriptorString } from "../utils/cardGameUtils";
 
 interface ScoreboardProps {
     trigger : boolean;
     setTrigger : React.Dispatch<React.SetStateAction<boolean>>;
     scoreboard?: ScoreboardObj;
-}
-
-function extractPlayerName(playerDescriptor: string) {
-    const nameRegex = /name:\s([a-zA-Z1-9]+)/; // Regex to match "name: <name>"
-    const match = playerDescriptor.match(nameRegex);
-    return match ? match[1] : null; // Return the captured group or null if no match
 }
 
 
@@ -35,10 +30,10 @@ function Scoreboard({trigger, setTrigger, scoreboard} : ScoreboardProps) {
                         {Object.entries(scoreboard?.playerScores || {})
                             .sort((player1, player2) => player1[1] - player2[1])
                             .map(([player, score]) => {
-                                console.log("Player:", extractPlayerName(player), "Username:", username);
+                                console.log("Player:", parseNameFromPlayerDescriptorString(player), "Username:", username);
                                 return (
-                                    <tr key={player} className={extractPlayerName(player) === username ? 'table-primary bg-warning text-dark' : ''}>
-                                        <td>{extractPlayerName(player)}</td>
+                                    <tr key={player} className={parseNameFromPlayerDescriptorString(player) === username ? 'table-primary bg-warning text-dark' : ''}>
+                                        <td>{parseNameFromPlayerDescriptorString(player)}</td>
                                         <td>{score}</td>
                                     </tr>
                                 );

@@ -108,3 +108,8 @@ img {
     height: 100px;
     margin: 4px;
 }
+
+.activePlayer {
+    border: 2px solid red;
+    box-shadow: 0 0 2px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+}

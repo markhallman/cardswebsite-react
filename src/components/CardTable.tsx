@@ -1,8 +1,9 @@
 import Card, { Suit } from '../components/Card';
+import { Player, CardObj } from '../pages/heartsGame';
 
 interface CardTableProps {
-    playerConfiguration?: string[];
-    playerTrickMap?: Map<string,  {suit : string, value : string, rank : string}>;
+    playerConfiguration?: Player[];
+    playerTrickMap?: Map<string, CardObj>;
 }
 
 function getTableCardStyle(index : number) {
@@ -43,8 +44,7 @@ function CardTable( {playerConfiguration, playerTrickMap} : CardTableProps){
     return (
             <div className="cardTable">
                {playerTrickMap && Array.from(playerTrickMap.entries()).map( ([player, card], index) => {
-                const playerIndex = playerConfiguration.findIndex((element) => element === player);
-                console.log("Player Index: " + playerIndex);
+                const playerIndex = playerConfiguration.findIndex((element) => element.name === player);
                 return (
                   <div className={"cardHolder"} key={index} style={getTableCardStyle(playerIndex)}>
                       <Card rank={card.rank} suit={card.suit as Suit} isPlayer={true} key={playerIndex}/>
