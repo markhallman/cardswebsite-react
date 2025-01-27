@@ -14,7 +14,7 @@ function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
     }
 
     while (players.length < numPlayers){
-        players.push({name: "AI", humanControlled: false, id: "AI"});
+        players.push({name: "AI", humanControlled: false, id: "AI", icon: "DEFAULT"});
     }
 
     console.log("PlayerDisplay: ", players);
@@ -22,7 +22,7 @@ function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
         <div className="container">
             <div className="row">
                 {players?.map((player, index) => (
-                    <PlayerCard key={index} playerName={player.name} playerNumber={index} activePlayer={false}/>
+                    <PlayerCard key={index} playerName={player.name} iconEndpoint={player.icon} activePlayer={false}/>
                    ))}
             </div>           
         </div>

@@ -5,21 +5,26 @@ import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface PlayerCardProps {
     playerName?: string; 
-    playerNumber: number;
+    iconEndpoint?: string;
     activePlayer: boolean;
 }
 
-function PlayerCard({playerName, playerNumber, activePlayer} : PlayerCardProps) {
+function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) {
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
     const token = userContext.token;
-    const ICON_MAP = ["Cherry", "Apple", "Banana", "Strawberry"];
 
     useEffect(() => {
         const featchPlayerIcon = async () => {
             console.log("playername: " + playerName)
-            const iconEndpoint = playerName == "AI" ? "AI" : ICON_MAP[playerNumber]
             console.log("iconendpoint: " + iconEndpoint);
+
+            console.log(iconEndpoint);
+
+            if(!iconEndpoint) {
+                iconEndpoint = "DEFAULT";
+            }
+
             const response = await axios.get(
                 `${apiBaseUrl}/images/playerIcon/${iconEndpoint}`,
                 { responseType: "blob",
@@ -31,7 +36,7 @@ function PlayerCard({playerName, playerNumber, activePlayer} : PlayerCardProps) 
             setImageUrl(URL.createObjectURL(response.data));
         }
         featchPlayerIcon();
-    }, []);
+    }, [iconEndpoint]);
 
     return <>
         <div className="col-6 p-2 d-flex flex-row align-items-center">

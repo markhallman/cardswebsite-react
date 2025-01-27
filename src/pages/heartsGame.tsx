@@ -14,6 +14,7 @@ export type Player = {
     name: string;
     humanControlled: boolean;
     id: string;
+    icon: string;
 }
 
 export type CardObj = {
@@ -42,12 +43,15 @@ function HeartsGame() {
         console.error("UserContext not found for some reason");
         return null;
     }
+    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [gameState, setGameState] = useState<GameState | undefined>(undefined);
+    console.log(gameState);
 
     const {username, token}= userContext;
     const playerName = username;
 
-    const [showPopup, setShowPopup] = useState<boolean>(false);
-    const [gameState, setGameState] = useState<GameState | undefined>(undefined);
+    const player = gameState?.playerOrder.find(player => player.name === playerName);
+    console.log(player)
 
     const { client, isConnected  } = useWebSocket(token);
 
@@ -111,8 +115,8 @@ function HeartsGame() {
                         </div>
                     </div>
                     <div className="row fixed-bottom justify-content-center">
-                        <div className="col">
-                            <PlayerCard playerName={username} playerNumber={0} activePlayer={gameState?.currentPlayer.name==username}/>
+                        <div className="col p-3">
+                            <PlayerCard playerName={username} iconEndpoint={player?.icon} activePlayer={gameState?.currentPlayer.name==username}/>
                         </div>
                         <div className="col fixed-bottom bottomHand offset-4">
                             <Hand cards={gameState?.fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>

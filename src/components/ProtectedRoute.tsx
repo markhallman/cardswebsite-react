@@ -31,6 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
                     },
                 });
                 setIsAuthorized(response.data);
+                console.log(response.data);
             } catch (error) {
                 setIsAuthorized(false); // Treat API errors as unauthorized
             }

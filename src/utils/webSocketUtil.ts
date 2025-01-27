@@ -219,7 +219,7 @@ export const subscribeToGame = (gameId : string | undefined,
                 };
            
                 const currGameState : GameState = {
-                    playerOrder: messageData.currentGameState.playerDescriptors,
+                    playerOrder: messageData.currentGameState.players,
                     scoreboard: scoreboard,
                     currentPlayer: messageData.currentGameState.currentPlayer,
                     fullHand: playerHand,
