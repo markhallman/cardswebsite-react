@@ -22,7 +22,9 @@ function PlayerDisplay ( {players, numPlayers} : PlayerDisplayProps ) {
         <div className="container">
             <div className="row">
                 {players?.map((player, index) => (
-                    <PlayerCard key={index} playerName={player.name} iconEndpoint={player.icon} activePlayer={false}/>
+                    <div className="col-3 p-2 d-flex flex-row align-items-center">
+                        <PlayerCard key={index} playerName={player.name} iconEndpoint={player.icon} activePlayer={false}/>
+                    </div>
                    ))}
             </div>           
         </div>

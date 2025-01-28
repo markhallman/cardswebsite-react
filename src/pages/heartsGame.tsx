@@ -8,6 +8,7 @@ import { UserContext } from '../context/UserContext';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
 import PlayerCard from '../components/PlayerCard';
+import PlayerDisplay from '../components/PlayerDisplay';
 
 // TODO: Move these types to a shared location? Type definition file?
 export type Player = {
@@ -96,29 +97,34 @@ function HeartsGame() {
                             <button className="btn btn-success" onClick={()=> setShowPopup(!showPopup)} >Scoreboard</button>
                         </div>
                     </div>
-                    <div className="row justify-content-center" >
-                        <div className="col offset-4">
-                            <Hand cards={gameState?.fullHand} location="Top" isPlayer={false} />
+                    <div className="d-flex row justify-content-center" >
+                        <div className="opponentDisplay p-0 col-6" >
+                            <PlayerCard playerName={gameState?.playerOrder[2].name} 
+                                        iconEndpoint={gameState?.playerOrder[2].icon} 
+                                        activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[2].name}/>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col">
-                            <Hand cards={gameState?.fullHand} location="Left" isPlayer={false} />
+                    <div className="row d-flex justify-content-center align-items-center">
+                        <div className="opponentDisplay col">
+                            <PlayerCard playerName={gameState?.playerOrder[1].name} 
+                                        iconEndpoint={gameState?.playerOrder[1].icon} 
+                                        activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[1].name}/>    
                         </div>
-                        <div className="col-2 justify-content-right">
-                            <Hand cards={gameState?.fullHand} location="Right" isPlayer={false} />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="d-flex col alight-items-center justify-content-center align-self-center">
+                        <div className="col-6 align-self-center">
                             <CardTable playerTrickMap={gameState?.tableCards}  playerConfiguration={reindexPlayerArray(playerName, gameState?.playerOrder)}/>
                         </div>
-                    </div>
-                    <div className="row fixed-bottom justify-content-center">
-                        <div className="col p-3">
-                            <PlayerCard playerName={username} iconEndpoint={player?.icon} activePlayer={gameState?.currentPlayer.name==username}/>
+                        <div className="opponentDisplay col-2 justify-content-right m-6">
+                            <PlayerCard playerName={gameState?.playerOrder[3].name} 
+                                        iconEndpoint={gameState?.playerOrder[3].icon} 
+                                        activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[3].name}/>                        </div>
                         </div>
-                        <div className="col fixed-bottom bottomHand offset-4">
+                    <div className="row d-flex">
+                        <div className="position-absolute bottom-0 start-0 col-3 p-5">
+                            <PlayerCard playerName={username} 
+                                        iconEndpoint={player?.icon} 
+                                        activePlayer={gameState?.currentPlayer.name==username}/>
+                        </div>
+                        <div className="col bottomHand offset-4 fixed-bottom">
                             <Hand cards={gameState?.fullHand} location="Bottom" isPlayer={true} onClick={"playCard"}/>
                         </div>
                     </div>

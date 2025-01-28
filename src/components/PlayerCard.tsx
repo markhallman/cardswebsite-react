@@ -39,11 +39,11 @@ function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) 
     }, [iconEndpoint]);
 
     return <>
-        <div className="col-6 p-2 d-flex flex-row align-items-center">
+        <div className="container p-1 d-flex flex-row justify-content-center align-items-center">
             <div className= {activePlayer ? "text-center activePlayer" : "text-center"}>
                 <img src={imageUrl} className="playerIcon img-fluid img-thumbnail border-dark" alt="Player Icon" />
             </div>
-            <div className="activePlayertext-center border border-start-0 border-dark rounded-end p-2">
+            <div className="text-center border border-start-0 border-dark rounded-end p-2">
                 <h2>{playerName}</h2>
             </div>
         </div>

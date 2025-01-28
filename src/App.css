@@ -12,11 +12,6 @@
   box-shadow: 0 6px 8px 0 rgba(0, 0, 0, 0.589);
 }
 
-.container {
-  padding: 2px 16px;
-  background-color: lightblue;
-}
-
 .playingCard {
     width: auto;
     height: auto;
@@ -60,7 +55,7 @@ img {
     background-color: brown;
     width: 420px;
     height: 320px;
-    margin-top: 200px;
+    margin-top: 80px;
     margin-left: 0px;
     border: 1px solid black;
 }
@@ -112,4 +107,8 @@ img {
 .activePlayer {
     border: 2px solid red;
     box-shadow: 0 0 2px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+}
+
+.opponentDisplay {
+    transform: scale(.8)
 }
