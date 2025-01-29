@@ -42,7 +42,7 @@ function CardTable( {playerConfiguration, playerTrickMap} : CardTableProps){
     }
 
     return (
-            <div className="cardTable">
+            <div className="cardTable justify-content-center">
                {playerTrickMap && Array.from(playerTrickMap.entries()).map( ([player, card], index) => {
                 const playerIndex = playerConfiguration.findIndex((element) => element.name === player);
                 return (

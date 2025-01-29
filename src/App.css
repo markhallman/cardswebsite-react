@@ -56,7 +56,6 @@ img {
     width: 420px;
     height: 320px;
     margin-top: 80px;
-    margin-left: 0px;
     border: 1px solid black;
 }
 
@@ -69,6 +68,7 @@ img {
     text-align: center;
 }
 
+/*Styling for the scoreboard pop-up (and others in the future?)*/
 .popup{
     position: absolute;
     top: 0;
@@ -104,11 +104,18 @@ img {
     margin: 4px;
 }
 
+/* When its a players turn, their icon should highlight in the UI*/
 .activePlayer {
     border: 2px solid red;
     box-shadow: 0 0 2px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
 }
 
+/* Opponent display cards must be a little smaller */
 .opponentDisplay {
     transform: scale(.8)
+}
+
+.topOppenentDisplay{
+    width: 100px;
+    height: 100px;
 }

@@ -98,19 +98,19 @@ function HeartsGame() {
                         </div>
                     </div>
                     <div className="d-flex row justify-content-center" >
-                        <div className="opponentDisplay p-0 col-6" >
+                        <div className="opponentDisplay topOppenentDisplay p-0 col-6">
                             <PlayerCard playerName={gameState?.playerOrder[2].name} 
                                         iconEndpoint={gameState?.playerOrder[2].icon} 
                                         activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[2].name}/>
                         </div>
                     </div>
                     <div className="row d-flex justify-content-center align-items-center">
-                        <div className="opponentDisplay col">
+                        <div className="opponentDisplay col-2">
                             <PlayerCard playerName={gameState?.playerOrder[1].name} 
                                         iconEndpoint={gameState?.playerOrder[1].icon} 
                                         activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[1].name}/>    
                         </div>
-                        <div className="col-6 align-self-center">
+                        <div className="col-8 d-flex justify-content-center align-self-center">
                             <CardTable playerTrickMap={gameState?.tableCards}  playerConfiguration={reindexPlayerArray(playerName, gameState?.playerOrder)}/>
                         </div>
                         <div className="opponentDisplay col-2 justify-content-right m-6">
