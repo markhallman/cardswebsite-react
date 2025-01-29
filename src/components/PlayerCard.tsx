@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
@@ -10,33 +10,43 @@ interface PlayerCardProps {
 }
 
 function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) {
+    console.log("Rendering PlayerCard", iconEndpoint);
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
     const token = userContext.token;
 
+    const latestRequestId = useRef(0);
+
     useEffect(() => {
+        let objectUrl : string | null = null;
+        let isActive : boolean = true;
+
         const featchPlayerIcon = async () => {
-            console.log("playername: " + playerName)
-            console.log("iconendpoint: " + iconEndpoint);
-
-            console.log(iconEndpoint);
-
-            if(!iconEndpoint) {
-                iconEndpoint = "DEFAULT";
-            }
+            console.log("Fetching player icon", iconEndpoint);
 
             const response = await axios.get(
-                `${apiBaseUrl}/images/playerIcon/${iconEndpoint}`,
+                `${apiBaseUrl}/images/playerIcon/${iconEndpoint || "DEFAULT"}`,
                 { responseType: "blob",
                     headers: {
                         Authorization: `Bearer ${token}`, 
                     },
                 },
             );
-            setImageUrl(URL.createObjectURL(response.data));
+
+            // Only update state if this is the latest request
+            if (isActive) {
+                objectUrl = URL.createObjectURL(response.data);
+                setImageUrl(objectUrl);
+                console.log("iconendpoint and user :" + iconEndpoint + " " + userContext.username);
+            } 
         }
+        
         featchPlayerIcon();
-    }, [iconEndpoint]);
+
+        return () => {
+            isActive = false;
+        };
+    }, [iconEndpoint, token]);
 
     return <>
         <div className="container p-1 d-flex flex-row justify-content-center align-items-center">

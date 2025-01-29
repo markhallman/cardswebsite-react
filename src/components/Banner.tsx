@@ -7,16 +7,24 @@ import axios from "axios";
 
 function Banner(){
     const [imageUrl, setImageUrl] = useState('');
-    
+
     useEffect(() => {
+        let objectUrl: string | null = null;
         const fetchWebsiteLogo = async () => {
             const response = await axios.get(
                 `${apiBaseUrl}/images/coolestcardgames`,
                     { responseType: "blob" }
             );
-            setImageUrl(URL.createObjectURL(response.data));
+            objectUrl = URL.createObjectURL(response.data);
+            setImageUrl(objectUrl);
         }
         fetchWebsiteLogo();
+
+        return () => {
+            if (objectUrl) { 
+                URL.revokeObjectURL(objectUrl);
+            }
+        }
     }, []);
 
     const logoStyle = {

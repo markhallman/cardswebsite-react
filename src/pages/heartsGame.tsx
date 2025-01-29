@@ -8,7 +8,6 @@ import { UserContext } from '../context/UserContext';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
 import PlayerCard from '../components/PlayerCard';
-import PlayerDisplay from '../components/PlayerDisplay';
 
 // TODO: Move these types to a shared location? Type definition file?
 export type Player = {
@@ -46,13 +45,9 @@ function HeartsGame() {
     }
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [gameState, setGameState] = useState<GameState | undefined>(undefined);
-    console.log(gameState);
 
     const {username, token}= userContext;
-    const playerName = username;
-
-    const player = gameState?.playerOrder.find(player => player.name === playerName);
-    console.log(player)
+    const player = gameState?.playerOrder.find(player => player.name === username);
 
     const { client, isConnected  } = useWebSocket(token);
 
@@ -75,7 +70,7 @@ function HeartsGame() {
             console.log("WebSocket client connected, subscribing to game.");
             // TODO: recfactor to use a single set state function, so we dont have to pass a million of them
             //          maybe that involves just having a single gameState object that we pass around
-            subscribeToGame(gameId, playerName, setGameState);
+            subscribeToGame(gameId, username, setGameState);
         } else {
             console.log("Client not initialized, retrying");
         }
@@ -111,13 +106,14 @@ function HeartsGame() {
                                         activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[1].name}/>    
                         </div>
                         <div className="col-8 d-flex justify-content-center align-self-center">
-                            <CardTable playerTrickMap={gameState?.tableCards}  playerConfiguration={reindexPlayerArray(playerName, gameState?.playerOrder)}/>
+                            <CardTable playerTrickMap={gameState?.tableCards}  playerConfiguration={reindexPlayerArray(username, gameState?.playerOrder)}/>
                         </div>
                         <div className="opponentDisplay col-2 justify-content-right m-6">
                             <PlayerCard playerName={gameState?.playerOrder[3].name} 
                                         iconEndpoint={gameState?.playerOrder[3].icon} 
-                                        activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[3].name}/>                        </div>
+                                        activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[3].name}/>                        
                         </div>
+                    </div>
                     <div className="row d-flex">
                         <div className="position-absolute bottom-0 start-0 col-3 p-5">
                             <PlayerCard playerName={username} 
