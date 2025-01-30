@@ -116,6 +116,7 @@ img {
 
 .heartsGame{
     min-height: 100vh; /* Ensures the container spans the full viewport height */
-    background-color: lightgreen;
-
+    background: rgb(94,157,94);
+    background: linear-gradient(90deg, rgba(94,157,94,1) 0%, rgba(33,112,44,1) 29%);
+    /*background-image: url("/src/assets/cardTableTexture.jpg");*/
 }

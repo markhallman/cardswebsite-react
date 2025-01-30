@@ -86,7 +86,7 @@ function HeartsGame() {
     return (
         <>
             <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: client || undefined}}>
-                <div className="container-fluid heartsGame">
+                <div className="container-fluid heartsGame border border-dark rounded">
                     <div className="row">
                         <div className="col mt-2">
                             <button className="btn btn-success" onClick={()=> setShowPopup(!showPopup)} >Scoreboard</button>
