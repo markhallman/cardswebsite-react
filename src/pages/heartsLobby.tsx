@@ -72,7 +72,7 @@ function HeartsLobby(){
                         <h1>Welcome to the game lobby!</h1>
                         {numericGameId ? <p>Game ID: {numericGameId}</p> : <p>No game found!</p>}
                         {gameOwner == username ?  
-                            <button className="btn btn-success m-2 text-center" onClick={startGame}>
+                            <button className="btn btn-success m-3 text-center" onClick={startGame}>
                                 Start Game
                             </button>
                             : <p>Waiting for {gameOwner} to start the game</p>

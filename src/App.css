@@ -1,9 +1,6 @@
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   transition: 0.3s;
-}
-
-.card {
   box-sizing: content-box;
   margin: 10px;
 }
@@ -26,9 +23,6 @@
 
 .cardHolder {
     position: absolute;
-}
-
-.cardHolder {
     height: auto;
     width: auto;
 }
@@ -118,4 +112,10 @@ img {
 .topOppenentDisplay{
     width: 100px;
     height: 100px;
+}
+
+.heartsGame{
+    min-height: 100vh; /* Ensures the container spans the full viewport height */
+    background-color: lightgreen;
+
 }
