@@ -12,7 +12,7 @@ function HeartsLobby(){
     const numericGameId : number = Number(gameId);
 
     const userContext = useContext(UserContext);
-    const { username, token } = userContext;
+    const { username } = userContext;
     const gameWebSocketRoot = `/app/hearts/game-lobby/${gameId}`;
 
     // TODO : figure out acual type for players
@@ -25,7 +25,7 @@ function HeartsLobby(){
         subscribeToLobby(gameId, setRulesConfig, setPlayers, setGameOwner, navigate);
     };
 
-    const { client, isConnected } = useWebSocket(token, handleConnect);
+    const { client, isConnected } = useWebSocket(handleConnect);
 
     const startGame = () => {
         if (client && isConnected) {
@@ -48,18 +48,13 @@ function HeartsLobby(){
     });
 
     useEffect(() => {
-        if (!token) {
-            console.error("No token found in user context");
-            return;
-        }
-
         return () => {
             if(isConnected && client){
                 console.log("Unsubscribing from lobby");
                 unsubscribeFromLobby(gameId);
             }
         };
-    }, [token, isConnected]);
+    }, [isConnected]);
 
     // TODO: If a user visits this page, and the game is already started, they should be redirected to the game page
     // TODO: numPlayers should be actually configurable, sourced from RulesConfig

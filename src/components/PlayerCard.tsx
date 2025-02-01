@@ -13,9 +13,6 @@ function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) 
     console.log("Rendering PlayerCard", iconEndpoint);
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
-    const token = userContext.token;
-
-    const latestRequestId = useRef(0);
 
     useEffect(() => {
         let objectUrl : string | null = null;
@@ -26,11 +23,7 @@ function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) 
 
             const response = await axios.get(
                 `${apiBaseUrl}/images/playerIcon/${iconEndpoint || "DEFAULT"}`,
-                { responseType: "blob",
-                    headers: {
-                        Authorization: `Bearer ${token}`, 
-                    },
-                },
+                { responseType: "blob"},
             );
 
             // Only update state if this is the latest request
@@ -46,7 +39,7 @@ function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) 
         return () => {
             isActive = false;
         };
-    }, [iconEndpoint, token]);
+    }, [iconEndpoint]);
 
     return <>
         <div className="container p-1 d-flex flex-row justify-content-center align-items-center">

@@ -15,7 +15,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
 
     const { gameId } = useParams(); // Extract gameId from route params if needed
     const userContext = useContext(UserContext);
-    const token = userContext.token;
 
     // useMemo because we want to trigger before deciding what to render, because we need to know if the user is authorized
     useMemo(() => {
@@ -26,9 +25,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
             try {
                 // Replace with your API call logic
                 const response = await axios.get(`${apiBaseUrl}/games/authenticated/${gameId}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`, 
-                    },
+                    withCredentials: true,
                 });
                 setIsAuthorized(response.data);
                 console.log(response.data);
@@ -40,9 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
         const checkGameStatus = async () => {   
             // Replace with your API call logic
             const response = await axios.get(`${apiBaseUrl}/games/isStarted/${gameId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, 
-                },
+                withCredentials: true,
             });
             console.log("Gameisstarted: " + response.data);
             setGameIsStarted(response.data);
@@ -66,7 +61,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
                         break;
                 }
             });
-    }, [token, allowWhenGameStarted]);
+    }, [allowWhenGameStarted]);
 
     if (isAuthorized === null || gameIsStarted === null) {
         // Show loading spinner while checking

@@ -9,10 +9,6 @@ import { apiBaseUrl } from "../utils/webSocketUtil";
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
 
-function cardToImageString(suit : Suit, rank : string) : string {
-    return rank + suit.charAt(0) + ".png"
-}
-
 interface CardProps {
     rank: string;
     suit?: Suit;
@@ -57,7 +53,6 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
 
     const userContext = useContext(UserContext);
     const username = userContext.username;
-    const token  = userContext.token;
     const [imageUrl, setImageUrl] = useState("");
 
     const rankString = isPlayer ? cardRankToValue(rank) : "back";
@@ -70,11 +65,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
         const fetchCardImage = async () => {
             const response = await axios.get(
                 `${apiBaseUrl}/images/card/default/${suit}/${rankString}`,
-                { responseType: "blob",
-                  headers: {
-                        Authorization: `Bearer ${token}`, 
-                    },
-                 },
+                { responseType: "blob"},
             );
             setImageUrl(URL.createObjectURL(response.data));
         }

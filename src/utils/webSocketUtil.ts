@@ -14,8 +14,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 export const apiBaseUrl = isDevelopment ? 'http://localhost:8080' : 'https://coolestcardgames.com:8443';
 export const websocketUrl = isDevelopment ? 'ws://localhost:8080/ws' : 'wss://coolestcardgames.com:8443/ws';
 
-const initWebSocket = (token: string | undefined, 
-    subscribeAction?: () => void) => {
+const initWebSocket = (subscribeAction?: () => void) => {
     return new Promise((resolve, reject) => {
         if (client) {
             subscribeAction?.();
@@ -23,14 +22,8 @@ const initWebSocket = (token: string | undefined,
             return;
         }
 
-        if (!token) {
-            console.error("No token found in user context");
-            reject(new Error("No token found in user context"));
-            return;
-        }
-
         client = new Client({
-            brokerURL: `${websocketUrl}?token=${token}`,
+            brokerURL: `${websocketUrl}`,
             reconnectDelay: 1000,
 
             onConnect: () => {
@@ -118,7 +111,6 @@ export const subscribeToLobby = (gameId : string | undefined,
         console.log("Received message:", message.body);
         try {
             const messageData = JSON.parse(message.body);
-            console.log("Message data:", messageData);
 
             // Update the rules config if it has changed
             if (messageData.rulesConfig) {
@@ -247,7 +239,7 @@ export const unsubscribeFromGame = (gameId : string | undefined) => {
 let activeComponents : number = 0;
 
 // Custom Hook to manage the websocket connection centrally
-export function useWebSocket(token : string | undefined, subscribeAction?: () => void) { 
+export function useWebSocket(subscribeAction?: () => void) { 
     const [client, setClient] = useState<Client | null>(null);
     const [isConnected, setIsConnected] = useState<boolean>(false);
     const location = useLocation();
@@ -256,7 +248,7 @@ export function useWebSocket(token : string | undefined, subscribeAction?: () =>
         activeComponents++;
         const initWebSocketLocal = async () => {
             try {
-                await initWebSocket(token, subscribeAction);
+                await initWebSocket(subscribeAction);
                 console.log("WebSocket connection established");
         
                 const initializedClient: Client = getWebSocketClient();
@@ -267,11 +259,6 @@ export function useWebSocket(token : string | undefined, subscribeAction?: () =>
             } catch (error) {
                 console.error("Error initializing websocket:", error);
             }
-        }
-
-        if (!token) {
-            console.error("No token found in user context");
-            return;
         }
 
         if (!client || !isConnected) {
@@ -296,7 +283,7 @@ export function useWebSocket(token : string | undefined, subscribeAction?: () =>
             }
     };
 
-    }, [token, location]);
+    }, [location]);
 
     return {client, isConnected};
 }

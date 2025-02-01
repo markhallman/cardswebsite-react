@@ -46,10 +46,10 @@ function HeartsGame() {
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [gameState, setGameState] = useState<GameState | undefined>(undefined);
 
-    const {username, token}= userContext;
+    const {username}= userContext;
     const player = gameState?.playerOrder.find(player => player.name === username);
 
-    const { client, isConnected  } = useWebSocket(token);
+    const { client, isConnected  } = useWebSocket();
 
     // TODO: If we miss the initial message, we should probably have a way to request the current game state so its not broken
         // page refresh will fix, but we should have a way to recover from this
@@ -61,10 +61,6 @@ function HeartsGame() {
     });
 
     useEffect(() => {
-        if(!token) {  
-            console.error("No token found in user context");
-            return;  
-        }
 
         if (client && isConnected) {
             console.log("WebSocket client connected, subscribing to game.");

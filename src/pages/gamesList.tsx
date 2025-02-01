@@ -21,14 +21,12 @@ interface ActiveGames {
 function GamesList(){
     const [activeLobbies, setActiveLobbies] = useState<Game[]>([]);
 
-    const userContext = useContext(UserContext);
-    const {username, token} = userContext;
-    var tokenAuthHeader : string = `Bearer ${token}`;
+
 
     async function getActiveLobbies() {
         console.log("Get Active Button clicked");
         axios.get<ActiveGames>(`${apiBaseUrl}/games/activeLobbies`, {
-            headers: {Authorization: tokenAuthHeader}
+            withCredentials: true
         }).then((response)=>{
             console.log(response.data);
             const activeGames = response.data.activeGames;

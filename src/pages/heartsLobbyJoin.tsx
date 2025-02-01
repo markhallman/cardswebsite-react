@@ -9,16 +9,13 @@ function HeartsLobbyJoin(){
     let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
 
     const navigate = useNavigate();
-    const userContext = useContext(UserContext);
-    const {username, token} = userContext;
-    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function createGame() {
         console.log("Create Game Button clicked");
 
-        axios.post(`${apiBaseUrl}/games/creategame/hearts`, {}, {
-            headers: {Authorization: tokenAuthHeader}
-        }).then((response)=>{
+        axios.post(`${apiBaseUrl}/games/creategame/hearts`, {},
+             {withCredentials: true}
+        ).then((response)=>{
             console.log("Creating lobby for GameId: " + response.data);
             var gameId = response.data;
             navigate(`/heartsLobby/${gameId}`)

@@ -12,14 +12,11 @@ function JoinGameButton( {gameId} : joinButtonProps ) {
     const navigate = useNavigate();
 
     const userContext = useContext(UserContext);
-    const token = userContext.token;
-    var tokenAuthHeader : string = `Bearer ${token}`;
 
     async function joinGame() {
         console.log("Join Game Button clicked for gameId " + gameId);
-        axios.post<String>(`${apiBaseUrl}/games/joingame/${gameId}`, {}, {
-            headers: {Authorization: tokenAuthHeader}
-        }).then((response)=>{
+        axios.post<String>(`${apiBaseUrl}/games/joingame/${gameId}`, 
+            {withCredentials: true}).then((response)=>{
             console.log("Joining game");
             console.log("GameId: " + gameId);
             navigate(`/heartsLobby/${gameId}`)

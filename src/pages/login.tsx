@@ -3,11 +3,10 @@ import { useEffect, useState } from "react";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface LoginProps {
-    setToken: (token: string) => void;
     setUser: (user: string) => void;
 }
 
-function Login({setToken, setUser}: LoginProps) {
+function Login({setUser}: LoginProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
@@ -29,13 +28,11 @@ function Login({setToken, setUser}: LoginProps) {
         event.preventDefault();
 
         try {
-            const response = await axios.post(`${apiBaseUrl}/login`, {
+            await axios.post(`${apiBaseUrl}/login`, {
                 username: username,
                 password: password
-            });
+            }, {withCredentials: true});
             console.log("Login successful");
-            // Save the token to localStorage, removing the quotes
-            setToken(JSON.stringify(response.data).replace(/^"(.*)"$/, '$1'));
             setUser(username);
         } catch (error) {
             console.error("Error logging in:", error);
