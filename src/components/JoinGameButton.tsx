@@ -15,13 +15,13 @@ function JoinGameButton( {gameId} : joinButtonProps ) {
 
     async function joinGame() {
         console.log("Join Game Button clicked for gameId " + gameId);
-        axios.post<String>(`${apiBaseUrl}/games/joingame/${gameId}`, 
+        axios.post<String>(`${apiBaseUrl}/games/joingame/${gameId}`, {},
             {withCredentials: true}).then((response)=>{
             console.log("Joining game");
             console.log("GameId: " + gameId);
             navigate(`/heartsLobby/${gameId}`)
         }).catch((error) => {
-            console.error("Error creating game:", error);
+            console.error("Error joining game:", error);
         });
     }
 
