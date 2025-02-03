@@ -10,7 +10,6 @@ interface PlayerCardProps {
 }
 
 function PlayerCard({playerName, iconEndpoint, activePlayer} : PlayerCardProps) {
-    console.log("Rendering PlayerCard", iconEndpoint);
     const [imageUrl, setImageUrl] = useState("");
     const userContext = useContext(UserContext);
 
