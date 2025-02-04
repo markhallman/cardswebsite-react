@@ -25,11 +25,13 @@ function App() {
                 const response = await axios.get(`${apiBaseUrl}/authenticated`, {
                     withCredentials: true,
                 });
-                if(response.data.username == username) {
-                    console.log("Username matches")
+                console.log("Auth uname ", response.data.username);
+                console.log("curr uname ", username);
+                if(response.data.username == username || username == null) {
+                    setUsername(response.data.username);
                     return true;
                 } else {
-                    console.log("Username missing")
+                    console.log("Username does not match, setting to null")
                     setUsername(null);
                     return false;
                 }
@@ -41,7 +43,7 @@ function App() {
 
         checkAuthStatus();
 
-    }, [username]);
+    }, []);
 
     if(!username) {
         return <Login setUser={setUsername} />
