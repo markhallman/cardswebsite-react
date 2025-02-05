@@ -11,6 +11,8 @@ function Login({setUser}: LoginProps) {
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
 
+    const [loginFailed, setLoginFailed] = useState(false);
+
     useEffect(() => {
         const fetchWebsiteLogo = async () => {
             console.log("Fetching website logo");
@@ -35,12 +37,15 @@ function Login({setUser}: LoginProps) {
             console.log("Login successful");
             setUser(username);
         } catch (error) {
+            setLoginFailed(true);
             console.error("Error logging in:", error);
         }
     }
 
     return (
         <>
+            {loginFailed && <div className="alert alert-danger" role="alert">
+                Login failed. Please try again.</div>}
             <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
                 {/* Logo */}
                 <img src={imageUrl} width="100px" alt="Website Logo" className="mb-4" />
