@@ -3,8 +3,6 @@ import { Link, Outlet } from "react-router-dom";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import axios from "axios";
 
-
-
 function Banner(){
     const [imageUrl, setImageUrl] = useState('');
 
@@ -36,7 +34,7 @@ function Banner(){
     return (
         <>
             <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-                <a className="navbar-brand" href="#">
+                <a className="navbar-brand" href="/home">
                     <img src={imageUrl} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
                     Coolest Card Games
                 </a>
@@ -44,15 +42,21 @@ function Banner(){
                 <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarToggler">
-                    <ul className="navbar-nav">
-                        <li className='nav-item me-3'>
-                            <Link to="/home">Home</Link>
+                    <ul className="navbar-nav mr-auto">
+                        <li className='nav-item'>
+                            <Link className="nav-link" to="/home">
+                                Home
+                            </Link>
                         </li>
-                        <li className='nav-item me-3'>
-                            <Link to="/gamesList">Active Games</Link>
+                        <li className='nav-item'>
+                            <Link className="nav-link" to="/gamesList">
+                                Join Game
+                            </Link>
                         </li>
-                        <li className='nav-item me-3'>
-                            <Link to="/heartsLobbyJoin">Create Game</Link>
+                        <li className='nav-item'>
+                            <Link className="nav-link" to="/heartsLobbyJoin">
+                                Create Game
+                            </Link>
                         </li>
                     </ul>
                 </div>

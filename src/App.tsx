@@ -49,6 +49,11 @@ function App() {
         return <Login setUser={setUsername} />
     }
 
+    // TODO: Add a 404 page
+    // TODO: Route to 404 page if game does not exist
+    // TODO: Route to 404 page if game is not started
+    // TODO: Route to home if user accesses login page and is already logged in. Or at least prefill username?
+
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
@@ -58,6 +63,7 @@ function App() {
                     <Route path="/gamesList" element={<GamesList/>} />
                     <Route index element={<Home/>} />
                 </Route>
+                <Route path="/login" element={<Login setUser={setUsername}/>} />
                 <Route path="/heartsLobby/:gameId" element={
                     <ProtectedRoute allowWhenGameStarted={false}>                   
                          <HeartsLobby/>
