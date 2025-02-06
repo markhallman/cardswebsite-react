@@ -12,9 +12,9 @@ function Home(){
 
     return (
         <>
-            <h1 className="text-center p-3"> Welcome to Coolest Card Games! </h1>
-            <p className="text-center"> A place for card game fans from all over the world to play the coolest
-            card games. Really, right now thats just hearts, but what's cooler than hearts?</p>
+            <h1 className="text-center p-3 display-1"> Welcome to Coolest Card Games! </h1>
+            <h4 className="text-center"> A place for card game fans from all over the world to play the coolest
+            card games. <br/> Really, right now thats just hearts, but what's cooler than hearts?</h4>
         </>
     );
 }
