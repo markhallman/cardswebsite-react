@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import { UserContext } from './context/UserContext'
 import axios from 'axios'
 import { apiBaseUrl } from './utils/webSocketUtil'
+import Register from './pages/register'
 
 function App() {
     const [username, setUsername] = React.useState<string | null>(null);
@@ -64,6 +65,7 @@ function App() {
                     <Route index element={<Home/>} />
                 </Route>
                 <Route path="/login" element={<Login setUser={setUsername}/>} />
+                <Route path="/register" element={<Register setUser={setUsername}/>} />
                 <Route path="/heartsLobby/:gameId" element={
                     <ProtectedRoute allowWhenGameStarted={false}>                   
                          <HeartsLobby/>
