@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { useContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { UserContext } from '../context/UserContext';
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
 interface ProtectedRouteProps {
@@ -14,14 +13,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
     const [gameIsStarted, setGameIsStarted] = useState<boolean | null>(null); // null: loading
 
     const { gameId } = useParams(); // Extract gameId from route params if needed
-    const userContext = useContext(UserContext);
 
     // useMemo because we want to trigger before deciding what to render, because we need to know if the user is authorized
+    // TODO: This seems kinda weird, is there a more accepptable way to do this?
     useMemo(() => {
         console.log("Revalidating protected route");
         setGameIsStarted(null);
         setIsAuthorized(null);
-        const checkAuthorization = async () => {
+        const checkAuthorizationForGame = async () => {
             try {
                 // Replace with your API call logic
                 const response = await axios.get(`${apiBaseUrl}/games/authenticated/${gameId}`, {
@@ -44,7 +43,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
             return response.status;
         }
 
-        checkAuthorization();
+        checkAuthorizationForGame();
         checkGameStatus()
             .then((res) => {
                 switch(res){

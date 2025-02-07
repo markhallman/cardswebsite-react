@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiBaseUrl } from "../utils/webSocketUtil";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface LoginProps {
     setUser: (user: string) => void;
@@ -14,6 +14,7 @@ function Login({setUser}: LoginProps) {
 
     const [loginFailed, setLoginFailed] = useState(false);
 
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchWebsiteLogo = async () => {
@@ -38,6 +39,7 @@ function Login({setUser}: LoginProps) {
             }, {withCredentials: true});
             console.log("Login successful");
             setUser(username);
+            navigate("/home")
         } catch (error) {
             setLoginFailed(true);
             console.error("Error logging in:", error);

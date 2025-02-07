@@ -18,7 +18,7 @@ import { apiBaseUrl } from './utils/webSocketUtil'
 import Register from './pages/register'
 
 function App() {
-    const [username, setUsername] = React.useState<string | null>(null);
+    const [username, setUsername] = React.useState<string | undefined>(undefined);
 
     useEffect(() => {
         async function checkAuthStatus() {
@@ -33,11 +33,11 @@ function App() {
                     return true;
                 } else {
                     console.log("Username does not match, setting to null")
-                    setUsername(null);
+                    setUsername(undefined);
                     return false;
                 }
             } catch (error) {
-                setUsername(null);
+                setUsername(undefined);
                 return false;
             }
         }
@@ -45,10 +45,6 @@ function App() {
         checkAuthStatus();
 
     }, []);
-
-    if(!username) {
-        return <Login setUser={setUsername} />
-    }
 
     // TODO: Add a 404 page
     // TODO: Route to 404 page if game does not exist
@@ -58,7 +54,7 @@ function App() {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
-                <Route path="/" element={<Banner/>}>
+                <Route path="/" element={<Banner setUser={setUsername}/>}>
                     <Route path="/home" element={<Home/>} />
                     <Route path="/heartsLobbyJoin" element={<HeartsLobbyJoin/>} />
                     <Route index element={<Home/>} />

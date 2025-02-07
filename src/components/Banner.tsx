@@ -1,10 +1,18 @@
-import { useEffect, useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
 
-function Banner(){
+interface BannerProps {
+    setUser: (user?: string) => void;
+}
+
+function Banner({setUser}: BannerProps){
     const [imageUrl, setImageUrl] = useState('');
+    const userContext = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         let objectUrl: string | null = null;
@@ -24,6 +32,20 @@ function Banner(){
             }
         }
     }, []);
+
+    async function logout(){
+        console.log("Logout Button clicked");
+        
+        try {
+            await axios.post(`${apiBaseUrl}/logout`, 
+                {}, {withCredentials: true});
+            console.log("Logout successful");
+            setUser(undefined);
+            navigate("/home");
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    }
 
     const logoStyle = {
         marginRight :'10px',
@@ -54,6 +76,34 @@ function Banner(){
                             </Link>
                         </li>
                     </ul>
+                    <ul className="navbar-nav ms-auto p-3">
+                    { userContext.username ? 
+                        <>
+                            <li className='nav-item me-2'>
+                                <button className="nav-link" onClick={logout}>
+                                    Logut
+                                </button>
+                            </li>
+                            <li className='nav-item'>
+                                <p className="mt-2 text-light"> Welcome {userContext.username}!</p> 
+                            </li>
+                        </>
+                    :
+                        <>
+                            <li className='nav-item'>
+                                <Link className="nav-link" to="/login">
+                                    Login
+                                </Link>
+                            </li>
+                            <li className='nav-item'>
+                                <Link className="nav-link" to="/register">
+                                    Register
+                                </Link>
+                            </li>
+                        </>
+                    }
+                    </ul>
+
                 </div>
             </nav>
             <Outlet />

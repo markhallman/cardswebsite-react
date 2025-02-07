@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { apiBaseUrl } from "../utils/webSocketUtil";
+import { useNavigate } from "react-router-dom";
 
 interface RegisterProps {
     setUser: (user: string) => void;
@@ -13,6 +14,8 @@ function Register({setUser}: RegisterProps) {
 
     const [imageUrl, setImageUrl] = useState("");
 
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const fetchWebsiteLogo = async () => {
             console.log("Fetching website logo");
@@ -32,10 +35,11 @@ function Register({setUser}: RegisterProps) {
         try {
             await axios.post(`${apiBaseUrl}/register`, {
                 username: username,
-                password: password
+                password: password,
+                email: email
             }, {withCredentials: true});
-            console.log("Registration successful");
-            setUser(username);
+            console.log("Registration successful, redirecting to login");
+            navigate(`/login`)
         } catch (error) {
             console.error("Error registering:", error);
         }
