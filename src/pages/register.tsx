@@ -12,6 +12,9 @@ function Register({setUser}: RegisterProps) {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
 
+    const [registerFailed, setRegisterFailed] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("")
+
     const [imageUrl, setImageUrl] = useState("");
 
     const navigate = useNavigate();
@@ -38,15 +41,24 @@ function Register({setUser}: RegisterProps) {
                 password: password,
                 email: email
             }, {withCredentials: true});
+            setRegisterFailed(false);
             console.log("Registration successful, redirecting to login");
             navigate(`/login`)
         } catch (error) {
+            setRegisterFailed(true);
+            if (axios.isAxiosError(error) && error.response) {
+                setErrorMessage(error.response.data);
+            } else {
+                setErrorMessage('An unexpected error occurred.');
+            }
             console.error("Error registering:", error);
         }
     }
 
     return (
         <>
+            {registerFailed && <div className="alert alert-danger" role="alert">
+                {errorMessage}</div>}
             <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
                 {/* Logo */}
                 <img src={imageUrl} width="100px" alt="Website Logo" className="mb-4" />
