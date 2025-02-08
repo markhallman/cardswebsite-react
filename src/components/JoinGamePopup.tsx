@@ -48,7 +48,7 @@ function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps )
     }
 
     useEffect(() => {
-        getActiveLobbies();
+        setInterval(getActiveLobbies, 3000);
     }, []); 
 
     return trigger ?
