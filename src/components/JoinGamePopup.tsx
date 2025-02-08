@@ -1,7 +1,5 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
+import { useEffect, useState } from 'react';
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import { RulesConfig } from "./RulesConfigEditor";
 import JoinGameButton from "./JoinGameButton";
@@ -25,11 +23,6 @@ interface ActiveGames {
 
 function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps ) {
 
-    const navigate = useNavigate();
-
-    const userContext = useContext(UserContext);
-    const username = userContext.username;
-
     const [activeLobbies, setActiveLobbies] = useState<Game[]>([]);
 
     // TODO: This should be able to distinguish by gameType (i.e. activeLobbies/hearts)
@@ -47,9 +40,25 @@ function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps )
         });
     }
 
+    // TODO: Race condition?
+    var intervalId : NodeJS.Timeout | undefined = undefined;
     useEffect(() => {
-        setInterval(getActiveLobbies, 3000);
-    }, []); 
+        if(trigger){
+            getActiveLobbies();
+            intervalId = setInterval(getActiveLobbies, 3000);
+        } else {
+            if(intervalId){
+                clearInterval(intervalId);
+                intervalId = undefined;
+            }
+        }
+
+        return () => {
+            if(intervalId){
+                clearInterval(intervalId);
+            }
+        }
+    }, [trigger]); 
 
     return trigger ?
     <>

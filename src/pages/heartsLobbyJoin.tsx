@@ -7,9 +7,9 @@ import JoinGamePopup from "../components/JoinGamePopup";
 
 function HeartsLobbyJoin(){
     // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down
-    let downloadsPages = ["Home", "Downloads", "HeartsLobbyJoin", "GamesList"]
 
     const navigate = useNavigate();
+    const userContext = useContext(UserContext);
     const [showPopup, setShowPopup] = useState<boolean>(false);
     
     async function createGame() {
@@ -26,10 +26,7 @@ function HeartsLobbyJoin(){
         });
     }
 
-    async function joinGamePopup(){
-
-    }
-
+    // TODO: Factor out these game display divs into a component
     return (
         <>
             <div className="content-area p-3 justify-content-center">
@@ -50,12 +47,20 @@ function HeartsLobbyJoin(){
                             Compete against your opponents and avoid taking hearts to win! <br/>
                             Beware the queen of spades
                         </p>
-                        <button className="btn btn-primary m-2" onClick={createGame}>
-                            Create Game
-                        </button>
-                        <button className="btn btn-secondary m-2" onClick={()=> setShowPopup(!showPopup)}>
-                            Join Game
-                        </button>
+                        { userContext.username ?
+                                <>
+                                <button className="btn btn-primary m-2" onClick={createGame}>
+                                    Create Game
+                                </button>
+                                <button className="btn btn-secondary m-2" onClick={()=> setShowPopup(!showPopup)}>
+                                    Join Game
+                                </button>
+                                </>
+                            :
+                                <p className="mt-4 me-2 fw-bold">
+                                    Register now to play!
+                                </p>
+                        }
                     </div>
                 </div>
                 <div className="row mt-3 justify-content-center text-center">

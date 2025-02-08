@@ -1,13 +1,10 @@
 import Banner from './components/Banner'
-import GamesList from './pages/gamesList'
 import HeartsGame from './pages/heartsGame'
 import HeartsLobby from './pages/heartsLobby'
 import HeartsLobbyJoin from './pages/heartsLobbyJoin'
 import Home from './pages/home'
 import Login from './pages/login'
-
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
-
 import React, { useEffect, useLayoutEffect } from 'react'
 import { Route } from 'react-router-dom'
 import './App.css'

@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useMemo, useState } from "react";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 
@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
 
     // useMemo because we want to trigger before deciding what to render, because we need to know if the user is authorized
     // TODO: This seems kinda weird, is there a more accepptable way to do this?
-    useMemo(() => {
+    useLayoutEffect(() => {
         console.log("Revalidating protected route");
         setGameIsStarted(null);
         setIsAuthorized(null);
