@@ -54,7 +54,7 @@ function HeartsLobby(){
                 unsubscribeFromLobby(gameId);
             }
         };
-    }, [isConnected]);
+    }, []);
 
     // TODO: If a user visits this page, and the game is already started, they should be redirected to the game page
     // TODO: numPlayers should be actually configurable, sourced from RulesConfig
@@ -72,7 +72,7 @@ function HeartsLobby(){
                             </button>
                             : <p>Waiting for {gameOwner} to start the game</p>
                         }   
-                        <RulesConfigEditor rulesConfig={rulesConfig}/>
+                        <RulesConfigEditor isEditable={false} rulesConfig={rulesConfig}/>
                         <PlayerDisplay players={players} numPlayers={4}/>
                     </div>
                 </div>

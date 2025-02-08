@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import JoinGamePopup from "../components/JoinGamePopup";
+import CreateGamePopup from "../components/CreateGamePopup";
 
 function HeartsLobbyJoin(){
     // TODO: have some sort of heartbeat with the server so that we can tell if it is up or down
 
     const navigate = useNavigate();
     const userContext = useContext(UserContext);
-    const [showPopup, setShowPopup] = useState<boolean>(false);
+    const [showJoinPopup, setShowJoinPopup] = useState<boolean>(false);
+    const [showCreatePopup, setShowCreatePopup] = useState<boolean>(false);
     
     async function createGame() {
         console.log("Create Game Button clicked");
@@ -26,7 +28,7 @@ function HeartsLobbyJoin(){
         });
     }
 
-    // TODO: Factor out these game display divs into a component
+    // TODO: Factor out these game display divs into a component (can maybe define IN this class?)
     return (
         <>
             <div className="content-area p-3 justify-content-center">
@@ -49,10 +51,18 @@ function HeartsLobbyJoin(){
                         </p>
                         { userContext.username ?
                                 <>
-                                <button className="btn btn-primary m-2" onClick={createGame}>
+                                <button className="btn btn-primary m-2" onClick={() =>
+                                    { 
+                                        setShowCreatePopup(!showCreatePopup);
+                                        setShowJoinPopup(false);
+                                    }}>
                                     Create Game
                                 </button>
-                                <button className="btn btn-secondary m-2" onClick={()=> setShowPopup(!showPopup)}>
+                                <button className="btn btn-secondary m-2"onClick={() =>
+                                    { 
+                                        setShowJoinPopup(!showJoinPopup);
+                                        setShowCreatePopup(false);
+                                    }}>
                                     Join Game
                                 </button>
                                 </>
@@ -78,7 +88,8 @@ function HeartsLobbyJoin(){
                         </button>
                     </div>
                 </div>
-                <JoinGamePopup trigger={showPopup} setTrigger={setShowPopup} gameType={"Hearts"}></JoinGamePopup>
+                <JoinGamePopup trigger={showJoinPopup} setTrigger={setShowJoinPopup} gameType={"Hearts"}></JoinGamePopup>
+                <CreateGamePopup trigger={showCreatePopup} setTrigger={setShowCreatePopup}></CreateGamePopup>
             </div>
         </>
     );
