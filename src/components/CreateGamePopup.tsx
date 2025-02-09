@@ -1,7 +1,8 @@
 import axios from "axios";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import { useNavigate } from "react-router-dom";
-import RulesConfigEditor from "./RulesConfigEditor";
+import RulesConfigEditor, { DEFAULT_RULES_CONFIG, RulesConfig } from "./RulesConfigEditor";
+import { useState } from "react";
 
 interface createGamePopupProps {
     trigger : boolean;
@@ -11,11 +12,14 @@ interface createGamePopupProps {
 function CreateGamePopup( {trigger, setTrigger} : createGamePopupProps ) {
     const navigate = useNavigate();
 
+    const [rulesConfig, setRulesConfig] = useState<RulesConfig>(DEFAULT_RULES_CONFIG);
+
     async function createGame() {
         console.log("Create Game Button clicked");
 
-        axios.post(`${apiBaseUrl}/games/creategame/hearts`, {},
-                {withCredentials: true}
+        axios.post(`${apiBaseUrl}/games/creategame/hearts`, 
+                { rulesConfig: rulesConfig },
+                { withCredentials: true }
         ).then((response)=>{
             console.log("Creating lobby for GameId: " + response.data);
             var gameId = response.data;
@@ -35,7 +39,10 @@ function CreateGamePopup( {trigger, setTrigger} : createGamePopupProps ) {
                <button className="btn btn-primary m-2" onClick={createGame}>
                                     Create Game
                </button>
-               <RulesConfigEditor isEditable={true}></RulesConfigEditor>
+               <button className="btn btn-primary m-2" onClick={() => setRulesConfig(DEFAULT_RULES_CONFIG)}>
+                                    Restore Default Rules
+               </button>
+               <RulesConfigEditor isEditable={true} rulesConfig={rulesConfig} setRulesConfig={setRulesConfig}></RulesConfigEditor>
                <button className="close-button btn-close" onClick={() => {setTrigger(false)}}></button>
             </div>
         </div>
