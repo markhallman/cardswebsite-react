@@ -61,6 +61,29 @@ function RulesConfigEditor ( {isEditable, rulesConfig, setRulesConfig} : RulesCo
         );
     }
 
+    function NumberRulesSelector( {rule, ruleDescription, min, max}: {rule: string, ruleDescription : string, min : string, max : string} ){
+        return (
+            <tr>
+                <th>{ruleDescription}</th>
+                <td>
+                    {!isEditable ? +rulesConfig[rule as keyof RulesConfig] :
+                        <input type="number" 
+                            id={rule}
+                            name={rule}
+                            min={min}
+                            max={max}
+                            value={+rulesConfig[rule as keyof RulesConfig]}
+                            onChange={(e)=>{
+                                setRulesConfig(
+                                {...rulesConfig, [rule]: +e.target.value }
+                            )}}>
+                        </input>
+                    }
+                </td>
+            </tr>
+        );
+    }
+
     return (
         <div className="container">
             <div className="row d-flex justify-content-center">
@@ -94,18 +117,22 @@ function RulesConfigEditor ( {isEditable, rulesConfig, setRulesConfig} : RulesCo
                                 rule="noTricksMinus" 
                                 ruleDescription="Minus points if you win no tricks">
                             </CheckboxRulesSelector>
-                            <tr>
-                                <th>Number of players:</th>
-                                <td>{rulesConfig ? rulesConfig.numPlayers : "NO CONFIG FOUND"}</td>
-                            </tr>
+                            <NumberRulesSelector
+                                rule="numPlayers"
+                                ruleDescription="Number of players"
+                                min="4"
+                                max="5">
+                            </NumberRulesSelector>
                             <CheckboxRulesSelector 
                                 rule="pointsAllowedFirstTrick" 
                                 ruleDescription="Points allowed on the first trick">
                             </CheckboxRulesSelector>
-                            <tr>
-                                <th>Points to lose:</th>
-                                <td>{rulesConfig ? rulesConfig.pointsToLose : "NO CONFIG FOUND"}</td>
-                            </tr>
+                            <NumberRulesSelector
+                                rule="pointsToLose"
+                                ruleDescription="Points to lose"
+                                min="30"
+                                max="200">
+                            </NumberRulesSelector>
                             <CheckboxRulesSelector 
                                 rule="shootTheSun" 
                                 ruleDescription="Shoot the Sun">
