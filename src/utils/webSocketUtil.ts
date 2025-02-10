@@ -133,10 +133,9 @@ export const subscribeToLobby = (gameId : string | undefined,
     });
 
     startGameListener = client.subscribe(`/topic/hearts/game-lobby/${gameId}/startGame`, (message) => {
-        console.log("Received message:", message.body);
         try {
             const messageData = JSON.parse(message.body);
-            console.log("Message data:", messageData);
+            console.log("Received gamestart message:", messageData);
 
             // If we hear back from the server that the game is starting, go to the game page
             navigate(`/heartsGame/${gameId}`);
@@ -191,7 +190,6 @@ export const subscribeToGame = (gameId : string | undefined,
                 if (!player) {
                     console.error("Player not found in current game state!");
                     throw new Error("Player not found in current game state!"); 
-                    return;
                 }
                 const playerHand : CardObj[] = sortCards(player.hand);
 

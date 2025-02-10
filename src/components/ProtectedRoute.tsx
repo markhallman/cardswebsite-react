@@ -16,6 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
 
     // useMemo because we want to trigger before deciding what to render, because we need to know if the user is authorized
     // TODO: This seems kinda weird, is there a more accepptable way to do this?
+    //  THIS ISN'T EVEN WORKING CORRECTLY ALL THE TIME
     useLayoutEffect(() => {
         console.log("Revalidating protected route");
         setGameIsStarted(null);
@@ -67,16 +68,25 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
         return <div>Loading...</div>;
     }
 
+    if (isAuthorized === false){
+        // TODO: better 403 or unauthorized page
+        return <div>you are not authorized, go away</div>
+    }
+
+    
     // If the page isnt allowed when the game is started, and the game is started, we assume you want to be on the game page
     if((gameIsStarted && !allowWhenGameStarted)){
         return <Navigate to={`/heartsGame/${gameId}`} replace />;
     }
 
-    // Dont allow access if the game is not started and the user wants the game pate or the user is not authorized
+    /* TODO: THIS ISN'T WORKING. THERES A RACE CONDITION WHERE SOMETIMES THE GAME STARTS, BUT THE ROUTE RERENDERS BEFORE THE STATE IS UPDATED
+    // Dont allow access if the game is not started and the user wants the game state or the user is not authorized
     if (!isAuthorized || (!gameIsStarted && allowWhenGameStarted)) {
         // Redirect if not authorized
+        console.log("Game is not started, navigating to home");
         return <Navigate to={"/home"} replace />;
     }
+    */
 
     // Render the child component if authorized
     return <>{children}</>;
