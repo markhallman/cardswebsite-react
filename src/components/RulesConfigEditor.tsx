@@ -121,7 +121,7 @@ function RulesConfigEditor ( {isEditable, rulesConfig, setRulesConfig} : RulesCo
                                 rule="numPlayers"
                                 ruleDescription="Number of players"
                                 min="4"
-                                max="5">
+                                max="4">
                             </NumberRulesSelector>
                             <CheckboxRulesSelector 
                                 rule="pointsAllowedFirstTrick" 

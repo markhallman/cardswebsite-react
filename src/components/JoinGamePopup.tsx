@@ -66,16 +66,16 @@ function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps )
             <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2">
                 <button className="close-button btn-close" onClick={() => {setTrigger(false)}}></button>
                     {activeLobbies.length > 0 ? (
-                                <ul className="vstack list-unstyled d-flex flex-wrap">
+                                <div className="d-flex flex-wrap justify-content-center">
                                     {activeLobbies.map((game, index) => (
-                                        <li key={index} className="list-group-item bg-secondary text-white border border-dark m-2 p-2 justify-content-center align-items-center gameRoom">
-                                            <span className="p-2">
-                                                Game ID: {game.gameId}, Open Slots: {game.rulesConfig.numPlayers - game.players.length}
-                                            </span>
+                                        <div key={index} className="border border-dark rounded m-2 p-2">
+                                            <span className="me-2">
+                                                <b>Game ID: </b>{game.gameId}
+                                                <b> Open Slots: </b>{game.rulesConfig.numPlayers - game.players.length}</span>
                                             <JoinGameButton gameId={game.gameId}/>
-                                        </li>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                             ) : (
                                 <p>No active games available.</p>
                             )}

@@ -26,7 +26,7 @@ function JoinGameButton( {gameId} : joinButtonProps ) {
     }
 
     return (
-        <button onClick={joinGame}>
+        <button className="btn btn-primary" onClick={joinGame}>
             Join Game
         </button>
     )

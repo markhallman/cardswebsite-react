@@ -53,15 +53,6 @@ img {
     border: 1px solid black;
 }
 
-.gameRoom {
-    background: #C0C0C0;
-    border: solid black;
-    margin: 2px;
-    width: 400px;
-    height: 40px;
-    text-align: center;
-}
-
 /*Styling for the scoreboard pop-up (and others in the future?)*/
 .popup{
     position: absolute;
