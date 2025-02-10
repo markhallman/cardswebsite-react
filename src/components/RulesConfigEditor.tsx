@@ -99,44 +99,35 @@ function RulesConfigEditor ( {isEditable, rulesConfig, setRulesConfig} : RulesCo
                         <tbody>
                             <CheckboxRulesSelector 
                                 rule="heartsMustBeBroken" 
-                                ruleDescription="To play a heart, hearts must be broken">
-                            </CheckboxRulesSelector>
+                                ruleDescription="To play a heart, hearts must be broken"/>
                             <CheckboxRulesSelector 
                                 rule="jackMinus10" 
-                                ruleDescription="Jack is worth -10 points">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Jack is worth -10 points"/>
                             <CheckboxRulesSelector 
                                 rule="jackRequired" 
-                                ruleDescription="Jack is required to shoot the moon">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Jack is required to shoot the moon"/>
                             <CheckboxRulesSelector 
                                 rule="kittyWonFirstTrick" 
-                                ruleDescription="Player who wins the first trick wins the kitty">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Player who wins the first trick wins the kitty"/>
                             <CheckboxRulesSelector 
                                 rule="noTricksMinus" 
-                                ruleDescription="Minus points if you win no tricks">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Minus points if you win no tricks"/>
                             <NumberRulesSelector
                                 rule="numPlayers"
                                 ruleDescription="Number of players"
                                 min="4"
-                                max="4">
-                            </NumberRulesSelector>
+                                max="4"/>
                             <CheckboxRulesSelector 
                                 rule="pointsAllowedFirstTrick" 
-                                ruleDescription="Points allowed on the first trick">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Points allowed on the first trick"/>
                             <NumberRulesSelector
                                 rule="pointsToLose"
                                 ruleDescription="Points to lose"
                                 min="30"
-                                max="200">
-                            </NumberRulesSelector>
+                                max="200"/>
                             <CheckboxRulesSelector 
                                 rule="shootTheSun" 
-                                ruleDescription="Shoot the Sun">
-                            </CheckboxRulesSelector>
+                                ruleDescription="Shoot the Sun"/>
                             <tr>
                                 <th>Start Card Rules:</th>
                                 <td>{rulesConfig ? rulesConfig.startCardRules : "NO CONFIG FOUND"}</td>
