@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export type RulesConfig = {
     heartsMustBeBroken : boolean,
     jackMinus10 : boolean,
@@ -8,18 +10,85 @@ export type RulesConfig = {
     pointsAllowedFirstTrick : boolean,
     pointsToLose : number,
     shootTheSun : boolean,
-    startCardRules : number
+    startCardRules : number,
+    gameType : string
 };
 
-interface RulesConfigEditorProps {
-    rulesConfig? : RulesConfig;
+// TODO: Rules defaults should probably be sourced from the server
+export const DEFAULT_RULES_CONFIG = {
+    heartsMustBeBroken : true,
+    jackMinus10 : true,
+    jackRequired : false,
+    kittyWonFirstTrick : false,
+    noTricksMinus : false,
+    numPlayers : 4,
+    pointsAllowedFirstTrick : false,
+    pointsToLose : 100,
+    shootTheSun : false,
+    startCardRules : 0,
+    gameType : "HEARTS"
 }
 
-function RulesConfigEditor ( {rulesConfig} : RulesConfigEditorProps) {
+interface RulesConfigEditorProps {
+    isEditable: boolean;
+    rulesConfig : RulesConfig;
+    setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig>>;
+}
+
+function RulesConfigEditor ( {isEditable, rulesConfig, setRulesConfig} : RulesConfigEditorProps) {
+
+    function CheckboxRulesSelector( {rule, ruleDescription} : {rule: string, ruleDescription : string} ){
+        return (                            
+            <tr>
+                <th>
+                    <label htmlFor={rule}>{ruleDescription}</label>
+                </th>
+                <td>
+                    {!isEditable ? rulesConfig[rule as keyof RulesConfig] ? "YES" : "NO" :
+                        <input type="checkbox"
+                            className="onoffswitch-checkbox" 
+                            id={rule}
+                            name={rule}
+                            checked={rulesConfig[rule as keyof RulesConfig] ? true : false}
+                            onChange={(e)=>{
+                                    setRulesConfig(
+                                        {...rulesConfig, [rule]: e.target.checked }
+                                )}}>
+                        </input>
+                    }
+                </td>
+            </tr>
+        );
+    }
+
+    function NumberRulesSelector( {rule, ruleDescription, min, max}: {rule: string, ruleDescription : string, min : string, max : string} ){
+        return (
+            <tr>
+                <th>{ruleDescription}</th>
+                <td>
+                    {!isEditable ? +rulesConfig[rule as keyof RulesConfig] :
+                        <input type="number" 
+                            id={rule}
+                            name={rule}
+                            min={min}
+                            max={max}
+                            value={+rulesConfig[rule as keyof RulesConfig]}
+                            onChange={(e)=>{
+                                setRulesConfig(
+                                {...rulesConfig, [rule]: +e.target.value }
+                            )}}>
+                        </input>
+                    }
+                </td>
+            </tr>
+        );
+    }
+
     return (
         <div className="container">
             <div className="row d-flex justify-content-center">
                 <div className="col-6">
+                <form>
                     <table className="mx-auto table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -28,52 +97,53 @@ function RulesConfigEditor ( {rulesConfig} : RulesConfigEditorProps) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>To play a heart, hearts Must Be Broken:</th>
-                                <td>{rulesConfig ? (rulesConfig.heartsMustBeBroken ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Jack is worth -10 points:</th>
-                                <td>{rulesConfig ? (rulesConfig.jackMinus10 ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Jack is required to shoot the moon:</th>
-                                <td>{rulesConfig ? (rulesConfig.jackRequired ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Kitty is won by player winning the first trick:</th>
-                                <td>{rulesConfig ? (rulesConfig.kittyWonFirstTrick ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Minus points if you win no tricks:</th>
-                                <td>{rulesConfig ? (rulesConfig.noTricksMinus ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Number of players:</th>
-                                <td>{rulesConfig ? rulesConfig.numPlayers : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Points allowed on the first trick:</th>
-                                <td>{rulesConfig ? (rulesConfig.pointsAllowedFirstTrick ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Points to lose:</th>
-                                <td>{rulesConfig ? rulesConfig.pointsToLose : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Shoot the Sun:</th>
-                                <td>{rulesConfig ? (rulesConfig.shootTheSun ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
-                            <tr>
-                                <th>Hearts Must Be Broken:</th>
-                                <td>{rulesConfig ? (rulesConfig.heartsMustBeBroken ? "Yes" : "No") : "NO CONFIG FOUND"}</td>
-                            </tr>
+                            <CheckboxRulesSelector 
+                                rule="heartsMustBeBroken" 
+                                ruleDescription="To play a heart, hearts must be broken">
+                            </CheckboxRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="jackMinus10" 
+                                ruleDescription="Jack is worth -10 points">
+                            </CheckboxRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="jackRequired" 
+                                ruleDescription="Jack is required to shoot the moon">
+                            </CheckboxRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="kittyWonFirstTrick" 
+                                ruleDescription="Player who wins the first trick wins the kitty">
+                            </CheckboxRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="noTricksMinus" 
+                                ruleDescription="Minus points if you win no tricks">
+                            </CheckboxRulesSelector>
+                            <NumberRulesSelector
+                                rule="numPlayers"
+                                ruleDescription="Number of players"
+                                min="4"
+                                max="5">
+                            </NumberRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="pointsAllowedFirstTrick" 
+                                ruleDescription="Points allowed on the first trick">
+                            </CheckboxRulesSelector>
+                            <NumberRulesSelector
+                                rule="pointsToLose"
+                                ruleDescription="Points to lose"
+                                min="30"
+                                max="200">
+                            </NumberRulesSelector>
+                            <CheckboxRulesSelector 
+                                rule="shootTheSun" 
+                                ruleDescription="Shoot the Sun">
+                            </CheckboxRulesSelector>
                             <tr>
                                 <th>Start Card Rules:</th>
                                 <td>{rulesConfig ? rulesConfig.startCardRules : "NO CONFIG FOUND"}</td>
                             </tr>
                         </tbody>
                     </table>
+                    </form>
                 </div>
             </div>
         </div>

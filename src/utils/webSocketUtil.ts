@@ -93,7 +93,7 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 // Set the proper websocket subscriptions for the lobby
 // TODO: WHAT IS THE ACTUAL TYPE OF RULES CONFIG
 export const subscribeToLobby = (gameId : string | undefined, 
-    setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig | undefined>>,
+    setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig>>,
     setPlayerList : React.Dispatch<React.SetStateAction<Player[] | undefined>>,
     setGameOwner : React.Dispatch<React.SetStateAction<string | undefined>>,
     navigate: (path: string) => void) => {
