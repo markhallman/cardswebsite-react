@@ -14,9 +14,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
 
     const { gameId } = useParams(); // Extract gameId from route params if needed
 
-    // useMemo because we want to trigger before deciding what to render, because we need to know if the user is authorized
-    // TODO: This seems kinda weird, is there a more accepptable way to do this?
-    //  THIS ISN'T EVEN WORKING CORRECTLY ALL THE TIME
+    // TODO: WE ONLY WANT PROTECTED ROUTES TO DEAL WITH AUTHENTICATION AND GAME MEMBERSHIP
+    //  NOT WITH WHETHER THE GAME HAS STARTED, THAT LOGIC SHOULD BE SEPARATE
     useLayoutEffect(() => {
         console.log("Revalidating protected route");
         setGameIsStarted(null);
@@ -34,6 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
             }
         };
 
+        // TODO: This should be migrated to lobby page? Or is this even necessary?
         const checkGameStatus = async () => {   
             // Replace with your API call logic
             const response = await axios.get(`${apiBaseUrl}/games/isStarted/${gameId}`, {
@@ -63,30 +63,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, allowWhenGame
             });
     }, [allowWhenGameStarted]);
 
-    if (isAuthorized === null || gameIsStarted === null) {
+    if (isAuthorized === null) {
         // Show loading spinner while checking
         return <div>Loading...</div>;
     }
 
     if (isAuthorized === false){
         // TODO: better 403 or unauthorized page
-        return <div>you are not authorized, go away</div>
+        return <div>403 UNAUTHORIZED: you are not authorized, go away</div>
     }
-
-    
-    // If the page isnt allowed when the game is started, and the game is started, we assume you want to be on the game page
-    if((gameIsStarted && !allowWhenGameStarted)){
-        return <Navigate to={`/heartsGame/${gameId}`} replace />;
-    }
-
-    /* TODO: THIS ISN'T WORKING. THERES A RACE CONDITION WHERE SOMETIMES THE GAME STARTS, BUT THE ROUTE RERENDERS BEFORE THE STATE IS UPDATED
-    // Dont allow access if the game is not started and the user wants the game state or the user is not authorized
-    if (!isAuthorized || (!gameIsStarted && allowWhenGameStarted)) {
-        // Redirect if not authorized
-        console.log("Game is not started, navigating to home");
-        return <Navigate to={"/home"} replace />;
-    }
-    */
 
     // Render the child component if authorized
     return <>{children}</>;

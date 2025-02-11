@@ -35,6 +35,10 @@ export type GameState = {
     currentPlayer : Player;
 }
 
+function LoadingGame() {
+    return <h2>🌀 Loading Hearts Game...</h2>;
+  }
+
 function HeartsGame() {
     const { gameId } = useParams<{ gameId: string }>();
     const userContext = useContext(UserContext);
@@ -82,6 +86,7 @@ function HeartsGame() {
 
     return (
         <>
+            {gameState ? 
             <GameContext.Provider value={{gameWebSocketRoot: `/app/hearts/game-room/${gameId}`, stompClient: client || undefined}}>
                 <div className="container-fluid heartsGame border border-dark rounded">
                     <div className="row">
@@ -124,6 +129,7 @@ function HeartsGame() {
                     <Scoreboard trigger={showPopup} setTrigger={setShowPopup} scoreboard={gameState?.scoreboard}></Scoreboard>
                 </div>
             </GameContext.Provider>
+            : <LoadingGame/>}
         </>
     );
 }

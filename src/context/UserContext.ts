@@ -1,9 +1,10 @@
 import { Context, createContext } from 'react';
 
 interface UserContextType {
-    username?: string;
-    // TODO: Add token and other user info here
-    // TODO: Would it make sense to have seprate contexts for user vs game info?
+    username?: string,
+    inGame : boolean,
+    inLobby : boolean;
 }
 
-export const UserContext : Context<UserContextType> = createContext({});
+export const UserContext : Context<UserContextType> 
+         = createContext<UserContextType>({inGame: false, inLobby: false});

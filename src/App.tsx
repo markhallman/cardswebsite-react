@@ -5,7 +5,7 @@ import HeartsLobbyJoin from './pages/heartsLobbyJoin'
 import Home from './pages/home'
 import Login from './pages/login'
 import { createBrowserRouter, createRoutesFromElements, RouterProvider } from "react-router-dom"
-import React, { useEffect, useLayoutEffect } from 'react'
+import React, { Suspense, useEffect, useLayoutEffect } from 'react'
 import { Route } from 'react-router-dom'
 import './App.css'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -16,6 +16,8 @@ import Register from './pages/register'
 
 function App() {
     const [username, setUsername] = React.useState<string | undefined>(undefined);
+    const [inGame, setInGame] = React.useState<boolean>(false);
+    const [inLobby, setInLobby] = React.useState<boolean>(false);
 
     useEffect(() => {
         async function checkAuthStatus() {
@@ -64,7 +66,7 @@ function App() {
                     </ProtectedRoute>
                     }/>
                 <Route path="/heartsGame/:gameId" element={
-                    <ProtectedRoute allowWhenGameStarted={true}>                   
+                    <ProtectedRoute allowWhenGameStarted={true}>
                         <HeartsGame/>
                     </ProtectedRoute>
                }/>
@@ -73,7 +75,7 @@ function App() {
     );
     
     return (
-        <UserContext.Provider value={{username: username}}>
+        <UserContext.Provider value={{username: username, inGame: inGame, inLobby: inLobby}}>
             <RouterProvider router={router} /> 
         </UserContext.Provider>
     )
