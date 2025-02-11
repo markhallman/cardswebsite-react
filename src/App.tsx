@@ -16,8 +16,6 @@ import Register from './pages/register'
 
 function App() {
     const [username, setUsername] = React.useState<string | undefined>(undefined);
-    const [inGame, setInGame] = React.useState<boolean>(false);
-    const [inLobby, setInLobby] = React.useState<boolean>(false);
 
     useEffect(() => {
         async function checkAuthStatus() {
@@ -75,7 +73,7 @@ function App() {
     );
     
     return (
-        <UserContext.Provider value={{username: username, inGame: inGame, inLobby: inLobby}}>
+        <UserContext.Provider value={{username: username}}>
             <RouterProvider router={router} /> 
         </UserContext.Provider>
     )

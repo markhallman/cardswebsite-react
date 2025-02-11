@@ -12,7 +12,7 @@ function HeartsLobby({}){
     const numericGameId : number = Number(gameId);
 
     const userContext = useContext(UserContext);
-    const { username, inGame, inLobby } = userContext;
+    const { username } = userContext;
     const gameWebSocketRoot = `/app/hearts/game-lobby/${gameId}`;
 
     // TODO : figure out acual type for players
@@ -22,7 +22,7 @@ function HeartsLobby({}){
 
     const handleConnect = () => {
         console.log("WebSocket connected, subscribing to lobby");
-        subscribeToLobby(gameId, setRulesConfig, setPlayers, setGameOwner);
+        subscribeToLobby(gameId, setRulesConfig, setPlayers, setGameOwner, navigate);
     };
 
     const { client, isConnected } = useWebSocket(handleConnect);

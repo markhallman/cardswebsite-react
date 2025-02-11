@@ -95,7 +95,8 @@ const unsubscribeFromConnection = (gameId : string | undefined, subscription : S
 export const subscribeToLobby = (gameId : string | undefined, 
     setRulesConfig : React.Dispatch<React.SetStateAction<RulesConfig>>,
     setPlayerList : React.Dispatch<React.SetStateAction<Player[] | undefined>>,
-    setGameOwner : React.Dispatch<React.SetStateAction<string | undefined>>) => {
+    setGameOwner : React.Dispatch<React.SetStateAction<string | undefined>>,
+    navigate : (path : string) => void) => {
 
     if (!client) {
         throw new Error("WebSocket client is not initialized. Call initializeWebSocket first.");
@@ -135,6 +136,7 @@ export const subscribeToLobby = (gameId : string | undefined,
     startGameListener = client.subscribe(`/topic/hearts/game-lobby/${gameId}/startGame`, (message) => {
         try {
             const messageData = JSON.parse(message.body);
+            navigate(`/heartsGame/${gameId}`)
 
         } catch (error) {
             console.error("Error parsing message:", error);
