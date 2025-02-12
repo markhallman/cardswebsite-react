@@ -62,8 +62,11 @@ function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps )
 
     return trigger ?
     <>
-        <div className="popup" onClick={()=>setTrigger(false)}>
-            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2" onClick={(e) => e.stopPropagation()}>
+        <div className="popup" onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    setTrigger(false);
+                }}}>
+            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2">
                 <button className="close-button btn-close" onClick={() => {setTrigger(false)}}></button>
                     {activeLobbies.length > 0 ? (
                                 <div className="d-flex flex-wrap justify-content-center">

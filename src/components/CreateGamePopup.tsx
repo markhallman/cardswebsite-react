@@ -31,8 +31,11 @@ function CreateGamePopup( {trigger, setTrigger} : createGamePopupProps ) {
 
     return trigger ?
     <>
-        <div className="popup" onClick={()=>setTrigger(false)}>
-            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2"  onClick={(e) => e.stopPropagation()}>
+        <div className="popup" onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    setTrigger(false);
+                }}}>
+            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2">
                <p>
                     Click here to create a game
                </p>
