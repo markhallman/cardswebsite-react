@@ -16,8 +16,8 @@ function Scoreboard({trigger, setTrigger, scoreboard} : ScoreboardProps) {
 
     return trigger ?
     <>
-        <div className="popup">
-            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2">
+        <div className="popup"  onClick={()=>setTrigger(false)}>
+            <div className="popup-inner justify-content-center align-items-center ms-1 me-5 p-2" onClick={(e) => e.stopPropagation()}>
                 <h3>Scoreboard </h3>
                 <table className="table table-striped table-bordered">
                     <thead>
