@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import { ScoreboardObj } from "../pages/heartsGame";
 import { UserContext } from "../context/UserContext";
 import { parseNameFromPlayerDescriptorString } from "../utils/cardGameUtils";
@@ -9,10 +9,23 @@ interface ScoreboardProps {
     scoreboard?: ScoreboardObj;
 }
 
-
 function Scoreboard({trigger, setTrigger, scoreboard} : ScoreboardProps) {
     const userContext = useContext(UserContext);
     const username = userContext.username;
+
+    const escFunction = useCallback((event: { key: string; }) => {
+        if (event.key === "Escape") {
+          setTrigger(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+
+        return () => {
+            document.removeEventListener("keydown", escFunction, false);
+        };
+    }, [escFunction]);
 
     return trigger ?
     <>

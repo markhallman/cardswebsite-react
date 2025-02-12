@@ -2,7 +2,7 @@ import axios from "axios";
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import { useNavigate } from "react-router-dom";
 import RulesConfigEditor, { DEFAULT_RULES_CONFIG, RulesConfig } from "./RulesConfigEditor";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 interface createGamePopupProps {
     trigger : boolean;
@@ -11,8 +11,20 @@ interface createGamePopupProps {
 
 function CreateGamePopup( {trigger, setTrigger} : createGamePopupProps ) {
     const navigate = useNavigate();
-
     const [rulesConfig, setRulesConfig] = useState<RulesConfig>(DEFAULT_RULES_CONFIG);
+    const escFunction = useCallback((event: { key: string; }) => {
+        if (event.key === "Escape") {
+            setTrigger(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+
+        return () => {
+            document.removeEventListener("keydown", escFunction, false);
+        };
+    }, [escFunction]);
 
     async function createGame() {
         console.log("Create Game Button clicked");

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { apiBaseUrl } from "../utils/webSocketUtil";
 import { RulesConfig } from "./RulesConfigEditor";
 import JoinGameButton from "./JoinGameButton";
@@ -24,6 +24,19 @@ interface ActiveGames {
 function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps ) {
 
     const [activeLobbies, setActiveLobbies] = useState<Game[]>([]);
+    const escFunction = useCallback((event: { key: string; }) => {
+        if (event.key === "Escape") {
+            setTrigger(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener("keydown", escFunction, false);
+
+        return () => {
+            document.removeEventListener("keydown", escFunction, false);
+        };
+    }, [escFunction]);
 
     // TODO: This should be able to distinguish by gameType (i.e. activeLobbies/hearts)
     async function getActiveLobbies() {
@@ -60,6 +73,8 @@ function JoinGamePopup( {trigger, setTrigger, gameType} : joinButtonPopupProps )
         }
     }, [trigger]); 
 
+    //TODO: Could make a popup component to wrap contents of popup to avoid duplicated code between this
+    //  and the other popup compoenents like scoreboard and createGamePopup
     return trigger ?
     <>
         <div className="popup" onClick={(e) => {
