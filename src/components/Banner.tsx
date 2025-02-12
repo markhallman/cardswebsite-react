@@ -55,16 +55,16 @@ function Banner({setUser}: BannerProps){
 
     return (
         <>
-            <nav className="navbar bg-primary navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+            <nav className="navbar bg-primary navbar-expand-md bg-body-tertiary" data-bs-theme="dark">
                 <a className="navbar-brand" href="/home">
                     <img src={imageUrl} width="30px" alt="Logo" style={logoStyle} className="d-inline-block" />
                     Coolest Card Games
                 </a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
+                    <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarToggler">
-                    <ul className="navbar-nav mr-auto">
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll">
                         <li className='nav-item'>
                             <Link className="nav-link" to="/home">
                                 Home
@@ -76,7 +76,7 @@ function Banner({setUser}: BannerProps){
                             </Link>
                         </li>
                     </ul>
-                    <ul className="navbar-nav ms-auto p-3">
+                    <ul className="navbar-nav ms-auto">
                     { userContext.username ? 
                         <>
                             <li className='nav-item me-2'>
@@ -84,7 +84,7 @@ function Banner({setUser}: BannerProps){
                                     Logut
                                 </button>
                             </li>
-                            <li className='nav-item'>
+                            <li className='nav-item me-2'>
                                 <p className="mt-2 text-light"> Welcome {userContext.username}!</p> 
                             </li>
                         </>
@@ -103,7 +103,6 @@ function Banner({setUser}: BannerProps){
                         </>
                     }
                     </ul>
-
                 </div>
             </nav>
             <Outlet />
