@@ -10,10 +10,6 @@ interface HandProps {
     onClick? : string;
 }
 
-function showCard(suit: Suit, rank : string){
-    console.log("card clicked: " + rank + suit);
-}
-
 function getStyle(padding : number, location: string){
     padding = padding * 20
 
@@ -26,8 +22,7 @@ function getStyle(padding : number, location: string){
     }
 
     return {
-        transform : `translateX(${(padding)}%)`,
-        marginLeft: padding,
+        marginLeft: padding*2,
     }
 }
 
@@ -37,9 +32,8 @@ function Hand( {cards, location, isPlayer, onClick = "default"} : HandProps){
     return (
             <div className="hand">
                   {cards?.map( (card, index) =>
-                      <div className={"cardHolder"} key={index} style={getStyle(index, location)}>
-                            <Card rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick}/>
-                      </div> )}
+                            <Card z-index={index} rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick} key={index} style={getStyle(index, location)}/>
+                  )}
             </div>
         );
 }

@@ -25,6 +25,7 @@
     position: absolute;
     height: auto;
     width: auto;
+    display: inline-block;
 }
 
 .hand {

@@ -5,6 +5,7 @@ import { GameContext } from "../context/GameContext";
 import { UserContext } from '../context/UserContext';
 import { cardRankToValue } from "../utils/cardGameUtils";
 import { apiBaseUrl } from "../utils/webSocketUtil";
+import { motion } from "motion/react"
 
 export type Suit = "CLUB" | "DIAMOND" | "HEART" | "SPADE";
 export type Location = "Top" | "Bottom" | "Left" | "Right";
@@ -15,6 +16,7 @@ interface CardProps {
     isPlayer: Boolean;
     onClick? : string;
     height?: number;
+    style: {};
 }
 
 function defaultCardClick() {
@@ -44,9 +46,9 @@ function playCard(rank : string, suit: string, gameWebSocketRoot : string, usern
     });
 
     console.log("User card clicked and message sent:", messageBody);
-    }
+}
 
-function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps, height = 120) {
+function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default", style} : CardProps, height = 120) {
     const gameContext = useContext(GameContext);
     const gameWebSocketRoot = gameContext.gameWebSocketRoot;
     const stompClient = gameContext.stompClient;
@@ -57,7 +59,7 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
 
     const rankString = isPlayer ? cardRankToValue(rank) : "back";
 
-
+``
     // If this is the users hand, show cards. Otherwise show the generic yellow back of the card
     let playerClass = isPlayer ? "playerCard" : "opponentCard";
 
@@ -84,11 +86,20 @@ function Card( {rank, suit = 'CLUB', isPlayer, onClick = "default"} : CardProps,
     }
 
     return (
-            <img className={"playingCard " + playerClass}
-                    src={imageUrl}
-                    onClick={onClickLocal}
-                    height={height}/>
-        );
+        <motion.div
+            style={style}
+            whileHover={{ scale: 1.01 }}
+            initial={{ opacity: 0.5, scale: 1.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            layout>
+            <div className={"cardHolder"} >
+                <img className={"playingCard " + playerClass}
+                        src={imageUrl}
+                        onClick={onClickLocal}
+                        height={height}/>
+            </div>
+        </motion.div> 
+    );
 }
 
 export default Card;

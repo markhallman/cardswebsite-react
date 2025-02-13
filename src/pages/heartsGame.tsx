@@ -8,6 +8,7 @@ import { UserContext } from '../context/UserContext';
 import { reindexPlayerArray } from '../utils/cardGameUtils';
 import { subscribeToGame, unsubscribeFromGame, useWebSocket } from '../utils/webSocketUtil';
 import PlayerCard from '../components/PlayerCard';
+import { motion } from "motion/react"
 
 // TODO: Move these types to a shared location? Type definition file?
 export type Player = {
@@ -116,7 +117,7 @@ function HeartsGame() {
                                         activePlayer={gameState?.currentPlayer.name === gameState?.playerOrder[(playerIndex + 3) %4].name}/>                        
                         </div>
                     </div>
-                    <div className="row d-flex">
+                    <div className="row d-flex">``
                         <div className="position-absolute bottom-0 start-0 col-3 p-5">
                             <PlayerCard playerName={username} 
                                         iconEndpoint={player?.icon} 
