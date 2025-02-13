@@ -32,7 +32,7 @@ function Hand( {cards, location, isPlayer, onClick = "default"} : HandProps){
     return (
             <div className="hand">
                   {cards?.map( (card, index) =>
-                            <Card z-index={index} rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick} key={index} style={getStyle(index, location)}/>
+                            <Card rank={card.rank} suit={card.suit as Suit} isPlayer={isPlayer} onClick={onClick} key={index} style={getStyle(index, location)}/>
                   )}
             </div>
         );

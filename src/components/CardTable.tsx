@@ -41,13 +41,14 @@ function CardTable( {playerConfiguration, playerTrickMap} : CardTableProps){
         return null; // TODO: just return an empty table
     }
 
+    // TODO shouldnt need cardHolder here, already in Card. Need to figure out correct CSS properties for this to work though
     return (
             <div className="cardTable justify-content-center">
                {playerTrickMap && Array.from(playerTrickMap.entries()).map( ([player, card], index) => {
                 const playerIndex = playerConfiguration.findIndex((element) => element.name === player);
                 return (
                   <div className={"cardHolder"} key={index} style={getTableCardStyle(playerIndex)}>
-                      <Card rank={card.rank} suit={card.suit as Suit} isPlayer={true} key={playerIndex}/>
+                      <Card rank={card.rank} suit={card.suit as Suit} isPlayer={true} key={playerIndex} style={{}}/>
                   </div>);
                 })}
             </div>
